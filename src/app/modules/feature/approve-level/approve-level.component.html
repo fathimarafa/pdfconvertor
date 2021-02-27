@@ -1,0 +1,45 @@
+<mat-toolbar style="justify-content: space-between;background-color: #ecf0fa;">
+    <div class="mat-ripple mat-tab-label mat-focus-indicator mat-tab-label-active ng-star-inserted">
+        <div class="mat-tab-label-content">
+            {{module ? module.displayName :  ''}}
+        </div>
+    </div>
+</mat-toolbar>
+
+<mat-card>
+
+    <mat-card-header>
+
+        <mat-form-field class="example-form-field">
+            <mat-label>Search</mat-label>
+            <input matInput type="text">
+            <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <table class="table-compnay" mat-table [dataSource]="dataSource">
+            <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns">
+                <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                <td mat-cell *matCellDef="let element">
+                    <ng-container *ngIf="column.field !== 'action'">
+                        {{element[column.field]}}
+                    </ng-container>
+                    <ng-container *ngIf="column.field === 'action'">
+                        <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                        <mat-icon (click)="openDeleteDialog()">delete_outline</mat-icon>
+                    </ng-container>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    </mat-card-content>
+
+</mat-card>

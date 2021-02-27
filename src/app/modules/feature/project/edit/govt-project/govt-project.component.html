@@ -1,0 +1,24 @@
+<!-- <h2 mat-dialog-title class="form-dialog header-color">Government Project</h2> -->
+<h2 style="display: flex" mat-dialog-title class="form-dialog header-color">
+    <div style="margin-right: auto;">Government Project</div>
+    <mat-icon (click)="onCancelBtnClick()" style="padding: 4px;">close</mat-icon>
+</h2>
+<form *ngIf="form" [formGroup]="form">
+    <mat-horizontal-stepper>
+        <mat-step *ngFor="let step of steps; let index = index; let last = last;">
+            <ng-template matStepLabel>{{ step.label }}</ng-template>
+            <div class="stepper-container">
+                <formly-form [form]="form.at(index)" [model]="model" [fields]="step.fields" [options]="options[index]">
+                </formly-form>
+            </div>
+            <div align="end">
+                <button class="button-info" type="button" mat-button *ngIf="index !== 0" matStepperPrevious
+                    (click)="prevStep(index)">Back</button>
+                <button class="button-info" type="button" *ngIf="!last" matStepperNext mat-button
+                    [disabled]="!form.at(index).valid" (click)="nextStep(index)">Next</button>
+                <button class="button-success" type="submit" (click)="onSaveBtnClick()" *ngIf="last" mat-button
+                    [disabled]="!form.valid">Submit</button>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+</form>

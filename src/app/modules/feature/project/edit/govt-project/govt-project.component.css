@@ -1,0 +1,11 @@
+button {
+    width: 150px;
+    margin: 0 20px;
+    color: #fff !important;
+}
+
+.stepper-container {
+    max-height: 50vh;
+    overflow:auto;
+    padding: 20px
+}

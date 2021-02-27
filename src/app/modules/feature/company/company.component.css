@@ -1,0 +1,8 @@
+::ng-deep .is-branch-checkbox .mat-form-field-appearance-outline .mat-form-field-outline {
+  display: none;
+}
+
+::ng-deep .is-branch-checkbox .mat-form-field-appearance-outline .mat-form-field-infix{
+    padding: 6px 0;
+    width: 100px;
+}

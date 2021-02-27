@@ -1,0 +1,22 @@
+export interface Company {
+    companyId: number,
+    companyName: string,
+    companyTypeID: number,
+    companyAddress1: string,
+    companyAddress2: string,
+    post: string,
+    pin: number,
+    phoneNumber: number,
+    mobileNumber: number,
+    emailId: string,
+    tinNo: string,
+    cstNo: string,
+    isBranch: number,
+    parentCompanyid: number,
+    status: number,
+    curr_prec: number,
+    taxType: string,
+    grossSalary: number,
+    bulkwagepayment: number,
+    sitemanagerbalance: number
+}

@@ -1,0 +1,31 @@
+<ng-container [ngSwitch]="selectedValue">
+
+    <ng-container *ngSwitchCase="'One'">
+        <app-own-project-booking></app-own-project-booking>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'Two'">
+        <app-normal-project-booking></app-normal-project-booking>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'Three'">
+        <app-government-project-booking></app-government-project-booking>
+    </ng-container>
+
+
+    <ng-container *ngSwitchDefault>
+
+        <h2 style="width: 500px;" mat-dialog-title class="form-dialog header-color">Select Project Booking Type</h2>
+
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" #selection>
+            <mat-radio-button style="padding: 20px" (click)="onRadioBtnClick(project)" class="example-radio-button"
+                *ngFor="let project of projectTypes" [value]="project">
+                {{project}}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <button style="float: right" (click)="onProceedBtnClick(selection)" mat-button class="save">Proceed</button>
+
+    </ng-container>
+
+</ng-container>

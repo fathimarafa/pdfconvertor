@@ -1,0 +1,57 @@
+.app-toolbar{
+    background-color: #fff;
+    border-bottom: 1px solid #edf2f7;
+}
+h1{
+    font-size: 20px;
+    color:  #3182ce;
+}
+.btn-toggle{
+    color: #cbd5e0;
+}
+.btn-logout{
+    
+    width: auto;
+    margin-left: auto;
+    color: #718096;
+    font-size: 16px;
+}
+.btn-logout mat-icon{
+    margin-left: 4px;
+    font-style: 24px;
+    color: #63B3ED;
+}
+.mat-tab-label{
+    font-size: 18px;
+}
+.mat-drawer-content{
+    padding: 12px;
+}
+
+
+
+/* new */
+
+mat-toolbar{
+    position: fixed;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4,9,20,0.03), 
+    0 0.9375rem 1.40625rem rgba(4,9,20,0.03), 
+    0 0.25rem 0.53125rem rgba(4,9,20,0.05), 
+    0 0.125rem 0.1875rem rgba(4,9,20,0.03);
+    top: 0;
+    z-index: 2;
+}
+
+mat-sidenav-container{
+    height: 100vh;
+    width: 100vw;
+    padding-top: 60px;
+}
+
+mat-sidenav{
+    width: 280px;
+    top: 60px;
+    padding-right: 3px;
+}
+
+/*  */

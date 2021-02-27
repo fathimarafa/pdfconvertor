@@ -1,0 +1,19 @@
+<mat-card>
+    <div class="login-logo">
+        <mat-icon>check_circle</mat-icon>
+        <h3 style="display: inline-block;">Design Construct</h3>
+    </div>
+    <mat-card-content>
+        <mat-card-title>Login</mat-card-title>
+          <form [formGroup]="form">
+              <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+          </form>
+
+          <!-- <div class="button"> -->
+              <button (click)="onLoginBtnClick()" type="submit" mat-button>Login</button>
+          <!-- </div> -->
+
+
+      <!-- </form> -->
+  </mat-card-content>
+</mat-card>

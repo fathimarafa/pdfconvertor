@@ -1,0 +1,11 @@
+.btn-followup {
+  height: 25px;
+  line-height: 25px;
+  font-size: 10px;
+  vertical-align: top;
+  margin-left: 10px;
+}
+
+.module-default th:last-child {
+  width: 200px;
+}

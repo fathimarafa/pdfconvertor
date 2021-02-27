@@ -1,0 +1,8 @@
+<mat-toolbar style="justify-content: space-between;background-color: #ecf0fa;">
+    <div class="mat-ripple mat-tab-label mat-focus-indicator mat-tab-label-active ng-star-inserted">
+        <div class="mat-tab-label-content">
+            {{module ? module.displayName :  ''}}
+        </div>
+    </div>
+</mat-toolbar>
+<app-module-default-listing *ngIf="module" [moduleMetadata]="module"></app-module-default-listing>

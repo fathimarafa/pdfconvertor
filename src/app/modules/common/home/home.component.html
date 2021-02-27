@@ -1,0 +1,17 @@
+<mat-toolbar class="app-toolbar">
+        <button mat-icon-button aria-label="menu icon" (click)="sidenav.toggle()">
+            <mat-icon class="btn-toggle">menu</mat-icon>
+        </button>
+        <h1>Construct Manager</h1>
+        <button (click)="onLogoutBtnClick()" mat-button class="btn-logout">Logout <mat-icon>power_settings_new</mat-icon></button>
+        
+    </mat-toolbar>
+    <mat-sidenav-container>
+        <mat-sidenav mode="side" opened #sidenav>
+           <app-sidebar></app-sidebar>
+        </mat-sidenav>
+        <mat-sidenav-content style="background-color: #ecf0fa">
+            <router-outlet></router-outlet>
+            <!-- <app-multi-step-form></app-multi-step-form> -->
+        </mat-sidenav-content>
+    </mat-sidenav-container>

@@ -1,0 +1,36 @@
+<mat-nav-list style="overflow: hidden;">
+
+    <ng-container *ngFor="let mainMenu of sidebarNavBar">
+
+        <mat-list-item class="list-item-parent" (click)="mainMenu.showSubItem = !mainMenu.showSubItem">
+            <mat-icon matListIcon>dashboard</mat-icon>
+            <a routerLink="{{'./' + mainMenu.navLink}}" matLine>{{ mainMenu.displayName }}</a>
+            <button mat-icon-button (click)="mainMenu.showSubItem = !mainMenu.showSubItem">
+                <mat-icon>{{ mainMenu.showSubItem ? 'expand_more' : 'chevron_right'  }}</mat-icon>
+            </button>
+        </mat-list-item>
+
+        <ng-container *ngIf="mainMenu.showSubItem">
+
+            <ng-container *ngFor="let subMenu of mainMenu.subItem">
+
+                <mat-list-item class="list-item-child">
+                    <mat-icon (click)="subMenu.showSubItem = !subMenu.showSubItem" matListIcon>
+                        {{ subMenu.showSubItem ? 'expand_more' : 'chevron_right'  }}</mat-icon>
+                    <a matLine style="margin-left: -16px;">{{ subMenu.displayName }}</a>
+                </mat-list-item>
+
+                <ng-container *ngIf="subMenu.showSubItem">
+                    <mat-list-item class="list-item-grandchild"
+                        *ngFor="let subItemChild of subMenu.subItem">
+                        <a routerLink="{{'./' + subItemChild.navLink}}" matLine>{{ subItemChild.displayName }}</a>
+                    </mat-list-item>
+                </ng-container>
+
+            </ng-container>
+
+        </ng-container>
+
+    </ng-container>
+
+</mat-nav-list>

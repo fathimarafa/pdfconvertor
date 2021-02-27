@@ -1,0 +1,240 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+table {
+  width: 100%;
+}
+
+mat-icon {
+  cursor: pointer;
+}
+
+form button:disabled {
+  cursor: not-allowed !important;
+  background-color: grey !important;
+}
+
+/* form styles */
+.display-flex {
+  display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-2 {
+  flex: 2;
+}
+
+.flex-3 {
+  flex: 3;
+}
+
+.flex-4 {
+  flex: 4;
+}
+
+.flex-5 {
+  flex: 5;
+}
+
+.flex-6 {
+  flex: 6;
+}
+
+[class*="flex-"] {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* [class*="flex-"]:first-child {
+  padding-left: 0;
+}
+
+[class*="flex-"]:nth-last-child(2) {
+  padding-right: 0;
+} */
+
+/* form modal styles */
+/* .form-dialog.header-color{
+  color: rgba(13,27,62,0.7);
+} */
+
+.form-dialog.dialog-content {
+  margin-right: -20px;
+}
+
+mat-form-field {
+  font-size: 12px !important;
+}
+
+.form-dialog button {
+  width: 150px;
+  color: #fff;
+}
+
+.button-danger {
+  background-color: #ad1e40;
+}
+
+.button-success {
+  background-color: #3ac47d;
+}
+
+.button-info {
+  background-color: #3f51b5;
+}
+
+/*  */
+
+/*  */
+
+.mat-table .mat-cell {
+  font-size: 13px;
+  color: #5b6e88;
+}
+
+.mat-table tbody tr:nth-child(even) {
+  background-color: rgba(235, 248, 255, 0.4);
+}
+
+.mat-dialog-title {
+  color: #3182ce;
+  font-size: 20px;
+}
+
+/* scroll bar styles */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.mat-drawer-inner-container::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+.mat-drawer-inner-container:hover::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+/*  */
+
+.mat-dialog-title {
+  color: #3182ce;
+  font-size: 20px;
+}
+
+.button-info {
+  background-color: #3182ce;
+}
+
+.mat-step-header .mat-step-icon {
+  background-color: #3182ce;
+}
+
+.mat-step-header .mat-step-icon-selected {
+  background-color: #4fd1c5;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+  color: #a0aec0;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active.mat-step-label-selected {
+  color: #3182ce;
+}
+
+
+/* module - default */
+.module-default {
+  height: 100%;
+  width: 100%;
+}
+
+.module-default .toolbar {
+  font-size: 14px;
+  background-color: transparent;
+  color: #718096;
+}
+
+.module-default .mat-icon {
+  color: #90cdf4;
+}
+
+.module-default .mat-icon+.mat-icon {
+  margin-left: 12px;
+}
+
+.module-default th:last-child {
+  width: 100px;
+}
+
+.module-default .add-button {
+  position: absolute;
+  right: 50px;
+  top: 25px;
+  color: #63B3ED;
+  border-radius: 0;
+}
+
+.mat-dialog-title {
+  padding: 0 14px;
+}
+
+.form-dialog button {
+  width: 120px;
+}
+
+.form-dialog button.save {
+  background-color: #3182ce;
+  color: #ffffff;
+}
+
+.form-dialog button.cancel {
+  background-color: #a0aec0;
+  color: #ffffff;
+}
+
+/*  */
+
+.snackbar-default {
+  color: #fff;
+  background: #3ac47d;
+}
+
+.snackbar-error-message {
+  color: #fff;
+  background: #ad1e40;
+}
+
+/* form field hover outline color  */
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #3f51b5;
+}
+
+/*  */
+
+/* form field date picker  */
+mat-datepicker-toggle>button {
+  color: #3f51b5 !important;
+}
+
+/*  */
+
+.datepicker-width .mat-form-field-infix {
+  width: inherit;
+}

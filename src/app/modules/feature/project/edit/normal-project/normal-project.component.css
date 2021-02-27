@@ -1,0 +1,17 @@
+.mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+  
+  .mat-form-field {
+    margin-top: 16px;
+  }
+
+  button {
+    width: 150px;
+    margin: 0 20px;
+    color: #fff !important;
+}
+
+.button-group{
+  float: right;
+}

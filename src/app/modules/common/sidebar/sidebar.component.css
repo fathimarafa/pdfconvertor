@@ -1,0 +1,20 @@
+.mat-list-base{
+    padding-top: 0;
+}
+.mat-list-base .mat-list-item{
+    color: #718096;
+    font-size: 14px;
+    border-bottom: 1px solid #edf2f7;
+    box-sizing: border-box;
+}
+.mat-list-base .mat-list-item .mat-list-icon{
+    color: #63B3ED;
+}
+
+.list-item-child{
+    padding-left: 38px !important;
+}
+
+.list-item-grandchild{
+    padding-left: 70px !important;
+}

@@ -1,0 +1,18 @@
+.mat-dialog-title{
+    width: 620px;
+    padding: 0 14px;
+}
+formly-field{
+    /* padding: 0 !important; */
+}
+.form-dialog button{
+    width: 120px;
+}
+.form-dialog button.save{
+    background-color: #3182ce;
+    color: #ffffff;
+}
+.form-dialog button.cancel{
+    background-color: #a0aec0;
+    color: #ffffff;
+}
