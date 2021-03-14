@@ -1,6 +1,7 @@
 export interface MaterialBrandRegistration {
-    materialBrandId: Number;
-    MaterialBrandName: String;
-    CompanyId: Number;
-    BranchId: Number;
+    id: number;
+    materialBrandName: String;
+    companyId: number;
+    branchId: number;
+    userId: number;
 }

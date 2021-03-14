@@ -119,6 +119,24 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
                 showSubItem: true,
                 subItem: [
                     {
+                        displayName: 'Unit Registration',
+                        navLink: '/unitregistration',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Brand Registration',
+                        navLink: '/materialbrandregistration',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Category Registration',
+                        navLink: '/materialcategoryregistration',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
                         displayName: 'Material Registration',
                         navLink: '/materialregistration',
                         showSubItem: false,
@@ -130,6 +148,42 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
                         showSubItem: false,
                         subItem: []
                     },
+                    {
+                        displayName: 'Indent Creation',
+                        navLink: '/materialindentcreation',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Damage Stock Entry',
+                        navLink: '/materialdamagestock',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Issue',
+                        navLink: '/materialusage',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Quotation',
+                        navLink: '/materialquotation',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Supplier Advance',
+                        navLink: '/materialsupplieradvance',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Supplier Payment',
+                        navLink: '/materialsupplierpayment',
+                        showSubItem: false,
+                        subItem: []
+                    }
                 ]
             },
             {
@@ -190,38 +244,38 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
         showSubItem: false,
         subItem: []
     },
-/*     {
-        displayName: 'CRM',
-        navLink: '/home',
-        showSubItem: false,
-        subItem: [
-            {
-                displayName: 'Enquiry',
-                navLink: '/home',
-                showSubItem: false,
-                subItem: [
-                    {
-                        displayName: 'Enquiry',
-                        navLink: '/enquiry',
-                        showSubItem: false,
-                        subItem: []
-                    },
-                    {
-                        displayName: 'Followup',
-                        navLink: '/followup',
-                        showSubItem: false,
-                        subItem: []
-                    }
-                ]
-            }
-        ]
-    }, */
-/*     {
-        displayName: 'Material',
-        navLink: '/home',
-        showSubItem: false,
-        subItem: []
-    }, */
+    /*     {
+            displayName: 'CRM',
+            navLink: '/home',
+            showSubItem: false,
+            subItem: [
+                {
+                    displayName: 'Enquiry',
+                    navLink: '/home',
+                    showSubItem: false,
+                    subItem: [
+                        {
+                            displayName: 'Enquiry',
+                            navLink: '/enquiry',
+                            showSubItem: false,
+                            subItem: []
+                        },
+                        {
+                            displayName: 'Followup',
+                            navLink: '/followup',
+                            showSubItem: false,
+                            subItem: []
+                        }
+                    ]
+                }
+            ]
+        }, */
+    /*     {
+            displayName: 'Material',
+            navLink: '/home',
+            showSubItem: false,
+            subItem: []
+        }, */
     {
         displayName: 'HR and Labour',
         navLink: '/home',

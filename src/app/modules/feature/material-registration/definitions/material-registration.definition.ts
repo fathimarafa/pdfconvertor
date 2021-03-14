@@ -1,5 +1,6 @@
 export interface MaterialRegistration {
-    hsnCode: string;
+    id: string;
+    materialId: number;
     materialName: number;
     materialTypeId: number;
     materialBrandId: number;
@@ -11,15 +12,22 @@ export interface MaterialRegistration {
     branchId: number;
     openigStock: number;
     taxPer: number;
+    kfcPer: number;
     landingCost: number;
-    materialUID: string;
-    financialYearId: number;
-    stocks?: Stock[]
+    hsnCode: string;
+    remarks: string;
+    userId: number;
+    openingStock?: OpeningStock[]
 }
 
-export interface Stock {
+export interface OpeningStock {
+    openingStockId: number;
+    materialId: number;
     projectId: number;
     stock: number;
-    unitId: number;
+    unit_Id: number;
+    blockId: number;
+    floorId: number;
     rate: number;
+    financialYearId: number;
 }

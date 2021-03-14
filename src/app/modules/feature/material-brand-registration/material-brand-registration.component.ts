@@ -41,7 +41,8 @@ export class MaterialBrandRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<MaterialBrandRegistration[]>(this.module.serviceEndPoint)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    this.dataHandler.get<MaterialBrandRegistration[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
       .subscribe((res: MaterialBrandRegistration[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -58,9 +59,10 @@ export class MaterialBrandRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialBrandRegistration): void {
+    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.materialBrandId}`,
-      deleteUid: rowToDelete.materialBrandId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -73,9 +75,13 @@ export class MaterialBrandRegistrationComponent implements OnInit {
   private affectedRowIndex(affectedRow?: MaterialBrandRegistration) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: MaterialBrandRegistration) => row.materialBrandId === affectedRow.materialBrandId);
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialBrandRegistration) => row.id === affectedRow.id);
     }
     return indexToUpdate;
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
 }

@@ -37,7 +37,6 @@ export class SupplierRegistrationEditComponent implements OnInit {
 
   onSaveBtnClick() {
     if (this.form.valid) {
-      this.model.supplierRegistationId = this.model.supplierRegistationId || Math.round(Math.random() * 100).toString();
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
@@ -54,11 +53,22 @@ export class SupplierRegistrationEditComponent implements OnInit {
 
   get httpRequest(): Observable<SupplierRegistration> {
     if (this.isEdit) {
-      const endPoint = `${SupplierRegistrationMetadata.serviceEndPoint}/${this.model.supplierRegistationId}`;
-      return this.dataHandler.put<SupplierRegistration>(endPoint, this.model);
+      return this.dataHandler.put<SupplierRegistration>(SupplierRegistrationMetadata.serviceEndPoint, this.model);
     } else {
-      return this.dataHandler.post<SupplierRegistration>(SupplierRegistrationMetadata.serviceEndPoint, this.model);
+      const dummyDefaultFields = {
+        companyId: 1,
+        branchId: 1,
+        financialYearId: 2,
+        openingBalanceRecover: this.model.openingBalance,
+        userId: 1
+      }
+      const payload = { ...this.model, ...dummyDefaultFields };
+      return this.dataHandler.post<SupplierRegistration>(SupplierRegistrationMetadata.serviceEndPoint, payload);
     }
+  }
+
+  ngOnDestroy() {
+    this.form.reset();
   }
 
 }

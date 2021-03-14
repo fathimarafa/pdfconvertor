@@ -1,45 +1,58 @@
 <h2 mat-dialog-title class="form-dialog header-color">Add Material Details</h2>
-<mat-dialog-content style="width: 1000px" class="form-dialog mat-typography dialog-content">
-    <div class="form-title">Material Detials</div>
-    <div class="form-container">
-        <div [style.maxHeight]="modalForms.material.model.openingStock >= 1 ? '35vh' : '90vh'" class="form-child">
-            <form [formGroup]="modalForms.material.form">
-                <formly-form [model]="modalForms.material.model" [fields]="modalForms.material.fields"
-                    [options]="modalForms.material.options" [form]="modalForms.material.form">
-                </formly-form>
-            </form>
+<mat-dialog-content style="display: flex;" class="form-dialog mat-typography dialog-content">
+    <div>
+        <div class="form-title">Material Detials</div>
+        <div class="form-container">
+            <div class="form-child">
+                <form [formGroup]="modalForms.material.form">
+                    <formly-form [model]="modalForms.material.model" [fields]="modalForms.material.fields" [options]="modalForms.material.options" [form]="modalForms.material.form">
+                    </formly-form>
+                </form>
+            </div>
         </div>
     </div>
-    <ng-container *ngIf="modalForms.material.model.openingStock >= 1">
+    <div class="flex-1" [class.add-stock-disabled]="!hasOpeningStock">
         <div class="form-title">Stock Details</div>
         <div class="form-container">
             <div class="form-child">
                 <form [formGroup]="modalForms.stock.form">
-                    <formly-form [model]="modalForms.stock.model" [fields]="modalForms.stock.fields"
-                        [options]="modalForms.stock.options" [form]="modalForms.stock.form">
+                    <formly-form [model]="modalForms.stock.model" [fields]="modalForms.stock.fields" [options]="modalForms.stock.options" [form]="modalForms.stock.form">
                     </formly-form>
                 </form>
-                <button style="float: right;" (click)="onSaveBtnClick()" mat-button class="save">Add</button>
-                <table class="table-compnay" mat-table [dataSource]="dataSource">
-                    <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns">
-                        <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
-                        <td mat-cell *matCellDef="let element">
-                            <ng-container *ngIf="column.field !== 'action'">
-                                {{element[column.field]}}
-                            </ng-container>
-                            <ng-container *ngIf="column.field === 'action'">
-                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
-                                <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
-                            </ng-container>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
-                </table>
-                <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                <ng-container *ngIf="enableStockEdit">
+                    <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
+                    <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
+                </ng-container>
+                <ng-container *ngIf="!enableStockEdit">
+                    <button (click)="onAddStockBtnClick()" mat-button class="save add-block">Add</button>
+                </ng-container>
+                <div class="inner-table-container">
+                    <table class="table-compnay" mat-table [dataSource]="dataSource">
+                        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                            <td mat-cell *matCellDef="let element;let i =index">
+                                <ng-container *ngIf="firstColumn">
+                                    {{this.paginator.pageIndex == 0 ? i + 1 : 1 + i + this.paginator.pageIndex * this.paginator.pageSize}}
+                                </ng-container>
+                                <ng-container *ngIf="!firstColumn">
+                                    <ng-container *ngIf="column.field !== 'action'">
+                                        {{element[column.field]}}
+                                    </ng-container>
+                                    <ng-container *ngIf=" column.field === 'action'">
+                                        <mat-icon (click)="editStock(element)">edit</mat-icon>
+                                        <mat-icon (click)="removeStock(i)">delete_outline</mat-icon>
+                                    </ng-container>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
             </div>
         </div>
-    </ng-container>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
     <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>

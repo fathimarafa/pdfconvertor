@@ -143,7 +143,7 @@ export const ProjectEnquiryMetadata = {
                             "type": "input",
                             "key": "gstno",
                             "templateOptions": {
-                                "label": "GST Number",
+                                "label": "GST number",
                                 "required": true
                             }
                         },

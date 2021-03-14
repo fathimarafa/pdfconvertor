@@ -56,6 +56,25 @@ import { TeamComponent } from "./modules/feature/team/team.component";
 import { TeamEditComponent } from "./modules/feature/team/edit/team-edit.component";
 import { ConsultancyWorkComponent } from "./modules/feature/consultancy-work/consultancy-work.component";
 import { ConsultancyWorkEditComponent } from "./modules/feature/consultancy-work/edit/consultancy-work-edit.component";
+import { MaterialIndentCreationComponent } from "./modules/feature/material-indent-creation/material-indent-creation.component";
+import { MaterialIndentCreationEditComponent } from "./modules/feature/material-indent-creation/edit/material-indent-creation-edit.component";
+import { DamageStockEntryComponent } from "./modules/feature/damage-stock-entry/damage-stock-entry.component";
+import { DamageStockEntryEditComponent } from "./modules/feature/damage-stock-entry/edit/damage-stock-entry-edit.component";
+import { MaterialIndentApprovalComponent } from "./modules/feature/material-indent-approval/material-indent-approval.component";
+import { UnitRegistrationComponent } from "./modules/feature/unit-registration/unit-registration.component";
+import { UnitRegistrationEditComponent } from "./modules/feature/unit-registration/edit/unit-registration-edit.component";
+import { MaterialBrandRegistrationComponent } from './modules/feature/material-brand-registration/material-brand-registration.component';
+import { MaterialBrandRegistrationEditComponent } from './modules/feature/material-brand-registration/edit/material-brand-registration-edit.component';
+import { MaterialCategoryRegistrationComponent } from './modules/feature/material-category-registration/material-category-registration.component';
+import { MaterialCategoryRegistrationEditComponent } from './modules/feature/material-category-registration/edit/material-category-registration-edit.component';
+import { MaterialIssueComponent } from './modules/feature/material-issue/material-issue.component';
+import { MaterialIssueEditComponent } from './modules/feature/material-issue/edit/material-issue-edit.component';
+import { MaterialQuotationComponent } from './modules/feature/material-quotation/material-quotation.component';
+import { MaterialQuotationEditComponent } from './modules/feature/material-quotation/edit/material-quotation-edit.component';
+import { MaterialSupplierAdvanceComponent } from './modules/feature/material-supplier-advance/material-supplier-advance.component';
+import { MaterialSupplierAdvanceEditComponent } from './modules/feature/material-supplier-advance/edit/material-supplier-advance-edit.component';
+import { MaterialSupplierPaymentComponent } from './modules/feature/material-supplier-payment/material-supplier-payment.component';
+import { MaterialSupplierPaymentEditComponent } from './modules/feature/material-supplier-payment/edit/material-supplier-payment-edit.component';
 
 export const CustomDeclarations = [
     ApproveLevelComponent,
@@ -115,5 +134,24 @@ export const CustomDeclarations = [
     TeamComponent,
     TeamEditComponent,
     ConsultancyWorkComponent,
-    ConsultancyWorkEditComponent
+    ConsultancyWorkEditComponent,
+    MaterialIndentCreationComponent,
+    MaterialIndentCreationEditComponent,
+    MaterialIndentApprovalComponent,
+    DamageStockEntryComponent,
+    DamageStockEntryEditComponent,
+    UnitRegistrationComponent,
+    UnitRegistrationEditComponent,
+    MaterialBrandRegistrationComponent,
+    MaterialBrandRegistrationEditComponent,
+    MaterialCategoryRegistrationComponent,
+    MaterialCategoryRegistrationEditComponent,
+    MaterialIssueComponent,
+    MaterialIssueEditComponent,
+    MaterialQuotationComponent,
+    MaterialQuotationEditComponent,
+    MaterialSupplierAdvanceComponent,
+    MaterialSupplierAdvanceEditComponent,
+    MaterialSupplierPaymentComponent,
+    MaterialSupplierPaymentEditComponent
 ]

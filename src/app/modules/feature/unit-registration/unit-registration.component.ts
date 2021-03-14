@@ -41,7 +41,9 @@ export class UnitRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<UnitRegistration[]>(this.module.serviceEndPoint)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    const endPoint = `${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
+    this.dataHandler.get<UnitRegistration[]>(endPoint)
       .subscribe((res: UnitRegistration[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -58,9 +60,10 @@ export class UnitRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: UnitRegistration): void {
+    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.unitRegistrationId}`,
-      deleteUid: rowToDelete.unitRegistrationId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.unitId}/${dummyUserId}`,
+      deleteUid: rowToDelete.unitId
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -73,9 +76,13 @@ export class UnitRegistrationComponent implements OnInit {
   private affectedRowIndex(affectedRow?: UnitRegistration) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: UnitRegistration) => row.unitRegistrationId === affectedRow.unitRegistrationId);
+      indexToUpdate = this.dataSource.data.findIndex((row: UnitRegistration) => row.unitId === affectedRow.unitId);
     }
     return indexToUpdate;
+  }
+  
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
 }

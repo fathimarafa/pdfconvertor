@@ -6,10 +6,10 @@ export const MaterialCategoryRegistrationMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "MaterialCategoryRegistration",
+    "serviceEndPoint": "BuildExeMaterial/api/MaterialCategory",
     "tableColumns": [
         {
-            "field": 'materialCategoryId',
+            "field": 'id',
             "displayName": 'SNo'
         },
         {

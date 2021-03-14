@@ -1,25 +1,25 @@
 export interface ForemanWorkOrder {
-    foremanWorkorderId: Number;
-    workOrderNo: Number;
+    foremanWorkorderId: number;
+    workOrderNo: number;
     dateOrdered: Date;
-    workTypeId: Number;
+    workTypeId: number;
     description: String;
-    projectId: Number;
-    unitId: Number;
-    blockId: Number;
-    floorId: Number;
-    companyId: Number;
-    branchId: Number;
-    foremanId: Number;
-    workStatus: Number;
-    paymentStatus: Number;
-    financailYearId: Number;
-    labourWorkRateId: Number;
+    projectId: number;
+    unitId: number;
+    blockId: number;
+    floorId: number;
+    companyId: number;
+    branchId: number;
+    foremanId: number;
+    workStatus: number;
+    paymentStatus: number;
+    financailYearId: number;
+    labourWorkRateId: number;
     work: ForemanWork[]
 }
 
 export interface ForemanWork {
     workName: String;
-    workRate: Number;
-    otRate: Number
+    workRate: number;
+    otRate: number
 }

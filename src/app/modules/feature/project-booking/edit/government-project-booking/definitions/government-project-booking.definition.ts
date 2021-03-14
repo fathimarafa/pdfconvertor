@@ -3,8 +3,8 @@ import { FormlyFormOptions, FormlyFieldConfig } from "@ngx-formly/core";
 
 export interface GovernmentProjectBooking {
     projectBookingId: String;
-    projectId: Number;
-    projectStatusId: Number;
+    projectId: number;
+    projectStatusId: number;
     dateEntered: Date;
     narration: String;
     tenderSubmission?: GovernmentTenderSubmission;
@@ -15,8 +15,8 @@ export interface GovernmentProjectBooking {
 
 export interface GovernmentProjectBookingProjectDetails {
     projectBookingId: String;
-    projectId: Number;
-    projectStatusId: Number;
+    projectId: number;
+    projectStatusId: number;
     changedProjectStatusId;
     dateEntered: Date;
     narration: String;
@@ -40,11 +40,11 @@ export interface GovernmentTenderSubmission {
 export interface GovernmentOpenTender {
     companyName: String;
     contractorName: String;
-    tenderStatusId: Number;
-    marksGiven: Number;
+    tenderStatusId: number;
+    marksGiven: number;
     narration: String;
     position: String;
-    tenderAmount: Number;
+    tenderAmount: number;
 }
 
 export interface GovernmentTenderNegotiation {

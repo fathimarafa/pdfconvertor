@@ -1,0 +1,43 @@
+<div class="module-default">
+    <mat-toolbar class="toolbar">
+        {{module ? module.displayName :  ''}}
+    </mat-toolbar>
+    <mat-card>
+        <mat-card-header>
+            <mat-form-field>
+                <mat-label>Search</mat-label>
+                <input matInput type="text" (keyup)="doFilter($event.target.value)">
+                <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <!-- <button (click)="openDialog()" mat-button class="add-button">
+                Add New <mat-icon>add</mat-icon>
+            </button> -->
+        </mat-card-header>
+        <mat-card-content>
+            <table class="table-compnay" mat-table [dataSource]="dataSource">
+                <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                    <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                    <td mat-cell *matCellDef="let element;let i =index">
+                        <ng-container *ngIf="firstColumn">
+                            {{this.paginator.pageIndex == 0 ? i + 1 : 1 + i + this.paginator.pageIndex * this.paginator.pageSize}}
+                        </ng-container>
+                        <ng-container *ngIf="!firstColumn">
+                            <ng-container *ngIf="column.field !== 'action'">
+                                {{element[column.field]}}
+                            </ng-container>
+                            <ng-container *ngIf=" column.field === 'action'">
+                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                                <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                            </ng-container>
+                        </ng-container>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </mat-card-content>
+    </mat-card>
+</div>

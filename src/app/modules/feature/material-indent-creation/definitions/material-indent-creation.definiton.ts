@@ -1,0 +1,27 @@
+export interface MaterialIndent{
+    id:number;
+    indentTypeId:number,
+    indentCategoryId:number,
+    projectId:number,
+    unitId:number,
+    bockId:number,
+    floorId:number,
+    indentedDate:Date,
+    indentedBy:number,
+    indentStatus:number,
+    remarks:String,
+    supplierPreferred:number,
+    materialId:number,
+    quantityRequired:number,
+    requiredDate:Date,
+    quantityOrdered:number,
+    purchaseFlag:number,
+    workId:number,
+    subContractorId:number,
+    approvedDate:Date,
+    approvedBy:number,
+    companyId:number,
+    branchId:number,
+    isDeleted:number,
+    approvalLevel:number
+}

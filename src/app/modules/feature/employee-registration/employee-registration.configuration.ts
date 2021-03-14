@@ -22,7 +22,7 @@ export const EmployeeRegistrationMetadata = {
         },
         {
             "field": 'mobileNo',
-            "displayName": 'Mobile Number'
+            "displayName": 'Mobile number'
         },
         {
             "field": 'salaryAmount',
@@ -225,7 +225,7 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "key": "phoneNo",
                     "templateOptions": {
-                        "label": "Phone Number",
+                        "label": "Phone number",
                         "required": true
                     }
                 },
@@ -234,7 +234,7 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "key": "mobileNo",
                     "templateOptions": {
-                        "label": "Mobile Number",
+                        "label": "Mobile number",
                         "required": true
                     }
                 },
@@ -321,7 +321,7 @@ export const EmployeeRegistrationMetadata = {
                                         "type": "input",
                                         "key": "esiNo",
                                         "templateOptions": {
-                                            "label": "ESI Number",
+                                            "label": "ESI number",
                                             "required": true
                                         }
                                     },
@@ -330,7 +330,7 @@ export const EmployeeRegistrationMetadata = {
                                         "type": "input",
                                         "key": "pfNo",
                                         "templateOptions": {
-                                            "label": "PF Number",
+                                            "label": "PF number",
                                             "required": true
                                         }
                                     }
@@ -366,7 +366,7 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "key": "acoountNumber",
                     "templateOptions": {
-                        "label": "Account Number",
+                        "label": "Account number",
                         "required": true
                     }
                 },

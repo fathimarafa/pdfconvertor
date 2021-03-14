@@ -9,7 +9,7 @@ export const MaterialRegistrationMetadata = {
     "serviceEndPoint": "BuildExeMaterial/api/Material",
     "tableColumns": [
         {
-            "field": 'materialBrandRegistrationId',
+            "field": 'id',
             "displayName": 'SNo'
         },
         {
@@ -17,15 +17,15 @@ export const MaterialRegistrationMetadata = {
             "displayName": 'Name'
         },
         {
-            "field": 'MaterialTypeId',
+            "field": 'materialTypeId',
             "displayName": 'Type'
         },
         {
-            "field": 'MaterialBrandId',
+            "field": 'materialBrandId',
             "displayName": 'Brand Name'
         },
         {
-            "field": 'MaterialCaategoryId',
+            "field": 'materialCategoryId',
             "displayName": 'Category'
         },
         {
@@ -35,6 +35,7 @@ export const MaterialRegistrationMetadata = {
     ],
     "formFields": [
         {
+            "id": "row-1",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -46,6 +47,21 @@ export const MaterialRegistrationMetadata = {
                         "required": true
                     }
                 },
+                {
+                    "className": "flex-1",
+                    "type": "input",
+                    "key": "materialID",
+                    "templateOptions": {
+                        "label": "Material ID",
+                        "required": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": "row-2",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
                 {
                     "className": "flex-1",
                     "type": "input",
@@ -63,16 +79,12 @@ export const MaterialRegistrationMetadata = {
                         "label": "Material Type",
                         "options": [
                             {
-                                "label": "type 1",
-                                "value": "type 1"
+                                "label": "capital",
+                                "value": 1
                             },
                             {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
+                                "label": "consumable",
+                                "value": 2
                             }
                         ],
                         "required": true
@@ -81,6 +93,7 @@ export const MaterialRegistrationMetadata = {
             ]
         },
         {
+            "id": "row-3",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -89,20 +102,7 @@ export const MaterialRegistrationMetadata = {
                     "key": "materialCategoryId",
                     "templateOptions": {
                         "label": "Select Material Category",
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ],
+                        "options": [],
                         "required": true
                     }
                 },
@@ -112,51 +112,26 @@ export const MaterialRegistrationMetadata = {
                     "key": "materialBrandId",
                     "templateOptions": {
                         "label": "Select Material Brand",
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ],
-                        "required": true
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "unitId",
-                    "templateOptions": {
-                        "label": "Select Unit",
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ],
+                        "options": [],
                         "required": true
                     }
                 }
             ]
         },
         {
+            "id": "row-4",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "unitId",
+                    "templateOptions": {
+                        "label": "Select Unit",
+                        "options": [],
+                        "required": true
+                    }
+                },
                 {
                     "className": "flex-1",
                     "type": "input",
@@ -165,14 +140,22 @@ export const MaterialRegistrationMetadata = {
                         "label": "Remarks",
                         "required": true
                     }
-                },
+                }
+            ]
+        },
+        {
+            "id": "row-5",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "openingStock",
+                    "key": "openigStock",
                     "templateOptions": {
                         "label": "Opening Stock",
-                        "required": true
+                        "required": true,
+                        "type": "number"
                     }
                 },
                 {
@@ -181,12 +164,14 @@ export const MaterialRegistrationMetadata = {
                     "key": "materialUnitRate",
                     "templateOptions": {
                         "label": "Unit Rate",
-                        "required": true
+                        "required": true,
+                        "type": "number"
                     }
                 }
             ]
         },
         {
+            "id": "row-6",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -195,16 +180,34 @@ export const MaterialRegistrationMetadata = {
                     "key": "taxPer",
                     "templateOptions": {
                         "label": "Tax(%)",
-                        "required": true
+                        "required": true,
+                        "type": "number"
                     }
                 },
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "kfcTaxPer",
+                    "key": "kfcPer",
                     "templateOptions": {
                         "label": "Kfc Tax(%)",
-                        "required": true
+                        "required": true,
+                        "type": "number"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "row-7",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "input",
+                    "key": "landingCost",
+                    "templateOptions": {
+                        "label": "Landing Cost",
+                        "required": true,
+                        "type": "number"
                     }
                 }
             ]
@@ -212,6 +215,10 @@ export const MaterialRegistrationMetadata = {
     ],
     "openingStock": {
         "tableColumns": [
+            {
+                "field": 'materialId',
+                "displayName": 'SNo'
+            },
             {
                 "field": 'projectId',
                 "displayName": 'Project Id'
@@ -239,6 +246,7 @@ export const MaterialRegistrationMetadata = {
         ],
         "formFields": [
             {
+                "id": "row-1",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
                     {
@@ -249,12 +257,12 @@ export const MaterialRegistrationMetadata = {
                             "label": "Project Id",
                             "options": [
                                 {
-                                    "label": "",
-                                    "value": ""
+                                    "label": "proj1",
+                                    "value": "1"
                                 },
                                 {
-                                    "label": "",
-                                    "value": ""
+                                    "label": "proj2",
+                                    "value": "2"
                                 }
                             ],
                             "required": true
@@ -266,7 +274,8 @@ export const MaterialRegistrationMetadata = {
                         "key": "stock",
                         "templateOptions": {
                             "label": "Stock",
-                            "required": true
+                            "required": true,
+                            "type": "number"
                         }
                     },
                     {
@@ -275,8 +284,48 @@ export const MaterialRegistrationMetadata = {
                         "key": "rate",
                         "templateOptions": {
                             "label": "Unit Rate",
-                            "required": true
+                            "required": true,
+                            "type": "number"
                         }
+                    }
+                ]
+            },
+            {
+                "id": "row-2",
+                "fieldGroupClassName": "display-flex",
+                "fieldGroup": [
+                    {
+                        "className": "flex-1",
+                        "key": "blockId",
+                        "type": "select",
+                        "templateOptions": {
+                            "label": "Select block",
+                            "required": true,
+                            "options": []
+                        },
+                        "hideExpression": true
+                    },
+                    {
+                        "className": "flex-1",
+                        "key": "floorId",
+                        "type": "select",
+                        "templateOptions": {
+                            "label": "Select floor",
+                            "required": true,
+                            "options": []
+                        },
+                        "hideExpression": true
+                    },
+                    {
+                        "className": "flex-1",
+                        "key": "unitId",
+                        "type": "select",
+                        "templateOptions": {
+                            "label": "Select unit",
+                            "required": true,
+                            "options": []
+                        },
+                        "hideExpression": true
                     }
                 ]
             }

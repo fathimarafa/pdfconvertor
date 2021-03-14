@@ -267,7 +267,7 @@ export const GovernmentProjectBookingMetadata = {
                         "type": "input",
                         "key": "tenderNumber",
                         "templateOptions": {
-                            "label": "Tender Number",
+                            "label": "Tender number",
                             "required": true
                         }
                     },

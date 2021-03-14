@@ -40,7 +40,7 @@ export class MaterialCategoryRegistrationEditComponent implements OnInit {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.model
+          data: res || this.model
         }
         this.dialogRef.close(closeEvent);
       })
@@ -52,12 +52,25 @@ export class MaterialCategoryRegistrationEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<MaterialCategoryRegistration> {
+    const dummyFields = {
+      userId: 1,
+      companyId: 1,
+      branchId: 1
+    };
     if (this.isEdit) {
-      const endPoint = `${MaterialCategoryRegistrationMetadata.serviceEndPoint}/${this.model.materialCategoryId}`;
-      return this.dataHandler.put<MaterialCategoryRegistration>(endPoint, this.model);
+      return this.dataHandler.put<MaterialCategoryRegistration>(MaterialCategoryRegistrationMetadata.serviceEndPoint, this.model);
     } else {
-      return this.dataHandler.post<MaterialCategoryRegistration>(MaterialCategoryRegistrationMetadata.serviceEndPoint, this.model);
+      return this.dataHandler.post<MaterialCategoryRegistration>(MaterialCategoryRegistrationMetadata.serviceEndPoint, {...this.model,...dummyFields});
     }
   }
+
+  // fetchMaterialCategory() {
+  //   const dummyCompanyId = 1; const dummyBranchId = 0;
+  //   this.dataHandler.get<MaterialCategoryRegistration[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+  //     .subscribe((res: MaterialCategoryRegistration[]) => {
+  //       // this.dataSource = new MatTableDataSource(res);
+  //       // this.dataSource.paginator = this.paginator;
+  //     });
+  // }
 
 }

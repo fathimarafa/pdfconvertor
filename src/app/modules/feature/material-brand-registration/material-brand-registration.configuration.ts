@@ -6,15 +6,15 @@ export const MaterialBrandRegistrationMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "MaterialBrandRegistration",
+    "serviceEndPoint": "BuildExeMaterial/api/Brand",
     "tableColumns": [
         {
-            "field": 'materialBrandRegistrationId',
+            "field": 'id',
             "displayName": 'SNo'
         },
         {
             "field": 'materialBrandName',
-            "displayName": 'Short Name'
+            "displayName": 'Material Brand'
         },
         {
             "field": 'action',
@@ -27,7 +27,7 @@ export const MaterialBrandRegistrationMetadata = {
             "type": "input",
             "key": "materialBrandName",
             "templateOptions": {
-                "label": "Short Name",
+                "label": "Material Brand",
                 "required": true
             }
         }

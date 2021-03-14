@@ -41,7 +41,8 @@ export class SupplierRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<SupplierRegistration[]>(this.module.serviceEndPoint)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    this.dataHandler.get<SupplierRegistration[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
       .subscribe((res: SupplierRegistration[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -58,9 +59,10 @@ export class SupplierRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: SupplierRegistration): void {
+    const dummyUserId = 0;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.supplierRegistationId}`,
-      deleteUid: rowToDelete.supplierRegistationId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -73,9 +75,13 @@ export class SupplierRegistrationComponent implements OnInit {
   private affectedRowIndex(affectedRow?: SupplierRegistration) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: SupplierRegistration) => row.supplierRegistationId === affectedRow.supplierRegistationId);
+      indexToUpdate = this.dataSource.data.findIndex((row: SupplierRegistration) => row.id === affectedRow.id);
     }
     return indexToUpdate;
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
 }

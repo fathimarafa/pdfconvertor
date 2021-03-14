@@ -1,6 +1,7 @@
 export interface MaterialCategoryRegistration {
-    materialCategoryId: Number;
+    id: number;
     materialCategoryName: String;
     companyId: String;
     branchId: String;
+    userId: number;
 }

@@ -1,6 +1,6 @@
 export interface UserGroup {
-    userGroupId: Number,
+    userGroupId: number,
     userGroupName: String,
-    companyId: Number,
-    branchId: Number
+    companyId: number,
+    branchId: number
 }

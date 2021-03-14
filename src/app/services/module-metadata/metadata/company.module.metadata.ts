@@ -107,7 +107,7 @@ export const CompanyMetadata = {
                             "type": "input",
                             "key": "PhoneNumber",
                             "templateOptions": {
-                                "label": "Phone Number",
+                                "label": "Phone number",
                                 "required": true
                             }
                         },
@@ -115,7 +115,7 @@ export const CompanyMetadata = {
                             "type": "input",
                             "key": "MobileNumber",
                             "templateOptions": {
-                                "label": "Mobile Number",
+                                "label": "Mobile number",
                                 "required": true
                             }
                         },
@@ -150,7 +150,7 @@ export const CompanyMetadata = {
                             "type": "input",
                             "key": "TINNo",
                             "templateOptions": {
-                                "label": "TIN Number",
+                                "label": "TIN number",
                                 "required": true
                             }
                         },
@@ -158,7 +158,7 @@ export const CompanyMetadata = {
                             "type": "input",
                             "key": "CSTNo",
                             "templateOptions": {
-                                "label": "CST Number",
+                                "label": "CST number",
                                 "required": true
                             }
                         },

@@ -1,7 +1,7 @@
 export interface NormalProjectBooking {
     projectBookingId: String,
-    projectId: Number,
-    projectStatusId: Number,
+    projectId: number,
+    projectStatusId: number,
     dateEntered: Date,
     narration: String
 }

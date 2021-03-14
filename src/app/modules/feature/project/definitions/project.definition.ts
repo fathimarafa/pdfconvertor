@@ -1,14 +1,14 @@
 export interface Project {
-    id: Number;
+    id: number;
     projectId: String,
-    departmentId: Number,
+    departmentId: number,
     projectTypeId: String,
     projectName: String,
     projectDescription: String,
     startDate: Date,
     endDate: Date,
-    companyId: Number,
-    branchId: Number,
+    companyId: number,
+    branchId: number,
     unit: ProjectUnit[]
 }
 
@@ -16,13 +16,13 @@ export interface ProjectUnit {
     unitStartDate: Date,
     unitEndDate: Date,
     type: String,
-    floorId: Number,
+    floorId: number,
     unitNo: String,
     description: String,
     totalArea: String,
-    ratePerArea: Number,
-    areaTax: Number
-    landCost: Number,
-    landTax: Number
-    unitCost: Number
+    ratePerArea: number,
+    areaTax: number
+    landCost: number,
+    landTax: number
+    unitCost: number
 }

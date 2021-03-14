@@ -41,7 +41,8 @@ export class MaterialRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<MaterialRegistration[]>(this.module.serviceEndPoint)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    this.dataHandler.get<MaterialRegistration[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
       .subscribe((res: MaterialRegistration[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -58,9 +59,10 @@ export class MaterialRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialRegistration): void {
+    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.materialUID}`,
-      deleteUid: rowToDelete.materialUID
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -73,9 +75,13 @@ export class MaterialRegistrationComponent implements OnInit {
   private affectedRowIndex(affectedRow?: MaterialRegistration) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: MaterialRegistration) => row.materialUID === affectedRow.materialUID);
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialRegistration) => row.id === affectedRow.id);
     }
     return indexToUpdate;
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
 }

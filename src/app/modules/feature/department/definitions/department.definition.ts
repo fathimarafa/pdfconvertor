@@ -1,11 +1,11 @@
 export interface Department {
-    departmentId: Number;
+    departmentId: number;
     departmentShortName: String;
     departmentLongName: String;
     departmentCategory: DepartmentCategoryTypes;
-    companyId: Number;
-    branchId: Number;
-    userId: Number;
+    companyId: number;
+    branchId: number;
+    userId: number;
 }
 
 export enum DepartmentCategoryTypes {

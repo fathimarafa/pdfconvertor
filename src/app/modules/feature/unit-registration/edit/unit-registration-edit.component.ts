@@ -40,7 +40,7 @@ export class UnitRegistrationEditComponent implements OnInit {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.model
+          data: res || this.model
         }
         this.dialogRef.close(closeEvent);
       })
@@ -52,11 +52,16 @@ export class UnitRegistrationEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<UnitRegistration> {
+    const dummyFields = {
+      userId: 1,
+      companyId: 1,
+      branchId: 1
+    };
     if (this.isEdit) {
-      const endPoint = `${UnitRegistrationMetadata.serviceEndPoint}/${this.model.unitRegistrationId}`;
-      return this.dataHandler.put<UnitRegistration>(endPoint, this.model);
+      // const endPoint = `${UnitRegistrationMetadata.serviceEndPoint}`;
+      return this.dataHandler.put<UnitRegistration>(UnitRegistrationMetadata.serviceEndPoint, this.model);
     } else {
-      return this.dataHandler.post<UnitRegistration>(UnitRegistrationMetadata.serviceEndPoint, this.model);
+      return this.dataHandler.post<UnitRegistration>(UnitRegistrationMetadata.serviceEndPoint, { ...this.model, ...dummyFields });
     }
   }
 

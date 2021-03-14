@@ -6,18 +6,18 @@ export const UnitRegistrationMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "BuildExeMaterial/api/Material/UnitRegistration",
+    "serviceEndPoint": "BuildExeMaterial/api/Unit",
     "tableColumns": [
         {
-            "field": 'UnitRegistrationId',
+            "field": 'unitId',
             "displayName": 'SNo'
         },
         {
-            "field": 'UnitShortName',
+            "field": 'unitShortName',
             "displayName": 'Short Name'
         },
         {
-            "field": 'UnitLongName',
+            "field": 'unitLongName',
             "displayName": 'Long Name'
         },
         {

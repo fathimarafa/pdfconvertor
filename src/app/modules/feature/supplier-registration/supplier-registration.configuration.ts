@@ -34,30 +34,41 @@ export const SupplierRegistrationMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "supplierName",
-                    "templateOptions": {
-                        "label": "Supplier Name",
-                        "required": true
-                    }
+                    "fieldGroup": [
+                        {
+                            "type": "input",
+                            "key": "supplierName",
+                            "templateOptions": {
+                                "label": "Supplier Name",
+                                "required": true
+                            }
+                        },
+                        {
+                            "type": "input",
+                            "key": "pin",
+                            "templateOptions": {
+                                "label": "Pin",
+                                "required": true
+                            }
+                        },
+                        {
+                            "type": "input",
+                            "key": "post",
+                            "templateOptions": {
+                                "label": "Post",
+                                "required": true
+                            }
+                        }
+                    ]
                 },
                 {
                     "className": "flex-1",
-                    "type": "input",
-                    "key": "pin",
+                    "type": "textarea",
+                    "key": "supplierAddres1",
                     "templateOptions": {
-                        "label": "Pin",
-                        "required": true
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "post",
-                    "templateOptions": {
-                        "label": "Post",
-                        "required": true
+                        "label": "Communication Address",
+                        "required": true,
+                        "rows": 11
                     }
                 }
             ]
@@ -66,30 +77,41 @@ export const SupplierRegistrationMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "phoneNumber",
-                    "templateOptions": {
-                        "label": "Phone Number",
-                        "required": true
-                    }
+                    "fieldGroup": [
+                        {
+                            "type": "input",
+                            "key": "phoneNumber",
+                            "templateOptions": {
+                                "label": "Phone number",
+                                "required": true
+                            }
+                        },
+                        {
+                            "type": "input",
+                            "key": "mobileNumber",
+                            "templateOptions": {
+                                "label": "Mobile number",
+                                "required": true
+                            }
+                        },
+                        {
+                            "type": "input",
+                            "key": "emailId",
+                            "templateOptions": {
+                                "label": "Email Id",
+                                "required": true
+                            }
+                        }
+                    ]
                 },
                 {
                     "className": "flex-1",
-                    "type": "input",
-                    "key": "mobileNumber",
+                    "type": "textarea",
+                    "key": "supplierAddres2",
                     "templateOptions": {
-                        "label": "Mobile Number",
-                        "required": true
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "emailId",
-                    "templateOptions": {
-                        "label": "Email Id",
-                        "required": true
+                        "label": "Permanent Address",
+                        "required": true,
+                        "rows": 11
                     }
                 }
             ]
@@ -102,7 +124,7 @@ export const SupplierRegistrationMetadata = {
                     "type": "input",
                     "key": "tinNo",
                     "templateOptions": {
-                        "label": "TIN Number",
+                        "label": "TIN number",
                         "required": true
                     }
                 },
@@ -111,7 +133,7 @@ export const SupplierRegistrationMetadata = {
                     "type": "input",
                     "key": "gstNo",
                     "templateOptions": {
-                        "label": "GST Number",
+                        "label": "GST number",
                         "required": true
                     }
                 },
@@ -121,32 +143,27 @@ export const SupplierRegistrationMetadata = {
                     "key": "openingBalance",
                     "templateOptions": {
                         "label": "Opening Balance",
-                        "required": true
-                    }
-                }
-            ]
-        },
-        {
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "type": "textarea",
-                    "key": "supplierAddress1",
-                    "templateOptions": {
-                        "label": "Communication Address",
                         "required": true,
-                        "rows": 10
+                        "type":"number"
                     }
                 },
                 {
                     "className": "flex-1",
-                    "type": "textarea",
-                    "key": "supplierAddress2",
+                    "type": "select",
+                    "key": "openingType",
                     "templateOptions": {
-                        "label": "Permanent Address",
-                        "required": true,
-                        "rows": 10
+                        "label": "Opening Type",
+                        "options": [
+                            {
+                                "label": "debit",
+                                "value": "D"
+                            },
+                            {
+                                "label": "credit",
+                                "value": "C"
+                            }
+                        ],
+                        "required": true
                     }
                 }
             ]

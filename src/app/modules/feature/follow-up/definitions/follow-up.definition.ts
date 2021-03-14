@@ -1,10 +1,10 @@
 export interface FollowUp {
-    followupId: Number,
-    enquiryId: Number,
+    followupId: number,
+    enquiryId: number,
     followupdate: Date,
-    attendedstaff: Number,
+    attendedstaff: number,
     feedback: String,
     remarks: String,
     nextfollowup: Date,
-    status: Number
+    status: number
 }

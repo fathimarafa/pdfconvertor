@@ -40,7 +40,7 @@ export class MaterialBrandRegistrationEditComponent implements OnInit {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.model
+          data: res || this.model
         }
         this.dialogRef.close(closeEvent);
       })
@@ -52,11 +52,15 @@ export class MaterialBrandRegistrationEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<MaterialBrandRegistration> {
+    const dummyFields = {
+      userId: 1,
+      companyId: 1,
+      branchId: 1
+    };
     if (this.isEdit) {
-      const endPoint = `${MaterialBrandRegistrationMetadata.serviceEndPoint}/${this.model.materialBrandId}`;
-      return this.dataHandler.put<MaterialBrandRegistration>(endPoint, this.model);
+      return this.dataHandler.put<MaterialBrandRegistration>(MaterialBrandRegistrationMetadata.serviceEndPoint, this.model);
     } else {
-      return this.dataHandler.post<MaterialBrandRegistration>(MaterialBrandRegistrationMetadata.serviceEndPoint, this.model);
+      return this.dataHandler.post<MaterialBrandRegistration>(MaterialBrandRegistrationMetadata.serviceEndPoint, { ...this.model, ...dummyFields });
     }
   }
 

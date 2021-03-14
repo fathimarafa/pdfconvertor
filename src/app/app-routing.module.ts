@@ -31,6 +31,15 @@ import { ProjectBlockRegistrationComponent } from './modules/feature/project-blo
 import { AssignBlockFloorComponent } from './modules/feature/assign-block-floor/assign-block-floor.component';
 import { TeamComponent } from './modules/feature/team/team.component';
 import { ConsultancyWorkComponent } from './modules/feature/consultancy-work/consultancy-work.component';
+import { MaterialIndentCreationComponent } from './modules/feature/material-indent-creation/material-indent-creation.component';
+import { MaterialIndentApprovalComponent } from './modules/feature/material-indent-approval/material-indent-approval.component';
+import { DamageStockEntryComponent } from './modules/feature/damage-stock-entry/damage-stock-entry.component';
+import { MaterialBrandRegistrationComponent } from './modules/feature/material-brand-registration/material-brand-registration.component';
+import { MaterialCategoryRegistrationComponent } from './modules/feature/material-category-registration/material-category-registration.component';
+import { MaterialIssueComponent } from './modules/feature/material-issue/material-issue.component';
+import { MaterialQuotationComponent } from './modules/feature/material-quotation/material-quotation.component';
+import { MaterialSupplierAdvanceComponent } from './modules/feature/material-supplier-advance/material-supplier-advance.component';
+import { MaterialSupplierPaymentComponent } from './modules/feature/material-supplier-payment/material-supplier-payment.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -61,13 +70,22 @@ const routes: Routes = [
       { path: 'holidaySetting', component: HolidaySettingComponent },
       { path: 'salaryHeadCreation', component: SalaryHeadCreationComponent },
       { path: 'leaveSetting', component: LeaveSettingComponent },
-      { path: 'unitRegistration', component: UnitRegistrationComponent },
+      { path: 'unitregistration', component: UnitRegistrationComponent },
       { path: 'department', component: DepartmentComponent },
       { path: 'floor', component: ProjectFloorRegistrationComponent },
       { path: 'block', component: ProjectBlockRegistrationComponent },
       { path: 'assignblockfloors', component: AssignBlockFloorComponent },
       { path: 'team', component: TeamComponent },
-      { path: 'consultancywork', component: ConsultancyWorkComponent }
+      { path: 'consultancywork', component: ConsultancyWorkComponent },
+      { path: 'materialindentcreation', component: MaterialIndentCreationComponent },
+      { path: 'materialindentapproval', component: MaterialIndentApprovalComponent },
+      { path: 'materialdamagestock', component: DamageStockEntryComponent },
+      { path: 'materialbrandregistration', component: MaterialBrandRegistrationComponent },
+      { path: 'materialcategoryregistration', component: MaterialCategoryRegistrationComponent },
+      { path: 'materialusage', component: MaterialIssueComponent },
+      { path: 'materialquotation', component: MaterialQuotationComponent },
+      { path: 'materialsupplieradvance', component: MaterialSupplierAdvanceComponent },
+      { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

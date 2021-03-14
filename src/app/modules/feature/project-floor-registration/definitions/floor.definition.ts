@@ -1,7 +1,7 @@
 export interface Floor {
-    floorId: Number,
+    floorId: number,
     floorName: String,
-    companyId: Number,
-    branchId: Number,
-    userId: Number
+    companyId: number,
+    branchId: number,
+    userId: number
 }

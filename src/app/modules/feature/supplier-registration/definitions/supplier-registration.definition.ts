@@ -1,5 +1,5 @@
 export interface SupplierRegistration {
-    supplierRegistationId: string;
+    id: string;
     supplierName: string;
     supplierAddres1: string;
     supplierAddres2: string;

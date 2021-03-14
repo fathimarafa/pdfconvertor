@@ -1,0 +1,22 @@
+export interface MaterialSupplierAdvance{
+    id:number;
+    paymentDate:Date,
+    supplierId:number,
+    paymentMode:String,
+    paymentBy:number,
+    paymentNo:String,
+    advanceAmount:number,
+    advanceRecoveryBalance:number,
+    companyId:number,
+    branchId:number,
+    financialYearId:number,
+    narration:String,
+    withClear:number,
+    approvalStatus:number,
+    approvalLevel:number,
+    approvedBy:number,
+    approvedDate:Date,
+    voucherTypeId:number,
+    voucherNumber:number,
+    isDeleted:number
+}
