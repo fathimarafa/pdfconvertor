@@ -40,6 +40,7 @@ import { MaterialIssueComponent } from './modules/feature/material-issue/materia
 import { MaterialQuotationComponent } from './modules/feature/material-quotation/material-quotation.component';
 import { MaterialSupplierAdvanceComponent } from './modules/feature/material-supplier-advance/material-supplier-advance.component';
 import { MaterialSupplierPaymentComponent } from './modules/feature/material-supplier-payment/material-supplier-payment.component';
+import { MaterialTransferRequestComponent } from './modules/feature/material-transfer-request/material-transfer-request.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -85,7 +86,8 @@ const routes: Routes = [
       { path: 'materialusage', component: MaterialIssueComponent },
       { path: 'materialquotation', component: MaterialQuotationComponent },
       { path: 'materialsupplieradvance', component: MaterialSupplierAdvanceComponent },
-      { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent }
+      { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent },
+      { path: 'materialtransferrequest', component: MaterialTransferRequestComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

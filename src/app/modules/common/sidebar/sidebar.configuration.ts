@@ -161,6 +161,12 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
                         subItem: []
                     },
                     {
+                        displayName: 'Material Transfer Request',
+                        navLink: '/materialtransferrequest',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
                         displayName: 'Material Issue',
                         navLink: '/materialusage',
                         showSubItem: false,

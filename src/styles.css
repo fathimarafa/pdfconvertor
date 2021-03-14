@@ -81,7 +81,7 @@ form button:disabled {
 }
 
 mat-form-field {
-    font-size: 12px !important;
+    font-size: 11px !important;
 }
 
 .form-dialog button {
@@ -178,7 +178,7 @@ mat-form-field {
 }
 
 .module-default .toolbar {
-    font-size: 14px;
+    font-size: 13px;
     background-color: transparent;
     color: #718096;
 }
@@ -205,6 +205,7 @@ th:last-child {
 
 .mat-dialog-title {
     padding: 0 14px;
+    font-size: 16px !important;
 }
 
 .form-dialog button {
@@ -265,4 +266,22 @@ mat-datepicker-toggle>button {
 .checkbox-outline-none .mat-form-field-appearance-outline .mat-form-field-infix {
     padding: 6px 0;
     width: 100px;
+}
+
+.mat-header-cell {
+    font-size: 11px;
+}
+
+.mat-table .mat-cell {
+    font-size: 12px;
+}
+
+.mat-button,
+.mat-raised-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button,
+.mat-fab,
+.mat-mini-fab {
+    font-size: 12px;
 }

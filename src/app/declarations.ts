@@ -75,6 +75,8 @@ import { MaterialSupplierAdvanceComponent } from './modules/feature/material-sup
 import { MaterialSupplierAdvanceEditComponent } from './modules/feature/material-supplier-advance/edit/material-supplier-advance-edit.component';
 import { MaterialSupplierPaymentComponent } from './modules/feature/material-supplier-payment/material-supplier-payment.component';
 import { MaterialSupplierPaymentEditComponent } from './modules/feature/material-supplier-payment/edit/material-supplier-payment-edit.component';
+import { MaterialTransferRequestComponent } from './modules/feature/material-transfer-request/material-transfer-request.component';
+import { MaterialTransferRequestEditComponent } from './modules/feature/material-transfer-request/edit/material-transfer-request-edit.component';
 
 export const CustomDeclarations = [
     ApproveLevelComponent,
@@ -153,5 +155,7 @@ export const CustomDeclarations = [
     MaterialSupplierAdvanceComponent,
     MaterialSupplierAdvanceEditComponent,
     MaterialSupplierPaymentComponent,
-    MaterialSupplierPaymentEditComponent
+    MaterialSupplierPaymentEditComponent,
+    MaterialTransferRequestComponent,
+    MaterialTransferRequestEditComponent
 ]
