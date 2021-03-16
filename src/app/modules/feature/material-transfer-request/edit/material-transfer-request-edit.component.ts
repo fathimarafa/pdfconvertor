@@ -3,16 +3,18 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { IDialogEvent, DialogActions } from '../../../../definitions/dialog.definitions';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MaterialTransferRequest, TransferDetail } from '../definitions/material-transfer-request.definition';
 import { MaterialTransferRequestMetadata } from '../material-transfer-request.configuration';
 import { MatTableDataSource } from '@angular/material/table';
-import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../services/project-division-fields-handler/project-division-fields-handler.service';
+import { ProjectDivisionFields } from '../../../../services/project-division-fields-handler/project-division-fields-handler.service';
 import { FormfieldHandler } from '../handlers/form-field-handler';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
+import { TransferFromProjectDivision } from '../handlers/transfer-from-project-division';
+import { TransferToProjectDivision } from '../handlers/transfer-to-project-division';
 
 @Component({
   selector: 'app-material-transfer-request-edit',
@@ -25,7 +27,6 @@ export class MaterialTransferRequestEditComponent implements OnInit {
   isEdit: boolean;
   tableColumns;
   dataSource;
-  subscribeProjectDivison: Subscription;
   hasOpeningStock: boolean;
   enableItemEdit: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -34,36 +35,35 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     private dialogRef: MatDialogRef<MaterialTransferRequestEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: MaterialTransferRequest,
     private dataHandler: DataHandlerService,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private transferFromProjectDivision: TransferFromProjectDivision,
+    private transferToProjectDivision: TransferToProjectDivision
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
     this.defineModalForms();
     this.bindProjectDivisionFields();
-    this.loadDropdowns();
   }
 
   bindProjectDivisionFields() {
-    const model = {
-      projectId: this.modalForms.material.model.projectIdFrom,
-      unitId: this.modalForms.material.model.unitIdFrom,
-      blockId: this.modalForms.material.model.blockIdFrom,
-      floorId: this.modalForms.material.model.floorIdFrom
-    }
-    const projectControllerFields: ProjectDivisionFields<any> = {
+    const projectControllerFromFields: ProjectDivisionFields<any> = {
       projectDropdown: FormfieldHandler.projectFromDropdown,
       blockDropdown: FormfieldHandler.blockFromDropdown,
       floorDropdown: FormfieldHandler.floorFromDropdown,
       unitDropdown: FormfieldHandler.unitFromDropdown,
-      model,
-      isEdit: false
+      model: this.modalForms.material.model,
+      isEdit: this.isEdit
     };
-    this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
+    this.transferFromProjectDivision.initialize(projectControllerFromFields);
+    const projectControllerToFields: ProjectDivisionFields<any> = {
+      projectDropdown: FormfieldHandler.projectToDropdown,
+      blockDropdown: FormfieldHandler.blockToDropdown,
+      floorDropdown: FormfieldHandler.floorToDropdown,
+      unitDropdown: FormfieldHandler.unitToDropdown,
+      model: this.modalForms.material.model,
+      isEdit: this.isEdit
+    };
+    this.transferToProjectDivision.initialize(projectControllerToFields);
   }
 
   ngOnInit(): void {
@@ -86,7 +86,7 @@ export class MaterialTransferRequestEditComponent implements OnInit {
       },
       transferCharges: {
         form: new FormGroup({}),
-        model: {},
+        model: this.editData,
         options: {},
         fields: MaterialTransferRequestMetadata.transferCharges.formFields
       }
@@ -105,9 +105,6 @@ export class MaterialTransferRequestEditComponent implements OnInit {
   }
 
   onSaveBtnClick() {
-    if (this.hasOpeningStock && this.dataSource.data.length < 1) {
-      return;
-    }
     if (this.modalForms.material.form.valid) {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
@@ -124,19 +121,21 @@ export class MaterialTransferRequestEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<MaterialTransferRequest> {
+    this.transferFromProjectDivision.setProjectDivisionFieldsDefaultValue();
+    this.transferToProjectDivision.setProjectDivisionFieldsDefaultValue();
+    this.modalForms.material.model.multicompany = this.modalForms.material.model.multicompany ? 1 : 0;
+    let payload = {
+      ...this.modalForms.material.model,
+      ...this.modalForms.transferCharges.model,
+      transferDetail: this.dataSource.data,
+    }
     if (this.isEdit) {
-      return this.dataHandler.put<MaterialTransferRequest>(MaterialTransferRequestMetadata.serviceEndPoint, this.modalForms.material.model);
+      return this.dataHandler.put<MaterialTransferRequest>(MaterialTransferRequestMetadata.serviceEndPoint, [payload]);
     } else {
       const dummyDefaultFields = {
-        companyId: 1,
-        branchId: 1,
-        userId: 1
+        companyId: 1, branchId: 1, financialYearId: 1
       }
-      const payload = {
-        ...this.modalForms.material.model,
-        openingStock: this.dataSource.data,
-        ...dummyDefaultFields
-      }
+      payload = { ...dummyDefaultFields, ...payload };
       return this.dataHandler.post<MaterialTransferRequest>(MaterialTransferRequestMetadata.serviceEndPoint, [payload]);
     }
   }
@@ -149,76 +148,33 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     }
   }
 
-  onItemBtnClick() {
+  onAddItemBtnClick() {
     if (this.modalForms.transferDetail.form.valid) {
-      this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
       const dataRow: TransferDetail = Object.assign({}, this.modalForms.transferDetail.model);
-      // dataRow.unit_Id = this.modalForms.transferDetail.model.unitId;
-      // dataRow.financialYearId = 0;
-      // dataRow.materialId = 1;
+      dataRow['total'] = dataRow.quantity * dataRow.rate;
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
-      // this.modalForms.transferDetail.form.reset();
+      this.modalForms.transferDetail.form.reset();
     }
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    // switch (projectDivision) {
-    //   case 1:
-    //     FormfieldHandler.unitDropdown.hideExpression = true;
-    //     FormfieldHandler.blockDropdown.hideExpression = true;
-    //     FormfieldHandler.floorDropdown.hideExpression = true;
-    //     break;
-    //   case 2:
-    //     FormfieldHandler.unitDropdown.hideExpression = false;
-    //     FormfieldHandler.blockDropdown.hideExpression = true;
-    //     FormfieldHandler.floorDropdown.hideExpression = true;
-    //     break;
-    //   case 3:
-    //     FormfieldHandler.unitDropdown.hideExpression = false;
-    //     FormfieldHandler.blockDropdown.hideExpression = false;
-    //     FormfieldHandler.floorDropdown.hideExpression = false;
-    //     break;
-    //   case 4:
-    //     FormfieldHandler.unitDropdown.hideExpression = true;
-    //     FormfieldHandler.blockDropdown.hideExpression = false;
-    //     FormfieldHandler.floorDropdown.hideExpression = false;
-    //     break;
-    // }
-  }
-
-  // fetchMaterialCategory() {
-  //   const dummyCompanyId = 1; const dummyBranchId = 0;
-  //   const endPoint = `${MaterialCategoryRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-  //   this.dataHandler.get<MaterialCategoryRegistration[]>(endPoint)
-  //     .subscribe((res: MaterialCategoryRegistration[]) => {
-  //       if (res) {
-  //         FormfieldHandler.materialCategoryDropdown.templateOptions.options = res.map((e: MaterialCategoryRegistration) => (
-  //           {
-  //             label: e.materialCategoryName,
-  //             value: e.id
-  //           }
-  //         ));
-  //       }
-  //     });
-  // }
-
-  removeStock(rowIndex: number) {
+  removeItem(rowIndex: number) {
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
   }
 
-  editStock(rowToEdit: TransferDetail) {
+  editItem(rowToEdit: TransferDetail) {
     this.enableItemEdit = true;
-    this.modalForms.transferDetail.model = rowToEdit;
+    this.modalForms.transferDetail.model = Object.assign({}, rowToEdit);
   }
 
-  onUpdateStockBtnClick() {
+  onUpdateItemBtnClick() {
 
   }
 
-  onCancelStockUpdateBtnClick() {
-
+  onCancelItemUpdateBtnClick() {
+    this.enableItemEdit = false;
+    this.modalForms.transferDetail.form.reset();
   }
 
   get materialDropdown(): FormlyFieldConfig {
@@ -245,8 +201,9 @@ export class MaterialTransferRequestEditComponent implements OnInit {
   ngOnDestroy() {
     this.modalForms.material.form.reset();
     this.modalForms.transferDetail.form.reset();
-    this.projectDivisionFieldsHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
+    this.modalForms.transferCharges.form.reset();
+    this.transferFromProjectDivision.clear();
+    this.transferToProjectDivision.clear();
   }
 
 }

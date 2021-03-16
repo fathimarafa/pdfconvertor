@@ -18,11 +18,11 @@
                     </formly-form>
                 </form>
                 <ng-container *ngIf="enableItemEdit">
-                    <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
-                    <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
+                    <button (click)="onUpdateItemBtnClick()" mat-button class="save add-block">Save Changes</button>
+                    <button style="margin-right: 10px;" (click)="onCancelItemUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
                 </ng-container>
                 <ng-container *ngIf="!enableItemEdit">
-                    <button (click)="onItemBtnClick()" mat-button class="save add-block">Add</button>
+                    <button (click)="onAddItemBtnClick()" mat-button class="save add-block">Add</button>
                 </ng-container>
                 <div class="inner-table-container">
                     <table class="table-compnay" mat-table [dataSource]="dataSource">
@@ -37,8 +37,8 @@
                                         {{element[column.field]}}
                                     </ng-container>
                                     <ng-container *ngIf=" column.field === 'action'">
-                                        <mat-icon (click)="editStock(element)">edit</mat-icon>
-                                        <mat-icon (click)="removeStock(i)">delete_outline</mat-icon>
+                                        <mat-icon (click)="editItem(element)">edit</mat-icon>
+                                        <mat-icon (click)="removeItem(i)">delete_outline</mat-icon>
                                     </ng-container>
                                 </ng-container>
                             </td>

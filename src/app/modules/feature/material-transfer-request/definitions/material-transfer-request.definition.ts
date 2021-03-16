@@ -1,3 +1,5 @@
+import { FormlyFieldConfig } from "@ngx-formly/core";
+
 export interface MaterialTransferRequest {
     id: number;
     transferDate: Date;
@@ -40,4 +42,13 @@ export interface TransferDetail {
     quantity: number;
     rate: number;
     tax: number;
+}
+
+export interface ProjectDivisionFields<T> {
+    projectDropdown: FormlyFieldConfig;
+    blockDropdown: FormlyFieldConfig;
+    floorDropdown: FormlyFieldConfig;
+    unitDropdown: FormlyFieldConfig;
+    model: T;
+    isEdit: boolean;
 }
