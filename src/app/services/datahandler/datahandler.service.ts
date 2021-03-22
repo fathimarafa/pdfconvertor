@@ -10,9 +10,9 @@ import { environment } from './../../../environments/environment';
 @Injectable()
 export class DataHandlerService implements IDataHandlerService {
 
-    baseUrl = environment.baseUrl
-    basicHeaders: any;
-
+    private baseUrl = environment.baseUrl
+    private basicHeaders: any;
+    
     constructor(
         private httpClient: HttpClient,
         private authService: AuthenticationService,

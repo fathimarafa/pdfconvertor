@@ -4,17 +4,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmModalComponent } from '../../common/confirm-modal/confirm-modal.component';
 import { DataHandlerService } from '../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../services/dialog-event-handler/dialogeventhandler.service';
-import { MaterialPurchaseOrder } from './definitions//material-purchase-order.definition';
-import { MaterialPurchaseOrderMetadata } from './material-purchase-order.configuration';
+import { MaterialReceived } from './definitions/material-received.definition';
+import { MaterialRecieveMetadata } from './material-received.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
 
 @Component({
-  selector: 'app-material-purchase-order',
-  templateUrl: './material-purchase-order.component.html',
-  styleUrls: ['./material-purchase-order.component.css']
+  selector: 'app-material-received',
+  templateUrl: './material-received.component.html',
+  styleUrls: ['./material-received.component.css']
 })
-export class MaterialPurchaseOrderComponent implements OnInit {
+export class MaterialReceivedComponent implements OnInit {
 
   module;
   tableColumns;
@@ -27,7 +27,7 @@ export class MaterialPurchaseOrderComponent implements OnInit {
     private router: Router,
     private stateService: AppStateService
   ) {
-    this.module = MaterialPurchaseOrderMetadata;
+    this.module = MaterialRecieveMetadata;
     this.tableColumns = this.module.tableColumns
   }
 
@@ -45,21 +45,21 @@ export class MaterialPurchaseOrderComponent implements OnInit {
 
   fetchData() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialPurchaseOrder[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
-      .subscribe((res: MaterialPurchaseOrder[]) => {
+    this.dataHandler.get<MaterialReceived[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+      .subscribe((res: MaterialReceived[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  onAddEditBtnClick(rowToEdit?: MaterialPurchaseOrder) {
+  onAddEditBtnClick(rowToEdit?: MaterialReceived) {
     if (rowToEdit) {
       this.stateService.setState(this.module.moduleId, rowToEdit);
     }
-    this.router.navigateByUrl('/home/addmaterialpurchaseorder');
+    this.router.navigateByUrl('/home/addmaterialreceived');
   }
 
-  openDeleteDialog(rowToDelete: MaterialPurchaseOrder): void {
+  openDeleteDialog(rowToDelete: MaterialReceived): void {
     const dummyUserId = 1;
     const dataToComponent = {
       endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
@@ -73,10 +73,10 @@ export class MaterialPurchaseOrderComponent implements OnInit {
     )
   }
 
-  private affectedRowIndex(affectedRow?: MaterialPurchaseOrder) {
+  private affectedRowIndex(affectedRow?: MaterialReceived) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: MaterialPurchaseOrder) => row.id === affectedRow.id);
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialReceived) => row.id === affectedRow.id);
     }
     return indexToUpdate;
   }

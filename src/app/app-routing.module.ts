@@ -41,6 +41,11 @@ import { MaterialQuotationComponent } from './modules/feature/material-quotation
 import { MaterialSupplierAdvanceComponent } from './modules/feature/material-supplier-advance/material-supplier-advance.component';
 import { MaterialSupplierPaymentComponent } from './modules/feature/material-supplier-payment/material-supplier-payment.component';
 import { MaterialTransferRequestComponent } from './modules/feature/material-transfer-request/material-transfer-request.component';
+import { MaterialReceivedComponent } from './modules/feature/material-received/material-received.component';
+import { MaterialReceivedEditComponent } from './modules/feature/material-received/edit/material-received-edit.component';
+import { MaterialPurchaseReturnComponent } from './modules/feature/material-purchase-return/material-purchase-return.component';
+import { MaterialPurchaseOrderComponent } from './modules/feature/material-purchase-order/material-purchase-order.component';
+import { MaterialPurchaseOrderEditComponent } from './modules/feature/material-purchase-order/edit/material-purchase-order-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -87,7 +92,12 @@ const routes: Routes = [
       { path: 'materialquotation', component: MaterialQuotationComponent },
       { path: 'materialsupplieradvance', component: MaterialSupplierAdvanceComponent },
       { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent },
-      { path: 'materialtransferrequest', component: MaterialTransferRequestComponent }
+      { path: 'materialtransferrequest', component: MaterialTransferRequestComponent },
+      { path: 'materialreceived', component: MaterialReceivedComponent },
+      { path: 'addmaterialreceived', component: MaterialReceivedEditComponent },
+      { path: 'materialpurchasereturn', component: MaterialPurchaseReturnComponent },
+      { path: 'materialpurchaseorder', component: MaterialPurchaseOrderComponent },
+      { path: 'addmaterialpurchaseorder', component: MaterialPurchaseOrderEditComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

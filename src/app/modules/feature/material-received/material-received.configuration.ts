@@ -1,32 +1,32 @@
-export const MaterialPurchaseOrderMetadata = {
-    "moduleId": "materialpurchaseorder",
-    "moduleName": "Material Purchase Order",
-    "displayName": "Material / Material Purchase Order",
+export const MaterialRecieveMetadata = {
+    "moduleId": "materialrecieve",
+    "moduleName": "Material Recieve",
+    "displayName": "Material / Material Recieve",
     "hasAddNew": true,
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "BuildExeMaterial/api/PurchaseOrder",
+    "serviceEndPoint": "BuildExeMaterial/api/MaterialRecieve",
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'SNo'
         },
         {
-            "field": 'orderNo',
-            "displayName": 'Order No:'
+            "field": 'companyId',
+            "displayName": 'Company'
         },
         {
-            "field": 'dateOrdered',
-            "displayName": 'Order Date'
+            "field": 'projectIdTo',
+            "displayName": 'To Project'
         },
         {
-            "field": 'projectId',
-            "displayName": 'Project'
+            "field": 'transferId',
+            "displayName": 'Transfer Id'
         },
         {
-            "field": 'supplierPreffered',
-            "displayName": 'Supplier'
+            "field": 'receiveDate',
+            "displayName": 'Received Date'
         },
         {
             "field": 'action',
@@ -40,21 +40,31 @@ export const MaterialPurchaseOrderMetadata = {
             "fieldGroup": [
                 {
                     "className": "flex-1",
-                    "type": "input",
-                    "key": "orderNo",
+                    "key": "projectIdTo",
+                    "type": "select",   
                     "templateOptions": {
-                        "label": "Order ID",
+                        "label": "To Project",
+                        "required": true,
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "key": "transferId",
+                    "type": "input",
+                    "templateOptions": {
+                        "label": "Transfer No",
                         "required": true,
                         "type":"number"
                     }
                 },
                 {
                     "className": "flex-1",
+                    "key": "receiveDate",
                     "type": "datepicker",
-                    "key": "dateOrdered",
                     "templateOptions": {
-                        "label": "Order Date",
-                        "required": true
+                        "label": "Recieve Date",
+                        "required": true,
                     }
                 }
             ]
@@ -65,20 +75,10 @@ export const MaterialPurchaseOrderMetadata = {
             "fieldGroup": [
                 {
                     "className": "flex-1",
-                    "key": "projectId",
+                    "key": "blockIdTo",
                     "type": "select",
                     "templateOptions": {
-                        "label": "Project",
-                        "required": true,
-                        "options": []
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "key": "blockId",
-                    "type": "select",
-                    "templateOptions": {
-                        "label": "Select block",
+                        "label": "To block",
                         "required": true,
                         "options": []
                     },
@@ -86,10 +86,10 @@ export const MaterialPurchaseOrderMetadata = {
                 },
                 {
                     "className": "flex-1",
-                    "key": "floorId",
+                    "key": "floorIdTo",
                     "type": "select",
                     "templateOptions": {
-                        "label": "Select floor",
+                        "label": "To floor",
                         "required": true,
                         "options": []
                     },
@@ -97,79 +97,39 @@ export const MaterialPurchaseOrderMetadata = {
                 },
                 {
                     "className": "flex-1",
-                    "key": "unitId",
+                    "key": "unitIdTo",
                     "type": "select",
                     "templateOptions": {
-                        "label": "Select unit",
+                        "label": "To unit",
                         "required": true,
                         "options": []
                     },
                     "hideExpression": true
-                }
-            ]
-        },
-        {
-            "id": "row-3",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "key": "itemId",
-                    "type": "select",
-                    "templateOptions": {
-                        "label": "Item",
-                        "required": true,
-                        "options": []
-                    }  
-                },
-                {
-                    "className": "flex-1",
-                    "key": "supplierPreffered",
-                    "type": "select",
-                    "templateOptions": {
-                        "label": "Supplier",
-                        "required": true,
-                        "options": []
-                    }  
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "contactperson",
-                    "templateOptions": {
-                        "label": "Contact Person",
-                        "required": true
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "contactNo",
-                    "templateOptions": {
-                        "label": "Contact No",
-                        "required": true
-                    }
                 }
             ]
         }
     ],
-    "purchaseOrderDetail": {
+    "recieptDetail": {
         "tableColumns": [
             {
-                "field": 'purchaseOrderDetailId',
+                "field": 'recieptDetailId',
                 "displayName": 'SNo'
             },
             {
-                "field": 'itemId',
-                "displayName": 'Item'
+                "field": 'materialId',
+                "displayName": 'Material'
             },
             {
-                "field": 'quantityPurchased',
+                "field": 'quantity',
                 "displayName": 'Quantity'
             },
             {
-                "field": 'itemRate',
+                "field": 'rate',
                 "displayName": 'Rate'
+            },
+            {
+                "field": 'tax',
+                "displayName": 'Tax'
             },
             {
                 "field": 'total',
@@ -179,7 +139,9 @@ export const MaterialPurchaseOrderMetadata = {
                 "field": 'action',
                 "displayName": 'Action'
             }
-        ],
+        ]
+    },
+    "transferCharges": {
         "formFields": [
             {
                 "id": "row-1",
@@ -188,9 +150,19 @@ export const MaterialPurchaseOrderMetadata = {
                     {
                         "className": "flex-1",
                         "type": "input",
-                        "key": "quantityOrdered",
+                        "key": "transportationCharge",
                         "templateOptions": {
-                            "label": "Ordered Quantity",
+                            "label": "Transportation Charge",
+                            "type": "number",
+                            "required": true
+                        }
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "transportationPer",
+                        "templateOptions": {
+                            "label": "Transportation Rate",
                             "required": true,
                             "type": "number"
                         }
@@ -198,9 +170,9 @@ export const MaterialPurchaseOrderMetadata = {
                     {
                         "className": "flex-1",
                         "type": "input",
-                        "key": "quantityPurchased",
+                        "key": "loadingUnloadingCharge",
                         "templateOptions": {
-                            "label": "Purchased Quantity",
+                            "label": "Loading Unloading Charge",
                             "required": true,
                             "type": "number"
                         }
@@ -208,29 +180,9 @@ export const MaterialPurchaseOrderMetadata = {
                     {
                         "className": "flex-1",
                         "type": "input",
-                        "key": "itemRate",
+                        "key": "loadingUnloadingPer",
                         "templateOptions": {
-                            "label": "Unit Rate",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "disount",
-                        "templateOptions": {
-                            "label": "Discount",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "tax",
-                        "templateOptions": {
-                            "label": "Tax",
+                            "label": "Loading Unloading Per",
                             "required": true,
                             "type": "number"
                         }
@@ -243,12 +195,42 @@ export const MaterialPurchaseOrderMetadata = {
                 "fieldGroup": [
                     {
                         "className": "flex-1",
-                        "type": "textarea",
-                        "key": "remarks",
+                        "type": "input",
+                        "key": "otherCharges",
                         "templateOptions": {
-                            "label": "Remarks",
+                            "label": "Other Charges",
                             "required": true,
-                            "rows": "3"
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "otherChargesPer",
+                        "templateOptions": {
+                            "label": "Other Charges Per",
+                            "required": true,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "miscellaneousExpense",
+                        "templateOptions": {
+                            "label": "Miscellaneous Expense",
+                            "required": true,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "miscellaneousExpensePer",
+                        "templateOptions": {
+                            "label": "Miscellaneous Expense Per",
+                            "required": true,
+                            "type": "number"
                         }
                     }
                 ]

@@ -4,17 +4,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmModalComponent } from '../../common/confirm-modal/confirm-modal.component';
 import { DataHandlerService } from '../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../services/dialog-event-handler/dialogeventhandler.service';
-import { MaterialPurchaseOrder } from './definitions//material-purchase-order.definition';
-import { MaterialPurchaseOrderMetadata } from './material-purchase-order.configuration';
-import { Router } from '@angular/router';
-import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { MaterialPurchaseReturn } from './definitions/material-purchase-return.definition';
+import { MaterialPurchaseReturnEditComponent } from './edit/material-purchase-return-edit.component';
+import { MaterialPurchaseReturnMetadata } from './material-purchase-return.configuration';
 
 @Component({
-  selector: 'app-material-purchase-order',
-  templateUrl: './material-purchase-order.component.html',
-  styleUrls: ['./material-purchase-order.component.css']
+  selector: 'app-material-purchase-return',
+  templateUrl: './material-purchase-return.component.html',
+  styleUrls: ['./material-purchase-return.component.css']
 })
-export class MaterialPurchaseOrderComponent implements OnInit {
+export class MaterialPurchaseReturnComponent implements OnInit {
 
   module;
   tableColumns;
@@ -23,11 +22,9 @@ export class MaterialPurchaseOrderComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService,
-    private router: Router,
-    private stateService: AppStateService
+    private dialogEventHandler: DialogEventHandlerService
   ) {
-    this.module = MaterialPurchaseOrderMetadata;
+    this.module = MaterialPurchaseReturnMetadata;
     this.tableColumns = this.module.tableColumns
   }
 
@@ -45,21 +42,23 @@ export class MaterialPurchaseOrderComponent implements OnInit {
 
   fetchData() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialPurchaseOrder[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
-      .subscribe((res: MaterialPurchaseOrder[]) => {
+    this.dataHandler.get<MaterialPurchaseReturn[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+      .subscribe((res: MaterialPurchaseReturn[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  onAddEditBtnClick(rowToEdit?: MaterialPurchaseOrder) {
-    if (rowToEdit) {
-      this.stateService.setState(this.module.moduleId, rowToEdit);
-    }
-    this.router.navigateByUrl('/home/addmaterialpurchaseorder');
+  openDialog(rowToEdit?: MaterialPurchaseReturn) {
+    this.dialogEventHandler.openDialog(
+      MaterialPurchaseReturnEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
   }
 
-  openDeleteDialog(rowToDelete: MaterialPurchaseOrder): void {
+  openDeleteDialog(rowToDelete: MaterialPurchaseReturn): void {
     const dummyUserId = 1;
     const dataToComponent = {
       endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
@@ -73,10 +72,10 @@ export class MaterialPurchaseOrderComponent implements OnInit {
     )
   }
 
-  private affectedRowIndex(affectedRow?: MaterialPurchaseOrder) {
+  private affectedRowIndex(affectedRow?: MaterialPurchaseReturn) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: MaterialPurchaseOrder) => row.id === affectedRow.id);
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialPurchaseReturn) => row.id === affectedRow.id);
     }
     return indexToUpdate;
   }

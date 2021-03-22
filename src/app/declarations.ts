@@ -77,6 +77,15 @@ import { MaterialSupplierPaymentComponent } from './modules/feature/material-sup
 import { MaterialSupplierPaymentEditComponent } from './modules/feature/material-supplier-payment/edit/material-supplier-payment-edit.component';
 import { MaterialTransferRequestComponent } from './modules/feature/material-transfer-request/material-transfer-request.component';
 import { MaterialTransferRequestEditComponent } from './modules/feature/material-transfer-request/edit/material-transfer-request-edit.component';
+import { MaterialReceivedComponent } from './modules/feature/material-received/material-received.component';
+import { MaterialReceivedEditComponent } from './modules/feature/material-received/edit/material-received-edit.component';
+import { MaterialPurchaseReturnComponent } from './modules/feature/material-purchase-return/material-purchase-return.component';
+import { MaterialPurchaseReturnEditComponent } from './modules/feature/material-purchase-return/edit/material-purchase-return-edit.component';
+import { SelectTransferComponent } from "./modules/feature/material-received/edit/select-transfer/select-transfer.component";
+import { MaterialPurchaseOrderComponent } from './modules/feature/material-purchase-order/material-purchase-order.component';
+import { MaterialPurchaseOrderEditComponent } from './modules/feature/material-purchase-order/edit/material-purchase-order-edit.component';
+import { SelectIndentComponent } from './modules/feature/material-purchase-order/edit/select-indent/select-indent.component';
+
 
 export const CustomDeclarations = [
     ApproveLevelComponent,
@@ -157,5 +166,13 @@ export const CustomDeclarations = [
     MaterialSupplierPaymentComponent,
     MaterialSupplierPaymentEditComponent,
     MaterialTransferRequestComponent,
-    MaterialTransferRequestEditComponent
+    MaterialTransferRequestEditComponent,
+    MaterialReceivedComponent,
+    MaterialReceivedEditComponent,
+    SelectTransferComponent,
+    MaterialPurchaseReturnComponent,
+    MaterialPurchaseReturnEditComponent,
+    MaterialPurchaseOrderComponent,
+    MaterialPurchaseOrderEditComponent,
+    SelectIndentComponent
 ]

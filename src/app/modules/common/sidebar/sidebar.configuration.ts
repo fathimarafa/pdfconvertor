@@ -155,14 +155,32 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
                         subItem: []
                     },
                     {
+                        displayName: 'Purchase Order',
+                        navLink: '/materialpurchaseorder',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
                         displayName: 'Damage Stock Entry',
                         navLink: '/materialdamagestock',
                         showSubItem: false,
                         subItem: []
                     },
                     {
+                        displayName: 'Material Purchase Return',
+                        navLink: '/materialpurchasereturn',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
                         displayName: 'Material Transfer Request',
                         navLink: '/materialtransferrequest',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Material Received',
+                        navLink: '/materialreceived',
                         showSubItem: false,
                         subItem: []
                     },
