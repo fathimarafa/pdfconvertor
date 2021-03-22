@@ -81,4 +81,8 @@ export class ApproveLevelComponent implements OnInit {
     return indexToUpdate;
   }
 
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
 }

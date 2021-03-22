@@ -20,3 +20,9 @@
 .list-item-grandchild {
     padding-left: 70px !important;
 }
+
+.active-nav,
+.active-nav:hover {
+    background-color: #345c82;
+    color: #fff !important;
+}

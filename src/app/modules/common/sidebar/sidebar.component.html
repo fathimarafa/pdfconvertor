@@ -16,13 +16,12 @@
 
                 <mat-list-item class="list-item-child">
                     <mat-icon (click)="subMenu.showSubItem = !subMenu.showSubItem" matListIcon>
-                        {{ subMenu.showSubItem ? 'expand_more' : 'chevron_right'  }}</mat-icon>
+                        {{ subMenu.showSubItem ? 'expand_more' : 'chevron_right' }}</mat-icon>
                     <a matLine style="margin-left: -16px;">{{ subMenu.displayName }}</a>
                 </mat-list-item>
 
                 <ng-container *ngIf="subMenu.showSubItem">
-                    <mat-list-item class="list-item-grandchild"
-                        *ngFor="let subItemChild of subMenu.subItem">
+                    <mat-list-item (click)="onSelection(subItemChild)" [class.active-nav]="subItemChild.isSelected" class="list-item-grandchild" *ngFor="let subItemChild of subMenu.subItem">
                         <a routerLink="{{'./' + subItemChild.navLink}}" matLine>{{ subItemChild.displayName }}</a>
                     </mat-list-item>
                 </ng-container>

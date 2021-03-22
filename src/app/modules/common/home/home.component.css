@@ -1,11 +1,22 @@
 .app-toolbar {
     background-color: #fff;
-    border-bottom: 1px solid #edf2f7;
+    border-bottom: solid 1px rgba(0, 0, 0, .12);
+    display: flex;
+    justify-content: space-between;
 }
 
-h1 {
+.left {
     font-size: 18px;
     color: #3182ce;
+    width: 263px;
+    border-right: solid 1px rgba(0, 0, 0, .12);
+    height: 100%;
+}
+
+.left-title {
+    display: inline-block;
+    position: relative;
+    top: 2px;
 }
 
 .btn-toggle {
@@ -25,16 +36,11 @@ h1 {
     color: #63B3ED;
 }
 
-.mat-drawer-content {
-    padding: 12px;
-}
-
 
 /* new */
 
 mat-toolbar {
     position: fixed;
-    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
     top: 0;
     z-index: 2;
 }
