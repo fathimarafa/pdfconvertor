@@ -1,0 +1,33 @@
+.container-body {
+    height: 100%;
+    padding: 20px;
+}
+
+::ng-deep .mat-form-field-infix {
+    width: 100px !important;
+}
+
+.body-content {
+    height: calc(100% - 200px);
+    padding: 40px 20px 0 0;
+    overflow: auto;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-right-20 {
+    margin-right: 20px;
+}
+
+.header {
+    color: #3182ce;
+    font-size: 14px;
+    font-weight: 500;
+}

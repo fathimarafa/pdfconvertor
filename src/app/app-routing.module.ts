@@ -46,6 +46,15 @@ import { MaterialReceivedEditComponent } from './modules/feature/material-receiv
 import { MaterialPurchaseReturnComponent } from './modules/feature/material-purchase-return/material-purchase-return.component';
 import { MaterialPurchaseOrderComponent } from './modules/feature/material-purchase-order/material-purchase-order.component';
 import { MaterialPurchaseOrderEditComponent } from './modules/feature/material-purchase-order/edit/material-purchase-order-edit.component';
+import { AccountHeadRegistrationComponent } from './modules/feature/account-head-registration/account-head-registration.component';
+import { AccountHeadRegistrationEditComponent } from './modules/feature/account-head-registration/edit/account-head-registration-edit.component';
+import { BankAccountRegistrationComponent } from './modules/feature/bank-account-registration/bank-account-registration.component';
+import { BankAccountRegistrationEditComponent } from './modules/feature/bank-account-registration/edit/bank-account-registration-edit.component';
+import { JournalVoucherEntryComponent } from './modules/feature/journal-voucher-entry/journal-voucher-entry.component';
+import { JournalVoucherEntryEditComponent } from './modules/feature/journal-voucher-entry/edit/journal-voucher-entry-edit.component';
+import { DocumentGroupComponent } from './modules/feature/document-group/document-group.component';
+import { BasicWorkCategoryComponent } from './modules/feature/work-category/basic-work-category.component';
+import { BasicDocumentTypeComponent } from './modules/feature/document-type/basic-document-type.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -97,7 +106,16 @@ const routes: Routes = [
       { path: 'addmaterialreceived', component: MaterialReceivedEditComponent },
       { path: 'materialpurchasereturn', component: MaterialPurchaseReturnComponent },
       { path: 'materialpurchaseorder', component: MaterialPurchaseOrderComponent },
-      { path: 'addmaterialpurchaseorder', component: MaterialPurchaseOrderEditComponent }
+      { path: 'addmaterialpurchaseorder', component: MaterialPurchaseOrderEditComponent },
+      { path: 'accountheadregistration', component: AccountHeadRegistrationComponent },
+      { path: 'addaccounthead', component: AccountHeadRegistrationEditComponent },
+      { path: 'bankaccountregistration', component: BankAccountRegistrationComponent },
+      { path: 'addbankaccount', component: BankAccountRegistrationEditComponent },
+      { path: 'journal', component: JournalVoucherEntryComponent },
+      { path: 'addjournal', component: JournalVoucherEntryEditComponent },
+      { path: 'documentgroup', component: DocumentGroupComponent },
+      { path: 'workcategory', component: BasicWorkCategoryComponent },
+      { path: 'documenttype', component: BasicDocumentTypeComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

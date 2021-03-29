@@ -85,7 +85,15 @@ import { SelectTransferComponent } from "./modules/feature/material-received/edi
 import { MaterialPurchaseOrderComponent } from './modules/feature/material-purchase-order/material-purchase-order.component';
 import { MaterialPurchaseOrderEditComponent } from './modules/feature/material-purchase-order/edit/material-purchase-order-edit.component';
 import { SelectIndentComponent } from './modules/feature/material-purchase-order/edit/select-indent/select-indent.component';
-
+import { AccountHeadRegistrationComponent } from './modules/feature/account-head-registration/account-head-registration.component';
+import { AccountHeadRegistrationEditComponent } from './modules/feature/account-head-registration/edit/account-head-registration-edit.component';
+import { BankAccountRegistrationComponent } from './modules/feature/bank-account-registration/bank-account-registration.component';
+import { BankAccountRegistrationEditComponent } from './modules/feature/bank-account-registration/edit/bank-account-registration-edit.component';
+import { JournalVoucherEntryComponent } from './modules/feature/journal-voucher-entry/journal-voucher-entry.component';
+import { JournalVoucherEntryEditComponent } from './modules/feature/journal-voucher-entry/edit/journal-voucher-entry-edit.component';
+import { DocumentGroupComponent } from './modules/feature/document-group/document-group.component';
+import { BasicWorkCategoryComponent } from './modules/feature/work-category/basic-work-category.component';
+import { BasicDocumentTypeComponent } from './modules/feature/document-type/basic-document-type.component';
 
 export const CustomDeclarations = [
     ApproveLevelComponent,
@@ -174,5 +182,14 @@ export const CustomDeclarations = [
     MaterialPurchaseReturnEditComponent,
     MaterialPurchaseOrderComponent,
     MaterialPurchaseOrderEditComponent,
-    SelectIndentComponent
+    SelectIndentComponent,
+    AccountHeadRegistrationComponent,
+    AccountHeadRegistrationEditComponent,
+    BankAccountRegistrationComponent,
+    BankAccountRegistrationEditComponent,
+    JournalVoucherEntryComponent,
+    JournalVoucherEntryEditComponent,
+    DocumentGroupComponent,
+    BasicWorkCategoryComponent,
+    BasicDocumentTypeComponent
 ]
