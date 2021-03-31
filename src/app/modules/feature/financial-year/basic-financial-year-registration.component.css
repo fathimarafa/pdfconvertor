@@ -1,0 +1,14 @@
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.form-container {
+    display: flex;
+    margin-right: 50px;
+}
+
+::ng-deep .form-dialog .mat-form-field-infix {
+    width: 150px;
+}

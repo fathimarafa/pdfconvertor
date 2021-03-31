@@ -59,6 +59,8 @@ import { BasicDocumentUploadComponent } from './modules/feature/document-upload/
 import { BasicDocumentUploadEditComponent } from './modules/feature/document-upload/edit/basic-document-upload-edit.component';
 import { BasicSitemanagerTransactionComponent } from './modules/feature/sitemanager-transaction/basic-sitemanager-transaction.component';
 import { BasicSitemanagerTransactionEditComponent } from './modules/feature/sitemanager-transaction/edit/basic-sitemanager-transaction-edit.component';
+import { BasicFinancialYearRegistrationComponent } from './modules/feature/financial-year/basic-financial-year-registration.component';
+import { BasicChequeClearenceComponent } from './modules/feature/cheque-clearence/basic-cheque-clearence.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -123,7 +125,9 @@ const routes: Routes = [
       { path: 'documentupload', component: BasicDocumentUploadComponent },
       { path: 'adddocument', component: BasicDocumentUploadEditComponent },
       { path: 'sitemanagertransaction', component: BasicSitemanagerTransactionComponent },
-      { path: 'addsitemanagertransaction', component: BasicSitemanagerTransactionEditComponent }
+      { path: 'addsitemanagertransaction', component: BasicSitemanagerTransactionEditComponent },
+      { path: 'financialyear', component: BasicFinancialYearRegistrationComponent },
+      { path: 'chequeclearence', component: BasicChequeClearenceComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

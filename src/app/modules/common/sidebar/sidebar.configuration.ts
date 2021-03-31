@@ -262,6 +262,18 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
                         navLink: '/sitemanagertransaction',
                         showSubItem: false,
                         subItem: []
+                    },
+                    {
+                        displayName: 'Financial Year Registration',
+                        navLink: '/financialyear',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Cheque Clearence',
+                        navLink: '/chequeclearence',
+                        showSubItem: false,
+                        subItem: []
                     }
                 ]
             },

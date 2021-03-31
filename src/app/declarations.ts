@@ -98,6 +98,8 @@ import { BasicDocumentUploadComponent } from './modules/feature/document-upload/
 import { BasicDocumentUploadEditComponent } from './modules/feature/document-upload/edit/basic-document-upload-edit.component';
 import { BasicSitemanagerTransactionComponent } from './modules/feature/sitemanager-transaction/basic-sitemanager-transaction.component';
 import { BasicSitemanagerTransactionEditComponent } from './modules/feature/sitemanager-transaction/edit/basic-sitemanager-transaction-edit.component';
+import { BasicFinancialYearRegistrationComponent } from './modules/feature/financial-year/basic-financial-year-registration.component';
+import { BasicChequeClearenceComponent } from './modules/feature/cheque-clearence/basic-cheque-clearence.component';
 
 export const CustomDeclarations = [
     ApproveLevelComponent,
@@ -199,5 +201,7 @@ export const CustomDeclarations = [
     BasicDocumentUploadComponent,
     BasicDocumentUploadEditComponent,
     BasicSitemanagerTransactionComponent,
-    BasicSitemanagerTransactionEditComponent
+    BasicSitemanagerTransactionEditComponent,
+    BasicFinancialYearRegistrationComponent,
+    BasicChequeClearenceComponent
 ]
