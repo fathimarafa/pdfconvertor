@@ -23,6 +23,7 @@ export class AccountHeadRegistrationEditComponent implements OnInit {
   fields: FormlyFieldConfig[];
   isEdit: boolean;
   editData;
+  accountSubGroupList: AccountSubGroup[];
 
   constructor(
     private dataHandler: DataHandlerService,
@@ -56,11 +57,12 @@ export class AccountHeadRegistrationEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<AccountHead> {
+    this.model.accountSubGroupName = this.accountSubGroupList.find((e: AccountSubGroup) => e.accountSubGroupId === this.model.accountSubGroupId).accountSubGroupName;
     if (this.isEdit) {
       return this.dataHandler.put<AccountHead>(AccountHeadRegistrtaionMetadata.serviceEndPoint, this.model);
     } else {
       const dummyDefaultFields = {
-        companyId: 1, branchId: 1, financialyearId: 0, userId: 0
+        companyId: 1, branchId: 1, financialyearId: 0, userId: 0, editable: 'N'
       }
       const payloads = { ...dummyDefaultFields, ...this.model };
       return this.dataHandler.post<AccountHead>(AccountHeadRegistrtaionMetadata.serviceEndPoint, payloads);
@@ -111,6 +113,7 @@ export class AccountHeadRegistrationEditComponent implements OnInit {
     this.dataHandler.get<AccountSubGroup[]>(endPoint)
       .subscribe((res: AccountSubGroup[]) => {
         if (res) {
+          this.accountSubGroupList = res;
           FormfieldHandler.accountSubGroupDropdown.templateOptions.options = res.map((e: AccountSubGroup) => (
             {
               label: e.accountSubGroupName,

@@ -250,6 +250,18 @@ export const SideNavigationMenu: ISideNavigationMenuItem[] = [
                         navLink: '/documenttype',
                         showSubItem: false,
                         subItem: []
+                    },
+                    {
+                        displayName: 'Document Upload',
+                        navLink: '/documentupload',
+                        showSubItem: false,
+                        subItem: []
+                    },
+                    {
+                        displayName: 'Sitemanager Transaction',
+                        navLink: '/sitemanagertransaction',
+                        showSubItem: false,
+                        subItem: []
                     }
                 ]
             },

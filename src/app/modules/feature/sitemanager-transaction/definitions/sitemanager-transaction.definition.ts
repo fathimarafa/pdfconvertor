@@ -1,0 +1,29 @@
+export interface BasicSitemanagerTransaction {
+    id: number;
+    transactionType: number;
+    transactionDate: Date;
+    projectId: number;
+    unitId: number;
+    blockId: number;
+    floorId: number;
+    companyId: number;
+    branchId: number;
+    financialYearId: number;
+    debitHeadId: number;
+    creditHeadId: number;
+    amount: number;
+    employeeId: number;
+    narration: string;
+    form: string;
+    category: number;
+    voucherTypeId: number;
+    voucherNumber: number;
+    isDeleted: number;
+    withClear: number;
+    approvalStatus: number;
+    approvalLevel: number;
+    approvedBy: number;
+    paymentModeId: number;
+    paymentMode: string;
+    paymentNo: string;
+}

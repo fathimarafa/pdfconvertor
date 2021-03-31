@@ -6,7 +6,7 @@ export const EmployeeRegistrationMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "Employee",
+    "serviceEndPoint": "BuildExeHR/api/Employee",
     "tableColumns": [
         {
             "field": 'employeeId',

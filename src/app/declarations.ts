@@ -94,6 +94,10 @@ import { JournalVoucherEntryEditComponent } from './modules/feature/journal-vouc
 import { DocumentGroupComponent } from './modules/feature/document-group/document-group.component';
 import { BasicWorkCategoryComponent } from './modules/feature/work-category/basic-work-category.component';
 import { BasicDocumentTypeComponent } from './modules/feature/document-type/basic-document-type.component';
+import { BasicDocumentUploadComponent } from './modules/feature/document-upload/basic-document-upload.component';
+import { BasicDocumentUploadEditComponent } from './modules/feature/document-upload/edit/basic-document-upload-edit.component';
+import { BasicSitemanagerTransactionComponent } from './modules/feature/sitemanager-transaction/basic-sitemanager-transaction.component';
+import { BasicSitemanagerTransactionEditComponent } from './modules/feature/sitemanager-transaction/edit/basic-sitemanager-transaction-edit.component';
 
 export const CustomDeclarations = [
     ApproveLevelComponent,
@@ -191,5 +195,9 @@ export const CustomDeclarations = [
     JournalVoucherEntryEditComponent,
     DocumentGroupComponent,
     BasicWorkCategoryComponent,
-    BasicDocumentTypeComponent
+    BasicDocumentTypeComponent,
+    BasicDocumentUploadComponent,
+    BasicDocumentUploadEditComponent,
+    BasicSitemanagerTransactionComponent,
+    BasicSitemanagerTransactionEditComponent
 ]

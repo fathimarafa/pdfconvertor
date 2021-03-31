@@ -55,6 +55,10 @@ import { JournalVoucherEntryEditComponent } from './modules/feature/journal-vouc
 import { DocumentGroupComponent } from './modules/feature/document-group/document-group.component';
 import { BasicWorkCategoryComponent } from './modules/feature/work-category/basic-work-category.component';
 import { BasicDocumentTypeComponent } from './modules/feature/document-type/basic-document-type.component';
+import { BasicDocumentUploadComponent } from './modules/feature/document-upload/basic-document-upload.component';
+import { BasicDocumentUploadEditComponent } from './modules/feature/document-upload/edit/basic-document-upload-edit.component';
+import { BasicSitemanagerTransactionComponent } from './modules/feature/sitemanager-transaction/basic-sitemanager-transaction.component';
+import { BasicSitemanagerTransactionEditComponent } from './modules/feature/sitemanager-transaction/edit/basic-sitemanager-transaction-edit.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -115,7 +119,11 @@ const routes: Routes = [
       { path: 'addjournal', component: JournalVoucherEntryEditComponent },
       { path: 'documentgroup', component: DocumentGroupComponent },
       { path: 'workcategory', component: BasicWorkCategoryComponent },
-      { path: 'documenttype', component: BasicDocumentTypeComponent }
+      { path: 'documenttype', component: BasicDocumentTypeComponent },
+      { path: 'documentupload', component: BasicDocumentUploadComponent },
+      { path: 'adddocument', component: BasicDocumentUploadEditComponent },
+      { path: 'sitemanagertransaction', component: BasicSitemanagerTransactionComponent },
+      { path: 'addsitemanagertransaction', component: BasicSitemanagerTransactionEditComponent }
     ]
   },
   { path: '**', redirectTo: '/login' }

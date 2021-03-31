@@ -41,7 +41,8 @@ export class EmployeeRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<Employee[]>(this.module.serviceEndPoint)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    this.dataHandler.get<Employee[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
       .subscribe((res: Employee[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

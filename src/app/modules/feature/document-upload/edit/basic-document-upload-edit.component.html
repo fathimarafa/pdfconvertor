@@ -1,0 +1,16 @@
+<div class="container-body form-dialog">
+
+    <div class="header">{{ isEdit ? 'Edit' : 'Add' }} Document</div>
+
+    <div class="body-content">
+        <form [formGroup]="form">
+            <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+        </form>
+    </div>
+
+    <div class="footer">
+        <button (click)="onSaveBtnClick()" mat-button class="save margin-right-20">Save</button>
+        <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+    </div>
+
+</div>
