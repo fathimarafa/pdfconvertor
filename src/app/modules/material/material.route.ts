@@ -1,0 +1,40 @@
+import { DamageStockEntryComponent } from './components/damage-stock-entry/damage-stock-entry.component';
+import { MaterialBrandRegistrationComponent } from './components/material-brand-registration/material-brand-registration.component';
+import { MaterialCategoryRegistrationComponent } from './components/material-category-registration/material-category-registration.component';
+import { MaterialIndentCreationComponent } from './components/material-indent-creation/material-indent-creation.component';
+import { SupplierRegistrationComponent } from './components/supplier-registration/supplier-registration.component';
+import { MaterialTransferRequestComponent } from './components/material-transfer-request/material-transfer-request.component';
+import { MaterialSupplierPaymentComponent } from './components/material-supplier-payment/material-supplier-payment.component';
+import { MaterialSupplierAdvanceComponent } from './components/material-supplier-advance/material-supplier-advance.component';
+import { MaterialRegistrationComponent } from './components/material-registration/material-registration.component';
+import { MaterialReceivedComponent } from './components/material-received/material-received.component';
+import { MaterialReceivedEditComponent } from './components/material-received/edit/material-received-edit.component';
+import { MaterialQuotationComponent } from './components/material-quotation/material-quotation.component';
+import { MaterialIssueComponent } from './components/material-issue/material-issue.component';
+import { MaterialPurchaseReturnComponent } from './components/material-purchase-return/material-purchase-return.component';
+import { MaterialPurchaseOrderComponent } from './components/material-purchase-order/material-purchase-order.component';
+import { MaterialPurchaseOrderEditComponent } from './components/material-purchase-order/edit/material-purchase-order-edit.component';
+import { MaterialIndentApprovalComponent } from './components/material-indent-approval/material-indent-approval.component';
+import { UnitRegistrationComponent } from './components/unit-registration/unit-registration.component';
+
+export const MaterialModuleRoutes = [
+    { path: 'unitregistration', component: UnitRegistrationComponent },
+    { path: 'materialregistration', component: MaterialRegistrationComponent },
+    { path: 'supplierregistration', component: SupplierRegistrationComponent },
+    { path: 'materialindentcreation', component: MaterialIndentCreationComponent },
+    { path: 'materialindentapproval', component: MaterialIndentApprovalComponent },
+    { path: 'materialdamagestock', component: DamageStockEntryComponent },
+    { path: 'unitregistration', component: UnitRegistrationComponent },
+    { path: 'materialbrandregistration', component: MaterialBrandRegistrationComponent },
+    { path: 'materialcategoryregistration', component: MaterialCategoryRegistrationComponent },
+    { path: 'materialusage', component: MaterialIssueComponent },
+    { path: 'materialquotation', component: MaterialQuotationComponent },
+    { path: 'materialsupplieradvance', component: MaterialSupplierAdvanceComponent },
+    { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent },
+    { path: 'materialtransferrequest', component: MaterialTransferRequestComponent },
+    { path: 'materialreceived', component: MaterialReceivedComponent },
+    { path: 'addmaterialreceived', component: MaterialReceivedEditComponent },
+    { path: 'materialpurchasereturn', component: MaterialPurchaseReturnComponent },
+    { path: 'materialpurchaseorder', component: MaterialPurchaseOrderComponent },
+    { path: 'addmaterialpurchaseorder', component: MaterialPurchaseOrderEditComponent }
+]

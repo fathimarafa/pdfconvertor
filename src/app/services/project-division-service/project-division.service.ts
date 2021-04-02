@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-// import { forkJoin } from 'rxjs';
-import { Floor } from '../../modules/feature/project-floor-registration/definitions/floor.definition';
-import { Block } from '../../modules/feature/project-block-registration/definitions/block.definition';
-import { UnitRegistration } from '../../modules/feature/unit-registration/definitions/unit-registration.definition';
 import { DataHandlerService } from '../datahandler/datahandler.service';
 import { Observable } from 'rxjs';
+import { Block } from '../../modules/crm/components/project-block-registration/definitions/block.definition';
+import { Floor } from '../../modules/crm/components/project-floor-registration/definitions/floor.definition';
 
 @Injectable({
   providedIn: 'root'

@@ -22,11 +22,14 @@ import { ModuleDefaultFormComponent } from './modules/common/module-default-form
 import { ModuleDefaultFormMultistepComponent } from './modules/common/module-default-form-multistep/module-default-form-multistep.component';
 import { ModuleMetadataService } from './services/module-metadata/module.metadata.service';
 import { MaterialModule } from './material.module';
-import { CustomDeclarations } from './declarations';
 import { DataHandlerService } from './services/datahandler/datahandler.service';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { DialogEventHandlerService } from './services/dialog-event-handler/dialogeventhandler.service';
 import { AuthenticationService } from './services/auth-service/authentication.service';
+import { BasicModuleComponents } from './modules/basic/basic.component';
+import { CRMmoduleComponents } from './modules/crm/crm.component';
+import { HRmoduleComponents } from './modules/hr/hr.component';
+import { MaterialModuleComponents } from './modules/material/material.component';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -43,7 +46,10 @@ const appearance: MatFormFieldDefaultOptions = {
     ModuleDefaultListingComponent,
     ModuleDefaultFormComponent,
     ModuleDefaultFormMultistepComponent,
-    ...CustomDeclarations
+    ...CRMmoduleComponents,
+    ...HRmoduleComponents,
+    ...MaterialModuleComponents,
+    ...BasicModuleComponents
   ],
   imports: [
     BrowserModule,

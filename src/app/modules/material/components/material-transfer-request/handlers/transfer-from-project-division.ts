@@ -1,54 +1,36 @@
 import { Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { Observable, Subject } from 'rxjs';
-import { Project } from '../../modules/crm/components/project/definitions/project.definition';
-import { ProjectMetadata } from '../../modules/crm/components/project/project.configuration';
-import { DataHandlerService } from '../datahandler/datahandler.service';
-import { ProjectDivisionService } from '../project-division-service/project-division.service';
-
-export interface ProjectDivisionFields<T> {
-  projectDropdown: FormlyFieldConfig;
-  blockDropdown: FormlyFieldConfig;
-  floorDropdown: FormlyFieldConfig;
-  unitDropdown: FormlyFieldConfig;
-  model: T;
-  isEdit: boolean;
-}
+import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
+import { ProjectDivisionService } from '../../../../../services/project-division-service/project-division.service';
+import { ProjectMetadata } from '../../../../crm/components/project/project.configuration';
+import { Project } from '../../../../crm/components/project/definitions/project.definition';
+import { ProjectDivisionFields } from '../definitions/material-transfer-request.definition';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class ProjectDivisionFieldsHandlerService {
+export class TransferFromProjectDivision {
 
   private fields: ProjectDivisionFields<any>;
   private projectDivision: number;
-  private isBlockFloorLoaded: boolean;
-  private onProjectDivisionChange: Subject<number>;
 
   constructor(
     private projectDivisionService: ProjectDivisionService,
     private dataHandler: DataHandlerService
-  ) {
-    this.onProjectDivisionChange = new Subject<number>();
-  }
+  ) { }
 
   initialize(controllerBasedFields: ProjectDivisionFields<any>) {
     this.fields = controllerBasedFields;
     this.fetchProjectSelectOptions();
-    if (this.fields.isEdit && this.fields.model.projectId) {
-      this.fetchProjectDivison(this.fields.model.projectId);
+    if (this.fields.isEdit && this.fields.model.projectIdFrom) {
+      this.fetchProjectDivison(this.fields.model.projectIdFrom);
     }
   }
 
   clear() {
     this.fields = undefined;
     this.projectDivision = null;
-    this.isBlockFloorLoaded = false;
-  }
-
-  get listenProjectDivisionChange(): Observable<number> {
-    return this.onProjectDivisionChange.asObservable();
   }
 
   private fetchProjectSelectOptions() {
@@ -78,10 +60,7 @@ export class ProjectDivisionFieldsHandlerService {
     if (this.projectDivision !== currentDivision) {
       this.fields.unitDropdown.templateOptions.options = [];
       if (currentDivision === 3 || currentDivision === 4) {
-        if (!this.isBlockFloorLoaded) {
-          this.fetchBlockFloor();
-          this.isBlockFloorLoaded = true;
-        }
+        this.fetchBlockFloor();
         if (currentDivision === 3) {
           this.fetchFloorUnit();
         }
@@ -90,12 +69,12 @@ export class ProjectDivisionFieldsHandlerService {
         this.fetchProjectDivisionUnit();
       }
       this.projectDivision = currentDivision;
-      this.onProjectDivisionChange.next(this.projectDivision);
+      this.showHideProjectDivisionBasedFields();
     }
   }
 
   private fetchProjectDivisionUnit() {
-    this.projectDivisionService.getOwnProjectUnit(this.fields.model.projectId)
+    this.projectDivisionService.getOwnProjectUnit(this.fields.model.projectIdFrom)
       .subscribe((res) => {
         this.fields.unitDropdown.templateOptions.options = res.map((e) => (
           {
@@ -107,7 +86,7 @@ export class ProjectDivisionFieldsHandlerService {
   }
 
   private fetchBlockFloor() {
-    this.projectDivisionService.getBlock(this.fields.model.projectId)
+    this.projectDivisionService.getBlock(this.fields.model.projectIdFrom)
       .subscribe((res) => {
         this.fields.blockDropdown.templateOptions.options = res.map((e) => (
           {
@@ -125,7 +104,7 @@ export class ProjectDivisionFieldsHandlerService {
   }
 
   private fetchFloor() {
-    this.projectDivisionService.getFloor(this.fields.model.projectId, this.fields.model.blockId)
+    this.projectDivisionService.getFloor(this.fields.model.projectIdFrom, this.fields.model.blockIdFrom)
       .subscribe((res) => {
         this.fields.floorDropdown.templateOptions.options = res.map((e) => (
           {
@@ -142,8 +121,8 @@ export class ProjectDivisionFieldsHandlerService {
   }
 
   private fetchFloorUnit() {
-    if (this.fields.model.projectId > -1 && this.fields.model.blockId > -1 && this.fields.model.floorId > -1) {
-      this.projectDivisionService.getUnit(this.fields.model.projectId, this.fields.model.blockId, this.fields.model.floorId)
+    if (this.fields.model.projectIdFrom > -1 && this.fields.model.blockIdFrom > -1 && this.fields.model.floorIdFrom > -1) {
+      this.projectDivisionService.getUnit(this.fields.model.projectIdFrom, this.fields.model.blockIdFrom, this.fields.model.floorIdFrom)
         .subscribe((res) => {
           this.fields.unitDropdown.templateOptions.options = res.map((e) => (
             {
@@ -155,19 +134,44 @@ export class ProjectDivisionFieldsHandlerService {
     }
   }
 
+  private showHideProjectDivisionBasedFields() {
+    switch (this.projectDivision) {
+      case 1:
+        this.fields.unitDropdown.hideExpression = true;
+        this.fields.blockDropdown.hideExpression = true;
+        this.fields.floorDropdown.hideExpression = true;
+        break;
+      case 2:
+        this.fields.unitDropdown.hideExpression = false;
+        this.fields.blockDropdown.hideExpression = true;
+        this.fields.floorDropdown.hideExpression = true;
+        break;
+      case 3:
+        this.fields.unitDropdown.hideExpression = false;
+        this.fields.blockDropdown.hideExpression = false;
+        this.fields.floorDropdown.hideExpression = false;
+        break;
+      case 4:
+        this.fields.unitDropdown.hideExpression = true;
+        this.fields.blockDropdown.hideExpression = false;
+        this.fields.floorDropdown.hideExpression = false;
+        break;
+    }
+  }
+
   setProjectDivisionFieldsDefaultValue() {
     switch (this.projectDivision) {
       case 1:
-        this.fields.model.blockId = 0;
-        this.fields.model.floorId = 0;
-        this.fields.model.unitId = 0;
+        this.fields.model.blockIdFrom = 0;
+        this.fields.model.floorIdFrom = 0;
+        this.fields.model.unitIdFrom = 0;
         break;
       case 2:
-        this.fields.model.blockId = 0;
-        this.fields.model.floorId = 0;
+        this.fields.model.blockIdFrom = 0;
+        this.fields.model.floorIdFrom = 0;
         break;
       case 4:
-        this.fields.model.unitId = 0;
+        this.fields.model.unitIdFrom = 0;
         break;
     }
   }
