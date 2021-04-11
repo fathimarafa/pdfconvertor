@@ -7,6 +7,7 @@ import { ProjectEditComponent } from './edit/project-edit.component';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { Project } from './definitions/project.definition';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-project',
@@ -22,7 +23,8 @@ export class ProjectComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = ProjectMetadata;
     this.tableColumns = this.module.tableColumns
@@ -76,6 +78,15 @@ export class ProjectComponent implements OnInit {
       indexToUpdate = this.dataSource.data.findIndex((row: Project) => row.projectId === rowToEdit.projectId);
     }
     return indexToUpdate;
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'project',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

@@ -1,18 +1,20 @@
 <div class="module-default">
     <mat-toolbar class="toolbar">
-        {{module ? module.displayName :  ''}}
+        {{module ? module.displayName : ''}}
     </mat-toolbar>
     <mat-card>
         <mat-card-header>
             <mat-form-field class="example-form-field">
                 <mat-label>Enquiry</mat-label>
                 <mat-select [value]="selectedEnquiry">
-                    <mat-option (click)="doFilter(enquiry.enquiryId)" *ngFor="let enquiry of enquiryList"
-                        [value]="enquiry.enquiryId">
+                    <mat-option (click)="doFilter(enquiry.enquiryId)" *ngFor="let enquiry of enquiryList" [value]="enquiry.enquiryId">
                         {{enquiry.enquiryNo}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <button style="margin-right: 100px;" (click)="onDownloadBtnClick()" mat-button class="add-button">
+                Download <mat-icon>download</mat-icon>
+            </button>
             <button (click)="openDialog()" mat-button class="add-button">
                 Add New <mat-icon>add</mat-icon>
             </button>

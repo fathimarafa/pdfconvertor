@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { UserGroupEditComponent } from './edit/user-group-edit.component';
 import { ConfirmModalComponent } from '../../../common/confirm-modal/confirm-modal.component';
 import { UserGroup } from './definitions/user-group.definition';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-user-group',
@@ -22,7 +23,8 @@ export class UserGroupComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = UserGroupMetadata;
     this.tableColumns = this.module.tableColumns
@@ -80,6 +82,15 @@ export class UserGroupComponent implements OnInit {
       indexToUpdate = this.dataSource.data.findIndex((row: UserGroup) => row.userGroupId === rowToEdit.userGroupId);
     }
     return indexToUpdate;
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'user group',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

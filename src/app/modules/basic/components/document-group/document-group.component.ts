@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-document-group',
@@ -32,7 +33,8 @@ export class DocumentGroupComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private pdfExportService: PdfExportService
   ) {
     this.module = DocumentGroupMetadata;
     this.tableColumns = this.module.tableColumns
@@ -101,6 +103,13 @@ export class DocumentGroupComponent implements OnInit {
   onSaveBtnClick() {
     if (this.form.valid) {
       this.httpRequest.subscribe((res) => {
+        if (this.isEdit) {
+          const rowToUpdate = this.dataSource.data.findIndex((row) => row.id === this.model.id);
+          this.dataSource.data[rowToUpdate] = this.model;
+        } else {
+          this.dataSource.data.push(res || this.model);
+        }
+        this.dataSource._updateChangeSubscription();
         this.snackBar.open('Data Saved Successfully');
         this.onCancelBtnClick();
       });
@@ -117,6 +126,15 @@ export class DocumentGroupComponent implements OnInit {
       const payloads = { ...dummyDefaultFields, ...this.model };
       return this.dataHandler.post<DocumentGroup>(this.module.serviceEndPoint, payloads);
     }
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'document group',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

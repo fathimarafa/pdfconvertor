@@ -38,7 +38,6 @@ import { GovernmentProjectBookingComponent } from './components/project-booking/
 import { NormalProjectBookingComponent } from './components/project-booking/edit/normal-project-booking/normal-project-booking.component';
 // import { OwnProjectBookingComponent } from './components/project-booking/edit/own-project-booking/own-project-booking.component';
 
-
 export const CRMmoduleComponents = [
     ApproveLevelComponent,
     ApproveLevelEditComponent,

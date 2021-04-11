@@ -8,6 +8,7 @@ import { MaterialPurchaseOrder } from './definitions//material-purchase-order.de
 import { MaterialPurchaseOrderMetadata } from './material-purchase-order.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-purchase-order',
@@ -25,7 +26,8 @@ export class MaterialPurchaseOrderComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialPurchaseOrderMetadata;
     this.tableColumns = this.module.tableColumns
@@ -83,6 +85,15 @@ export class MaterialPurchaseOrderComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'purchase order',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

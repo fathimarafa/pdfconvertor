@@ -7,6 +7,7 @@ import { TeamEditComponent } from './edit/team-edit.component';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { Team } from './definitions/team.definitions';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-team',
@@ -22,7 +23,8 @@ export class TeamComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = TeamMetadata;
     this.tableColumns = this.module.tableColumns
@@ -81,6 +83,15 @@ export class TeamComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'team',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

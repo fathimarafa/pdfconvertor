@@ -7,6 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { AssignBlockFloorMetadata } from './assign-block-floor.configuration';
 import { AssignBlockFloor } from './definitions/assign-block-floor.definition';
+import { PdfExportService, PdfExportSettings } from '../../../../services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-assign-block-floor',
@@ -22,7 +23,8 @@ export class AssignBlockFloorComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = AssignBlockFloorMetadata;
     this.tableColumns = this.module.tableColumns
@@ -81,6 +83,15 @@ export class AssignBlockFloorComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'block-floor',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

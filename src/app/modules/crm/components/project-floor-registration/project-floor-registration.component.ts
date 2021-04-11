@@ -7,6 +7,7 @@ import { ProjectFloorRegistrationMetadata } from './project-floor-registration.c
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { Floor } from './definitions/floor.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-project-floor-registration',
@@ -22,7 +23,8 @@ export class ProjectFloorRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = ProjectFloorRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -80,6 +82,15 @@ export class ProjectFloorRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'project floor',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

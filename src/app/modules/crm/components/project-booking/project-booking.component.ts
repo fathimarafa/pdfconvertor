@@ -8,6 +8,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { ProjectBooking } from './defintions/project-booking.definition';
 import { GovernmentProjectBookingComponent } from './edit/government-project-booking/government-project-booking.component';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-project-booking',
@@ -23,7 +24,8 @@ export class ProjectBookingComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = ProjectBookingMetadata;
     this.tableColumns = this.module.tableColumns
@@ -77,6 +79,15 @@ export class ProjectBookingComponent implements OnInit {
       indexToUpdate = this.dataSource.data.findIndex((row: ProjectBooking) => row.projectBookingId === rowToEdit.projectBookingId);
     }
     return indexToUpdate;
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'project booking',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

@@ -8,6 +8,7 @@ import { AccountHead } from './definitions/account-head-registration.definition'
 import { AccountHeadRegistrtaionMetadata } from './account-head-registration.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-account-head-registration',
@@ -25,7 +26,8 @@ export class AccountHeadRegistrationComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = AccountHeadRegistrtaionMetadata;
     this.tableColumns = this.module.tableColumns
@@ -83,6 +85,15 @@ export class AccountHeadRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'account heads',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

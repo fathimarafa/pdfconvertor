@@ -8,6 +8,7 @@ import { BasicDocumentUpload } from './definitions/basic-document-upload.definit
 import { BasicDocumentUploadMetadata } from './basic-document-upload.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-basic-document-upload',
@@ -25,7 +26,8 @@ export class BasicDocumentUploadComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = BasicDocumentUploadMetadata;
     this.tableColumns = this.module.tableColumns
@@ -83,6 +85,15 @@ export class BasicDocumentUploadComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'account heads',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

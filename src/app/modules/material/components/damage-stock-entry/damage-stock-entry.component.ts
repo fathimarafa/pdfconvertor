@@ -7,6 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DamageStockEntry } from './definitions/damage-stock-entry.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { DamageStockEntryMetadata } from './damage-stock-entry.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-damage-stock-entry',
@@ -22,7 +23,8 @@ export class DamageStockEntryComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = DamageStockEntryMetadata;
     this.tableColumns = this.module.tableColumns
@@ -84,6 +86,15 @@ export class DamageStockEntryComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'damage stock entry',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

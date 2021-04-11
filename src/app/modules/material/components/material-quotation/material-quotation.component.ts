@@ -7,6 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { MaterialQuotation } from './definitions/material-quotation.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { MaterialQuotationMetadata } from './material-quotation.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-quotation',
@@ -22,7 +23,8 @@ export class MaterialQuotationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialQuotationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -84,6 +86,15 @@ export class MaterialQuotationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material quotation',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

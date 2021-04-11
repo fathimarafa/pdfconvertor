@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { DocumentGroupMetadata } from '../document-group/document-group.configuration';
 import { DocumentGroup } from '../document-group/definitions/document-group.definition';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-basic-document-type',
@@ -34,7 +35,8 @@ export class BasicDocumentTypeComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private pdfExportService: PdfExportService
   ) {
     this.module = BasicDocumentTypeMetadata;
     this.tableColumns = this.module.tableColumns
@@ -104,6 +106,13 @@ export class BasicDocumentTypeComponent implements OnInit {
   onSaveBtnClick() {
     if (this.form.valid) {
       this.httpRequest.subscribe((res) => {
+        if (this.isEdit) {
+          const rowToUpdate = this.dataSource.data.findIndex((row) => row.id === this.model.id);
+          this.dataSource.data[rowToUpdate] = this.model;
+        } else {
+          this.dataSource.data.push(res || this.model);
+        }
+        this.dataSource._updateChangeSubscription();
         this.snackBar.open('Data Saved Successfully');
         this.onCancelBtnClick();
       });
@@ -141,6 +150,15 @@ export class BasicDocumentTypeComponent implements OnInit {
     return this.fields
       .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
       .find((x: FormlyFieldConfig) => x.key === 'documentGroupId');
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'document type',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 

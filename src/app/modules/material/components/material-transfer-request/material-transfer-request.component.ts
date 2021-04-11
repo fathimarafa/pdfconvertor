@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialTransferRequest } from './definitions/material-transfer-request.definition';
 import { MaterialTransferRequestEditComponent } from './edit/material-transfer-request-edit.component';
 import { MaterialTransferRequestMetadata } from './material-transfer-request.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-transfer-request',
@@ -22,7 +23,8 @@ export class MaterialTransferRequestComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialTransferRequestMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,6 +84,15 @@ export class MaterialTransferRequestComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material transfer request',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

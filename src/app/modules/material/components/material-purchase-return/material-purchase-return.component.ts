@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialPurchaseReturn } from './definitions/material-purchase-return.definition';
 import { MaterialPurchaseReturnEditComponent } from './edit/material-purchase-return-edit.component';
 import { MaterialPurchaseReturnMetadata } from './material-purchase-return.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-purchase-return',
@@ -22,7 +23,8 @@ export class MaterialPurchaseReturnComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialPurchaseReturnMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,6 +84,15 @@ export class MaterialPurchaseReturnComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material purchase',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

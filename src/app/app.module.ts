@@ -30,6 +30,7 @@ import { BasicModuleComponents } from './modules/basic/basic.component';
 import { CRMmoduleComponents } from './modules/crm/crm.component';
 import { HRmoduleComponents } from './modules/hr/hr.component';
 import { MaterialModuleComponents } from './modules/material/material.component';
+import { PrebudgetModuleComponents } from './modules/prebudget/prebudget.component';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -49,7 +50,8 @@ const appearance: MatFormFieldDefaultOptions = {
     ...CRMmoduleComponents,
     ...HRmoduleComponents,
     ...MaterialModuleComponents,
-    ...BasicModuleComponents
+    ...BasicModuleComponents,
+    ...PrebudgetModuleComponents
   ],
   imports: [
     BrowserModule,

@@ -8,6 +8,7 @@ import { BankAccount } from './definitions/bank-account-registration.definition'
 import { BankAccountRegistrtaionMetadata } from './bank-account-registration.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-bank-account-registration',
@@ -25,7 +26,8 @@ export class BankAccountRegistrationComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = BankAccountRegistrtaionMetadata;
     this.tableColumns = this.module.tableColumns
@@ -83,6 +85,15 @@ export class BankAccountRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'bank account',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

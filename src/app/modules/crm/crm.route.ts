@@ -14,6 +14,7 @@ import { UserGroupComponent } from './components/user-group/user-group.component
 import { TeamComponent } from './components/team/team.component';
 import { ProjectBlockRegistrationComponent } from './components/project-block-registration/project-block-registration.component';
 import { ProjectFloorRegistrationComponent } from './components/project-floor-registration/project-floor-registration.component';
+import { CrmWorkTypeComponent } from './components/work-type/crm-work-type.component';
 
 export const CRMmoduleRoutes = [
     { path: 'company', component: CompanyComponent },
@@ -31,5 +32,5 @@ export const CRMmoduleRoutes = [
     { path: 'consultancywork', component: ConsultancyWorkComponent },
     { path: 'floor', component: ProjectFloorRegistrationComponent },
     { path: 'block', component: ProjectBlockRegistrationComponent },
-    { path: 'assignblockfloors', component: AssignBlockFloorComponent },
+    { path: 'assignblockfloors', component: AssignBlockFloorComponent }
 ]

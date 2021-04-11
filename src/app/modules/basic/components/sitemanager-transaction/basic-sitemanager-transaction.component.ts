@@ -8,6 +8,7 @@ import { BasicSitemanagerTransaction } from './definitions/sitemanager-transacti
 import { BasicSitemanagerTransactionMetadata } from './basic-sitemanager-transaction.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-basic-sitemanager-transaction',
@@ -25,7 +26,8 @@ export class BasicSitemanagerTransactionComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = BasicSitemanagerTransactionMetadata;
     this.tableColumns = this.module.tableColumns
@@ -84,5 +86,16 @@ export class BasicSitemanagerTransactionComponent implements OnInit {
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'sitemanager-transaction',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data,
+      autosize: true
+    }
+    this.pdfExportService.download(data);
+  }
+
 
 }

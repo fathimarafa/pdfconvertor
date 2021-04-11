@@ -6,6 +6,7 @@ import { HRmoduleRoutes } from './modules/hr/hr.route';
 import { MaterialModuleRoutes } from './modules/material/material.route';
 import { BasicModuleRoutes } from './modules/basic/basic.route';
 import { CRMmoduleRoutes } from './modules/crm/crm.route';
+import { PrebudgetModuleRoutes } from './modules/prebudget/prebudget.route';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,7 +19,8 @@ const routes: Routes = [
       ...CRMmoduleRoutes,
       ...BasicModuleRoutes,
       ...MaterialModuleRoutes,
-      ...HRmoduleRoutes
+      ...HRmoduleRoutes,
+      ...PrebudgetModuleRoutes
     ]
   },
   { path: '**', redirectTo: '/login' }

@@ -5,6 +5,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { MaterialIndentApprovalMetadata } from './material-indent-approval.configuration';
 import { MaterialIndent } from '../material-indent-creation/definitions/material-indent-creation.definiton';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-indent-approval',
@@ -20,7 +21,8 @@ export class MaterialIndentApprovalComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialIndentApprovalMetadata;
     this.tableColumns = this.module.tableColumns
@@ -49,5 +51,15 @@ export class MaterialIndentApprovalComponent implements OnInit {
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material indent',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
+  }
+
 
 }

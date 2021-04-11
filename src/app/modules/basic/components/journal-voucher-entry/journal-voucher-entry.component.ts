@@ -8,6 +8,7 @@ import { Journal } from './definitions/journal-voucher-entry.definition';
 import { JournalVoucherEntryMetadata } from './journal-voucher-entry.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-journal-voucher-entry',
@@ -25,7 +26,8 @@ export class JournalVoucherEntryComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = JournalVoucherEntryMetadata;
     this.tableColumns = this.module.tableColumns
@@ -83,6 +85,15 @@ export class JournalVoucherEntryComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'journal voucher',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

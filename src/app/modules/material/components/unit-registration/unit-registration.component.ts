@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { UnitRegistration } from './definitions/unit-registration.definition';
 import { UnitRegistrationEditComponent } from './edit/unit-registration-edit.component';
 import { UnitRegistrationMetadata } from './unit-registration.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-unit-registration',
@@ -22,7 +23,8 @@ export class UnitRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = UnitRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -83,6 +85,15 @@ export class UnitRegistrationComponent implements OnInit {
   
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material unit',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

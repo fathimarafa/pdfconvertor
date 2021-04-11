@@ -7,6 +7,7 @@ import { SupplierRegistrationMetadata } from './supplier-registration.configurat
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { SupplierRegistration } from './definitions/supplier-registration.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-supplier-registration',
@@ -22,7 +23,8 @@ export class SupplierRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = SupplierRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,6 +84,15 @@ export class SupplierRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'supplier registration',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

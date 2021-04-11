@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { BasicChequeClearenceMetadata } from './basic-cheque-clearence.configuration';
 import { BasicChequeClearence } from './definitions/basic-cheque-clearence.definition';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-basic-cheque-clearence',
@@ -33,7 +34,8 @@ export class BasicChequeClearenceComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private pdfExportService: PdfExportService
   ) {
     this.module = BasicChequeClearenceMetadata;
     this.tableColumns = this.module.tableColumns
@@ -95,6 +97,15 @@ export class BasicChequeClearenceComponent implements OnInit {
         this.dataSource._updateChangeSubscription();
         this.snackBar.open('Cheque Cleared Successfully');
       });
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'cheque clearence',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

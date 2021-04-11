@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-basic-financial-year-registration',
@@ -30,7 +31,8 @@ export class BasicFinancialYearRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private pdfExportService: PdfExportService
   ) {
     this.module = BasicFinancialYearRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -76,6 +78,13 @@ export class BasicFinancialYearRegistrationComponent implements OnInit {
   onSaveBtnClick() {
     if (this.form.valid) {
       this.httpRequest.subscribe((res) => {
+        if (this.isEdit) {
+          const rowToUpdate = this.dataSource.data.findIndex((row) => row.financialYearId === this.model.financialYearId);
+          this.dataSource.data[rowToUpdate] = this.model;
+        } else {
+          this.dataSource.data.push(res || this.model);
+        }
+        this.dataSource._updateChangeSubscription();
         this.snackBar.open('Data Saved Successfully');
         this.onCancelBtnClick();
       });
@@ -100,6 +109,15 @@ export class BasicFinancialYearRegistrationComponent implements OnInit {
       .subscribe((res) => {
         this.snackBar.open('Data Saved Successfully');
       });
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'financial year',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

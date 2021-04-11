@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialCategoryRegistration } from './definitions/material-category.definition';
 import { MaterialCategoryRegistrationEditComponent } from './edit/material-category-registration-edit.component';
 import { MaterialCategoryRegistrationMetadata } from './material-category-registration.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-category-registration',
@@ -22,7 +23,8 @@ export class MaterialCategoryRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialCategoryRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,6 +84,15 @@ export class MaterialCategoryRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material category',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

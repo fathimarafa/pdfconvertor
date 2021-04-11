@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialSupplierPayment } from './definitions/material-supplier-payment.definition';
 import { MaterialSupplierPaymentEditComponent } from './edit/material-supplier-payment-edit.component';
 import { MaterialSupplierPaymentMetadata } from './/material-supplier-payment.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-supplier-payment',
@@ -22,7 +23,8 @@ export class MaterialSupplierPaymentComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialSupplierPaymentMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,6 +84,15 @@ export class MaterialSupplierPaymentComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'supplier payment',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

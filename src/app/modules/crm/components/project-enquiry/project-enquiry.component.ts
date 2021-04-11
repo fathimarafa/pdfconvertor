@@ -7,6 +7,7 @@ import { ProjectEnquiryEditComponent } from './edit/project-enquiry-edit.compone
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { ProjectEnquiry } from './definitions/project-enquiry.definition';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-project-enquiry',
@@ -22,7 +23,8 @@ export class ProjectEnquiryComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = ProjectEnquiryMetadata;
     this.tableColumns = this.module.tableColumns
@@ -80,6 +82,15 @@ export class ProjectEnquiryComponent implements OnInit {
       indexToUpdate = this.dataSource.data.findIndex((row: ProjectEnquiry) => row.enquiryId === rowToEdit.enquiryId);
     }
     return indexToUpdate;
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'project enquiry',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }

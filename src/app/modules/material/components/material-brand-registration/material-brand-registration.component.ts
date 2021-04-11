@@ -7,6 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialBrandRegistration } from './definitions/material-brand.definition';
 import { MaterialBrandRegistrationEditComponent } from './edit/material-brand-registration-edit.component';
 import { MaterialBrandRegistrationMetadata } from './material-brand-registration.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-material-brand-registration',
@@ -22,7 +23,8 @@ export class MaterialBrandRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = MaterialBrandRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,6 +84,15 @@ export class MaterialBrandRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'material brand',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }
