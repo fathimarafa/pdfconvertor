@@ -25,6 +25,10 @@ export const CompanyMetadata = {
             "displayName": 'Email'
         },
         {
+            "field": 'companyAddress1',
+            "displayName": 'Address'
+        },
+        {
             "field": 'action',
             "displayName": 'Action'
         }

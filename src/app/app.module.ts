@@ -31,6 +31,7 @@ import { CRMmoduleComponents } from './modules/crm/crm.component';
 import { HRmoduleComponents } from './modules/hr/hr.component';
 import { MaterialModuleComponents } from './modules/material/material.component';
 import { PrebudgetModuleComponents } from './modules/prebudget/prebudget.component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -76,6 +77,7 @@ const appearance: MatFormFieldDefaultOptions = {
         panelClass: ['snackbar-default']
       }
     },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     ServerCommunicationService,
     ModuleMetadataService,
     DataHandlerService,

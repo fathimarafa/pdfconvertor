@@ -6,4 +6,5 @@ export interface LabourWorkRate {
     rate: number;
     companyId: number;
     branchId: number;
+    id:number;
 }

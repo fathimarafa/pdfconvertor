@@ -1,41 +1,41 @@
 .mat-dialog-title {
-  width: 620px;
-  padding: 0 14px;
+    width: 620px;
+    padding: 0 14px;
 }
 
 formly-field {
-  /* padding: 0 !important; */
+    /* padding: 0 !important; */
 }
 
 .form-dialog button {
-  width: 120px;
+    width: 120px;
 }
 
 .form-dialog button.save {
-  background-color: #3182ce;
-  color: #ffffff;
+    background-color: #3182ce;
+    color: #ffffff;
 }
 
 .form-dialog button.cancel {
-  background-color: #a0aec0;
-  color: #ffffff;
+    background-color: #a0aec0;
+    color: #ffffff;
 }
 
 .mat-form-field {
-  width: 90%;
+    width: 90%;
 }
 
 ::ng-deep .mat-form-field-wrapper {
-  padding: 10px 0;
+    padding: 10px 0;
 }
 
 .add-button {
-  color: #63B3ED;
-  right: 50px;
-  top: 25px;
+    color: #3182ce;
+    right: 50px;
+    top: 25px;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }

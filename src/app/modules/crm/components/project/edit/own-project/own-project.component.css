@@ -1,35 +1,35 @@
 .mat-dialog-content {
-  height: 75vh;
-  max-height: 75vh;
+    height: 75vh;
+    max-height: 75vh;
 }
 
 .main-form {
-  flex: 1;
-  overflow: auto;
-  max-height: 45vh;
-  padding: 10px;
-  border: 1px solid rgba(0, 0, 0, .12);
-  border-radius: 10px;
+    flex: 1;
+    overflow: auto;
+    max-height: 45vh;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 10px;
 }
 
 .child-form {
-  flex: 2;
-  border-radius: 10px;
-  padding: 10px;
-  margin-left: 10px;
-  border: 1px solid rgba(0, 0, 0, .12);
+    flex: 2;
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
 }
 
 .child-form-container {
-  overflow: auto;
-  max-height: 39vh;
+    overflow: auto;
+    max-height: 39vh;
 }
 
 .form-header {
-  position: absolute;
-  top: 75px;
-  color: #3182ce;
-  font-size: 11px;
-  background-color: #fff;
-  padding: 0 10px;
+    position: absolute;
+    top: 75px;
+    color: #3182ce;
+    font-size: 11px;
+    background-color: #fff;
+    padding: 0 10px;
 }

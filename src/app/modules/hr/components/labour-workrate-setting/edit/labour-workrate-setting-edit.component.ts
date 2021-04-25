@@ -53,7 +53,7 @@ export class LabourWorkrateSettingEditComponent implements OnInit {
 
   get httpRequest(): Observable<LabourWorkRate> {
     if (this.isEdit) {
-      const endPoint = `${LabourWorkRateSettingMetadata.serviceEndPoint}/${this.model.labourWorkRateId}`;
+      const endPoint = `${LabourWorkRateSettingMetadata.serviceEndPoint}/${this.model.id}`;
       return this.dataHandler.put<LabourWorkRate>(endPoint, this.model);
     } else {
       return this.dataHandler.post<LabourWorkRate>(LabourWorkRateSettingMetadata.serviceEndPoint, this.model);

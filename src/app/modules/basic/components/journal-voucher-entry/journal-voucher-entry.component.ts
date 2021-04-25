@@ -91,7 +91,8 @@ export class JournalVoucherEntryComponent implements OnInit {
     const data: PdfExportSettings = {
       title: 'journal voucher',
       tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
+      tableRows: this.dataSource.data,
+      autosize: true
     }
     this.pdfExportService.download(data);
   }

@@ -6,7 +6,7 @@ export const LabourWorkRateSettingMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "LabourWorkrate",
+    "serviceEndPoint": "BuildExeHR/api/LabourWorkRate",
     "tableColumns": [
         {
             "field": 'labourWorkrateId',

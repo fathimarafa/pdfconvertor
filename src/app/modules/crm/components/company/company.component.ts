@@ -7,7 +7,6 @@ import { CompanyMetadata } from './company.configuration';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { Company } from './definitions/company.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
-import { PdfExportService, PdfExportSettings } from '../../../../services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-company',
@@ -23,8 +22,7 @@ export class CompanyComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private dialogEventHandler: DialogEventHandlerService
   ) {
     this.module = CompanyMetadata;
     this.tableColumns = this.module.tableColumns
@@ -82,15 +80,6 @@ export class CompanyComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'company',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

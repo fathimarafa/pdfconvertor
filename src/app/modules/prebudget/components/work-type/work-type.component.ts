@@ -128,13 +128,4 @@ export class WorkTypeComponent implements OnInit {
     }
   }
 
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'work type',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
-  }
-
 }

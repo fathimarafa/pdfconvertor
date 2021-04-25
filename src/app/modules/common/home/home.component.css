@@ -20,20 +20,20 @@
 }
 
 .btn-toggle {
-    color: #cbd5e0;
+    color: #3182ce;
 }
 
 .btn-logout {
     width: auto;
     margin-left: auto;
-    color: #718096;
+    color: #3182ce;
     font-size: 14px;
 }
 
 .btn-logout mat-icon {
     margin-left: 4px;
     font-style: 24px;
-    color: #63B3ED;
+    color: #3182ce;
 }
 
 
@@ -55,6 +55,12 @@ mat-sidenav {
     width: 280px;
     top: 60px;
     padding-right: 3px;
+}
+
+.logo {
+    height: 50%;
+    padding-top: 17px;
+    padding-left: 11px;
 }
 
 

@@ -3,14 +3,14 @@
 }
 
 .mat-list-base .mat-list-item {
-    color: #718096;
-    font-size: 13px;
+    color: #424952;
+    font-size: 13.4px;
     border-bottom: 1px solid #edf2f7;
     box-sizing: border-box;
 }
 
 .mat-list-base .mat-list-item .mat-list-icon {
-    color: #63B3ED;
+    color: #3182ce;
 }
 
 .list-item-child {
@@ -23,6 +23,6 @@
 
 .active-nav,
 .active-nav:hover {
-    background-color: #345c82;
+    background-color: #3182ce;
     color: #fff !important;
 }

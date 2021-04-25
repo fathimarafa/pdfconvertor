@@ -8,6 +8,12 @@ export const PrebudgetSideNavbar = {
             navLink: '/worktype',
             showSubItem: false,
             subItem: []
+        },
+        {
+            displayName: 'Specification Registration',
+            navLink: '/specification',
+            showSubItem: false,
+            subItem: []
         }
     ]
 }

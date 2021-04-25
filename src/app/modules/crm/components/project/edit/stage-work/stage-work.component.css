@@ -1,36 +1,35 @@
 .mat-dialog-content {
     height: 75vh;
     max-height: 75vh;
-  }
-  
-  .main-form {
+}
+
+.main-form {
     flex: 1;
     overflow: auto;
     max-height: 45vh;
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, .12);
     border-radius: 10px;
-  }
-  
-  .child-form {
+}
+
+.child-form {
     flex: 2;
     border-radius: 10px;
     padding: 10px;
     margin-left: 10px;
     border: 1px solid rgba(0, 0, 0, .12);
-  }
-  
-  .child-form-container {
+}
+
+.child-form-container {
     overflow: auto;
     max-height: 39vh;
-  }
-  
-  .form-header {
+}
+
+.form-header {
     position: absolute;
     top: 134px;
     color: #3182ce;
     font-size: 11px;
     background-color: #fff;
     padding: 0 10px;
-  }
-  
+}

@@ -1,14 +1,14 @@
 .example-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
 }
 
 .example-radio-button {
-  margin: 5px;
+    margin: 5px;
 }
 
-.save{
-  background-color: #3182ce;
-  color: #ffffff;
+.save {
+    background-color: #3182ce;
+    color: #ffffff;
 }

@@ -1,19 +1,15 @@
 <mat-card>
-    <div class="login-logo">
-        <mat-icon>check_circle</mat-icon>
-        <h3 style="display: inline-block;">Design Construct</h3>
-    </div>
+
+    <img style="padding: 0 0 20px 50px;" height="50px" class="logo" src="../../../../assets/BuildExelogo-01.jpg" alt="">
+
     <mat-card-content>
+
         <mat-card-title>Login</mat-card-title>
-          <form [formGroup]="form">
-              <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
-          </form>
+        <form [formGroup]="form">
+            <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+        </form>
+        <button (click)="onLoginBtnClick()" type="submit" mat-button>Login</button>
 
-          <!-- <div class="button"> -->
-              <button (click)="onLoginBtnClick()" type="submit" mat-button>Login</button>
-          <!-- </div> -->
+    </mat-card-content>
 
-
-      <!-- </form> -->
-  </mat-card-content>
 </mat-card>

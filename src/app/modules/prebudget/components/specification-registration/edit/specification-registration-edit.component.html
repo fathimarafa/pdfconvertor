@@ -1,1 +1,66 @@
-<p>specification-registration-edit works!</p>
+<div class="container-body form-dialog">
+
+    <h2 style="display: flex" mat-dialog-title class="form-dialog header-color">
+        <div style="margin-right: auto;">{{ isEdit ? 'Edit' : 'Add' }} Specificaiton </div>
+        <mat-icon (click)="onCancelBtnClick()" style="padding: 4px;">close</mat-icon>
+    </h2>
+
+    <div class="body-content">
+        <form [formGroup]="form" class="form-dialog">
+            <mat-horizontal-stepper>
+                <mat-step *ngFor="let step of steps; let index = index; let last = last;">
+                    <ng-template matStepLabel>{{ step.label }}</ng-template>
+                    <div class="stepper-container">
+
+                        <formly-form [form]="form.at(index)" [model]="model" [fields]="step.fields" [options]="options[index]">
+                        </formly-form>
+
+                        <ng-container *ngIf="showTable(step.id)">
+
+                            <div>
+                                <ng-container *ngIf="!enableRowEdit">
+                                    <button style="float: right;" (click)="onAddDetailBtnClick(form.at(index),step.id)" mat-button class="save">Add</button>
+                                </ng-container>
+                                <ng-container *ngIf="enableRowEdit">
+                                    <button style="margin-right: 20px;float: right;" (click)="onUpdateDetailBtnClick()" mat-button class="save">Update</button>
+                                    <button style="float: right;" (click)="onCancelUpdateBtnClick()" mat-button class="cancel">Cancel</button>
+                                </ng-container>
+                            </div>
+
+                            <table class="table-compnay" mat-table [dataSource]="tabTableDef[step.id].dataSource">
+                                <ng-container [matColumnDef]="column.field" *ngFor="let column of tabTableDef[step.id].tableColumns;let firstColumn = first">
+                                    <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                                    <td mat-cell *matCellDef="let element;let i =index">
+                                        <ng-container *ngIf="firstColumn">
+                                            {{index + 1}}
+                                        </ng-container>
+                                        <ng-container *ngIf="!firstColumn">
+                                            <ng-container *ngIf="column.field !== 'action'">
+                                                {{element[column.field]}}
+                                            </ng-container>
+                                            <ng-container *ngIf=" column.field === 'action'">
+                                                <mat-icon (click)="onRowEditBtnClick(element,step.id)">edit</mat-icon>
+                                                <mat-icon (click)="onRowDeleteBtnClick(i,step.id)">delete_outline</mat-icon>
+                                            </ng-container>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="tabTableDef[step.id].dataColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: tabTableDef[step.id].dataColumns;"></tr>
+                            </table>
+
+                        </ng-container>
+
+
+                    </div>
+                    <div align="end">
+                        <button class="button-info" type="button" mat-button *ngIf="index !== 0" matStepperPrevious (click)="prevStep(index)">Back</button>
+                        <button class="button-info" type="button" *ngIf="!last" matStepperNext mat-button [disabled]="!form.at(index).valid" (click)="nextStep(index)">Next</button>
+                        <button class="button-success" type="submit" (click)="onSaveBtnClick()" *ngIf="last" mat-button>Submit</button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </form>
+    </div>
+
+</div>

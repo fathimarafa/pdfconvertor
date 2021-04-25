@@ -1,18 +1,19 @@
-.table-compnay .mat-icon{
-    color: #90cdf4;
+.table-compnay .mat-icon {
+    color: #3182ce;
 }
-.table-compnay .mat-icon + .mat-icon{
+
+.table-compnay .mat-icon+.mat-icon {
     margin-left: 12px;
 }
 
-th:last-child{
+th:last-child {
     width: 100px;
 }
 
-.add-button{
+.add-button {
     position: absolute;
     right: 50px;
     top: 25px;
-    color: #63B3ED;
+    color: #3182ce;
     border-radius: 0;
 }
