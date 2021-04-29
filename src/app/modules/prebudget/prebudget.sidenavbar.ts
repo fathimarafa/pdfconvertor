@@ -14,6 +14,12 @@ export const PrebudgetSideNavbar = {
             navLink: '/specification',
             showSubItem: false,
             subItem: []
+        },
+        {
+            displayName: 'Template Registration',
+            navLink: '/template',
+            showSubItem: false,
+            subItem: []
         }
     ]
 }
