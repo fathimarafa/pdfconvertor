@@ -9,8 +9,12 @@ export const ProjectMetadata = {
     "serviceEndPoint": "BuildExeCRM/api/Project",
     "tableColumns": [
         {
-            "field": 'projectId',
+            "field": 'id',
             "displayName": 'S.No'
+        },
+        {
+            "field": 'projectId',
+            "displayName": 'Project ID'
         },
         {
             "field": 'projectName',

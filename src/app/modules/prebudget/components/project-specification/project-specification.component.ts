@@ -2,19 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmModalComponent } from '../../../common/confirm-modal/confirm-modal.component';
-import { ProjectBookingMetadata } from './project-booking.configuration';
-import { ProjectBookingEditComponent } from './edit/project-booking-edit.component';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
-import { ProjectBooking } from './defintions/project-booking.definition';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { ProjectSpecification } from './definitions/project-specification.definition';
+import { ProjectSpecificationMetadata } from './project-specification.configuration';
+import { Router } from '@angular/router';
+import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
 
 @Component({
-  selector: 'app-project-booking',
-  templateUrl: './project-booking.component.html',
-  styleUrls: ['./project-booking.component.css']
+  selector: 'app-project-specification',
+  templateUrl: './project-specification.component.html',
+  styleUrls: ['./project-specification.component.css']
 })
-export class ProjectBookingComponent implements OnInit {
+export class ProjectSpecificationComponent implements OnInit {
 
   module;
   tableColumns;
@@ -24,9 +24,10 @@ export class ProjectBookingComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private router: Router,
+    private stateService: AppStateService
   ) {
-    this.module = ProjectBookingMetadata;
+    this.module = ProjectSpecificationMetadata;
     this.tableColumns = this.module.tableColumns
   }
 
@@ -43,23 +44,21 @@ export class ProjectBookingComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<ProjectBooking[]>(this.module.serviceEndPoint)
-      .subscribe((res: ProjectBooking[]) => {
+    this.dataHandler.get<ProjectSpecification[]>(this.module.serviceEndPoint)
+      .subscribe((res: ProjectSpecification[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  openDialog(rowToEdit?: ProjectBooking) {
-    this.dialogEventHandler.openDialog(
-      ProjectBookingEditComponent,
-      this.dataSource,
-      rowToEdit,
-      this.affectedRowIndex(rowToEdit)
-    )
+  onAddEditBtnClick(rowToEdit?: ProjectSpecification) {
+    if (rowToEdit) {
+      this.stateService.setState(this.module.moduleId, rowToEdit);
+    }
+    this.router.navigateByUrl('/home/addprojectspecification');
   }
 
-  openDeleteDialog(rowToDelete: ProjectBooking): void {
+  openDeleteDialog(rowToDelete: ProjectSpecification): void {
     const dummyUserId = 1;
     const dataToComponent = {
       endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
@@ -73,10 +72,10 @@ export class ProjectBookingComponent implements OnInit {
     )
   }
 
-  private affectedRowIndex(rowToEdit?: ProjectBooking): number {
+  private affectedRowIndex(affectedRow?: ProjectSpecification) {
     let indexToUpdate;
-    if (rowToEdit) {
-      indexToUpdate = this.dataSource.data.findIndex((row: ProjectBooking) => row.id === rowToEdit.id);
+    if (affectedRow) {
+      indexToUpdate = this.dataSource.data.findIndex((row: ProjectSpecification) => row.id === affectedRow.id);
     }
     return indexToUpdate;
   }

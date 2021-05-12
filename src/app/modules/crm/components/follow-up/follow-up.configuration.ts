@@ -13,7 +13,7 @@ export const FollowUpMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'enquiryNo',
+            "field": 'enquiryId',
             "displayName": 'Enquiry No'
         },
         {
@@ -35,60 +35,80 @@ export const FollowUpMetadata = {
     ],
     "formFields": [
         {
-            "key": "followupdate",
-            "type": "datepicker",
-            "templateOptions": {
-                "label": "Date",
-                "required": true,
-            }
-        },
-        {
-            "type": "textarea",
-            "key": "remarks",
-            "templateOptions": {
-                "label": "Remarks",
-                "required": true,
-                "rows": 5
-            }
-        },
-        {
-            "type": "textarea",
-            "key": "feedback",
-            "templateOptions": {
-                "label": "FeedBack",
-                "required": true,
-                "rows": 5
-            }
-        },
-        {
-            "key": "status",
-            "type": "select",
-            "templateOptions": {
-                "label": "Status",
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": 1
-                    },
-                    {
-                        "label": "type 2",
-                        "value": 2
-                    },
-                    {
-                        "label": "type 3",
-                        "value": 3
+            "id": "row-1",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "followupdate",
+                    "type": "datepicker",
+                    "templateOptions": {
+                        "label": "Date",
+                        "required": true
                     }
-                ],
-                "required": true
-            }
+                },
+                {
+                    "className": "flex-1",
+                    "key": "attendedstaff",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Attended Staff",
+                        "options": [],
+                        "required": true
+                    }
+                }
+            ]
         },
         {
-            "key": "nextfollowup",
-            "type": "datepicker",
-            "templateOptions": {
-                "label": "Date",
-                "required": true,
-            }
+            "id": "row-2",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "textarea",
+                    "key": "remarks",
+                    "templateOptions": {
+                        "label": "Remarks",
+                        "required": true,
+                        "rows": 5
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "textarea",
+                    "key": "feedback",
+                    "templateOptions": {
+                        "label": "FeedBack",
+                        "required": true,
+                        "rows": 5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "row-3",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "status",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Status",
+                        "options": [],
+                        "required": true
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "key": "nextfollowup",
+                    "type": "datepicker",
+                    "templateOptions": {
+                        "label": "Next Follow Up Date",
+                        "required": true,
+                    }
+                }
+            ]
         }
     ]
 }

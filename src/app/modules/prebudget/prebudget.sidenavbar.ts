@@ -20,6 +20,12 @@ export const PrebudgetSideNavbar = {
             navLink: '/template',
             showSubItem: false,
             subItem: []
+        },
+        {
+            displayName: 'Project Specification',
+            navLink: '/projectspecification',
+            showSubItem: false,
+            subItem: []
         }
     ]
 }

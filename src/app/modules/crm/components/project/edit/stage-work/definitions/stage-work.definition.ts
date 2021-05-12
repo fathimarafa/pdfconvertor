@@ -4,10 +4,10 @@ export interface ProjectStageWork {
     paymentModeId: String,
     totalCost: String,
     taxType: String,
-    stage: Stage[]
+    stage: StageWorkDetails[]
 }
 
-export interface Stage {
+export interface StageWorkDetails {
     stageName: String,
     unitCost: String,
     grossAmount: String,

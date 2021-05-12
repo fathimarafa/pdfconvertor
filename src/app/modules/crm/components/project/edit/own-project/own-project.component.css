@@ -13,7 +13,7 @@
 }
 
 .child-form {
-    flex: 2;
+    flex: 3;
     border-radius: 10px;
     padding: 10px;
     margin-left: 10px;
@@ -32,4 +32,19 @@
     font-size: 11px;
     background-color: #fff;
     padding: 0 10px;
+}
+
+.own-project-component ::ng-deep.mat-form-field-infix {
+    width: 100px;
+}
+
+.unit-total-field {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+
+.unit-total-field ::ng-deep .mat-form-field-flex {
+    background-color: #E8E8E8;
+    cursor: not-allowed;
 }

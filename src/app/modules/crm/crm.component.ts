@@ -34,9 +34,6 @@ import { GovernmentProjectComponent } from './components/project/edit/govt-proje
 import { NormalProjectComponent } from './components/project/edit/normal-project/normal-project.component';
 import { OwnProjectComponent } from './components/project/edit/own-project/own-project.component';
 import { StageWorkComponent } from './components/project/edit/stage-work/stage-work.component';
-import { GovernmentProjectBookingComponent } from './components/project-booking/edit/government-project-booking/government-project-booking.component';
-import { NormalProjectBookingComponent } from './components/project-booking/edit/normal-project-booking/normal-project-booking.component';
-// import { OwnProjectBookingComponent } from './components/project-booking/edit/own-project-booking/own-project-booking.component';
 
 export const CRMmoduleComponents = [
     ApproveLevelComponent,
@@ -65,8 +62,6 @@ export const CRMmoduleComponents = [
     NormalProjectComponent,
     ProjectBookingComponent,
     ProjectBookingEditComponent,
-    NormalProjectBookingComponent,
-    GovernmentProjectBookingComponent,
     ProjectFloorRegistrationComponent,
     ProjectFloorRegistrationEditComponent,
     ProjectBlockRegistrationComponent,

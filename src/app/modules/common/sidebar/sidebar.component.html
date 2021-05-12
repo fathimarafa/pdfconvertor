@@ -22,7 +22,7 @@
 
                 <ng-container *ngIf="subMenu.showSubItem">
                     <mat-list-item (click)="onSelection(subItemChild)" [class.active-nav]="subItemChild.isSelected" class="list-item-grandchild" *ngFor="let subItemChild of subMenu.subItem">
-                        <a routerLink="{{'./' + subItemChild.navLink}}" matLine>{{ subItemChild.displayName }}</a>
+                        <a matLine>{{ subItemChild.displayName }}</a>
                     </mat-list-item>
                 </ng-container>
 

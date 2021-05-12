@@ -287,3 +287,37 @@ mat-datepicker-toggle>button {
 .mat-card:not([class*=mat-elevation-z]) {
     box-shadow: none;
 }
+
+.stepper-container {
+    max-height: 50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+mat-paginator button:disabled {
+    background-color: #fff !important;
+}
+
+.mat-radio-button {
+    margin-right: 20px;
+}
+
+
+/* .pad-top-20 {
+    padding-top: 20px;
+} */
+
+.pad-right-10 {
+    padding-right: 10px;
+}
+
+.pad-right-10 .mat-form-field-flex {
+    background-color: #E8E8E8;
+    cursor: not-allowed;
+}
+
+.projectunit-formfield-row-divider {
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    margin-bottom: 10px;
+}

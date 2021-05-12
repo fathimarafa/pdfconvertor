@@ -6,26 +6,12 @@
         <mat-card-header>
             <mat-form-field>
                 <mat-label>Search</mat-label>
-                <input matInput type="text">
+                <input matInput type="text" (keyup)="doFilter($event.target.value)">
                 <button mat-button matSuffix mat-icon-button aria-label="Clear">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <mat-form-field style="margin-left: 20px">
-                <mat-label>Select Project Type</mat-label>
-                <mat-select>
-                    <mat-option>
-                        Own Project
-                    </mat-option>
-                    <mat-option>
-                        Normal Project
-                    </mat-option>
-                    <mat-option>
-                        Government Project
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <button (click)="openDialog()" mat-button class="add-button">
+            <button (click)="onAddEditBtnClick()" mat-button class="add-button">
                 Add New <mat-icon>add</mat-icon>
             </button>
         </mat-card-header>
@@ -42,7 +28,7 @@
                                 {{element[column.field]}}
                             </ng-container>
                             <ng-container *ngIf=" column.field === 'action'">
-                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                                <mat-icon (click)="onAddEditBtnClick(element)">edit</mat-icon>
                                 <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
                             </ng-container>
                         </ng-container>
@@ -51,7 +37,7 @@
                 <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
             </table>
-            <mat-paginator #paginatorRef [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </mat-card-content>
     </mat-card>
 </div>

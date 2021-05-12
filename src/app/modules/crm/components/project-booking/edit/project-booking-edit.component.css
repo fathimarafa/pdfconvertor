@@ -1,14 +1,33 @@
-.example-radio-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
+button {
+    width: 150px;
+    margin: 0 20px;
+    color: #fff !important;
 }
 
-.example-radio-button {
-    margin: 5px;
+tr {
+    cursor: pointer;
 }
 
-.save {
-    background-color: #3182ce;
-    color: #ffffff;
+::ng-deep .mat-form-field-infix {
+    width: 100px;
+}
+
+
+/* ::ng-deep .cdk-overlay-pane {
+    max-width: 90vw !important;
+    height: 94vh;
+} */
+
+.client-form-column {
+    flex: 1;
+    margin-right: 60px;
+    max-height: 60vh;
+    padding-right: 10px;
+    overflow: scroll;
+}
+
+.project-booking-stepper-container {
+    max-height: 60vh;
+    padding-top: 10px;
+    min-height: 55vh;
 }

@@ -1,27 +1,36 @@
 export interface OwnProject {
-    projectId: String,
-    departmentId: number,
-    projectTypeId: String,
-    projectName: String,
-    projectDescription: String,
-    startDate: Date,
-    endDate: Date,
-    companyId: number,
-    branchId: number,
-    unit: ProjectUnit[]
-}
-
-export interface ProjectUnit {
-    unitStartDate: Date,
-    unitEndDate: Date,
-    type: String,
-    floorId: number,
-    unitNo: String,
-    description: String,
-    totalArea: String,
-    ratePerArea: number,
-    areaTax: number
-    landCost: number,
-    landTax: number
-    unitCost: number
+    id: number;
+    projectId: number;
+    clientId: number;
+    projectCategoryId: number;
+    blockId: number;
+    floorId: number;
+    unitId: string;
+    description: string;
+    unitStartDate: Date;
+    unitEndDate: Date;
+    dateCompleted: Date;
+    buildUpArea: number;
+    unitStatus: number;
+    totalAmount: number;
+    carpetArea: number;
+    commonArea: number;
+    balconyArea: number;
+    workArea: number;
+    ratePerArea: number;
+    privateTerrace: number;
+    terraceRate: number;
+    carParking: number;
+    gst: number;
+    kfc: number;
+    landCost: number;
+    landRate: number;
+    landgst: number;
+    landkfc: number;
+    aggregatetax: number;
+    clientAmount: number;
+    clientPer: number;
+    bankAmount: number;
+    bankPer: number;
+    userId: number;
 }

@@ -66,14 +66,15 @@ export class FollowUpComponent implements OnInit {
     this.dialogEventHandler.openDialog(
       FollowUpEditComponent,
       this.dataSource,
-      rowToEdit || { enquiryId: this.selectedEnquiry },
+      rowToEdit || {},
       this.affectedRowIndex(rowToEdit)
     )
   }
 
   openDeleteDialog(rowToDelete: FollowUp): void {
+    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.followupId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.followupId}/${dummyUserId}`,
       deleteUid: rowToDelete.followupId
     }
     this.dialogEventHandler.openDialog(

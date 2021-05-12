@@ -3,11 +3,15 @@ import { SpecificationRegistrationComponent } from './components/specification-r
 import { SpecificationRegistrationEditComponent } from "./components/specification-registration/edit/specification-registration-edit.component";
 import { TemplateRegistrationComponent } from "./components/template-registration/template-registration.component";
 import { TemplateRegistrationEditComponent } from "./components/template-registration/edit/template-registration-edit.component";
+import { ProjectSpecificationComponent } from "./components/project-specification/project-specification.component";
+import { ProjectSpecificationEditComponent } from "./components/project-specification/edit/project-specification-edit.component";
 
 export const PrebudgetModuleComponents = [
     WorkTypeComponent,
     SpecificationRegistrationComponent,
     SpecificationRegistrationEditComponent,
     TemplateRegistrationComponent,
-    TemplateRegistrationEditComponent
+    TemplateRegistrationEditComponent,
+    ProjectSpecificationComponent,
+    ProjectSpecificationEditComponent
 ]

@@ -1,28 +1,32 @@
 export interface Project {
-    id: number;
-    projectId: String,
-    departmentId: number,
-    projectTypeId: String,
-    projectName: String,
-    projectDescription: String,
-    startDate: Date,
-    endDate: Date,
-    companyId: number,
-    branchId: number,
-    unit: ProjectUnit[]
-}
-
-export interface ProjectUnit {
-    unitStartDate: Date,
-    unitEndDate: Date,
-    type: String,
-    floorId: number,
-    unitNo: String,
-    description: String,
-    totalArea: String,
-    ratePerArea: number,
-    areaTax: number
-    landCost: number,
-    landTax: number
-    unitCost: number
+    id: string;
+    projectId: string;
+    projectTypeId: string;
+    departmentId: number;
+    projectName: string;
+    projectDescription: string;
+    status: number;
+    statusDescription: string;
+    startDate: Date;
+    endDate: Date;
+    clientId: number;
+    firstName: string;
+    lastName: string;
+    sex: string;
+    gsT_No: string;
+    dateOfBirth: Date;
+    address: string;
+    post: string;
+    pin: string;
+    phoneNumber: string;
+    mobileNumber: string;
+    emailId: string;
+    totalArea: number;
+    ratePerArea: number;
+    totalAmount: number;
+    paymentModeId: number;
+    companyId: number;
+    branchId: number;
+    userId: number;
+    enquiryId: number;
 }
