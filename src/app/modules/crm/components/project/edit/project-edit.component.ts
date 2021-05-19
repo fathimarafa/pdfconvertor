@@ -22,6 +22,7 @@ export class ProjectEditComponent implements OnInit {
       this.selectedProjectType = 'Government Project';
     }
     this.onProceedBtnClick();
+    // this.selectedValue = 'Two';
   }
 
   onRadioBtnClick(value) {

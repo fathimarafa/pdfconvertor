@@ -1,0 +1,36 @@
+export interface ProjectStage {
+    id?: number;
+    projectId?: string;
+    ownProjectDetailsiId?: number;
+    stageName?: string;
+    stageStatusId?: number;
+    stageRemarks?: string;
+    dateToStart?: Date;
+    dateToComplete?: Date;
+    dateCompleted?: Date;
+    dateDue?: Date;
+    paymentPercentage?: number;
+    stageType?: string;
+    sacCode?: string;
+    taxInclusive?: string;
+    taxArea?: string;
+    paymentModeId?: number;
+    sgstPercent?: number;
+    sgstAmt?: number;
+    cgstPercent?: number;
+    cGSTAmt?: number;
+    igstPercent?: number;
+    igstAmt?: number;
+    labourWelfarePercent?: number;
+    labourWelfareAmount?: number;
+    tdsPercent?: number;
+    tdsAmount?: number;
+    kfcper?: number;
+    kfcAmt?: number;
+    discount?: number;
+    netAmount?: number;
+    amountBalance?: number;
+    voucherTypeId?: number;
+    voucherNumber?: number;
+    userId?: number;
+}

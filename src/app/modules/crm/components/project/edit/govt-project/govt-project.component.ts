@@ -74,7 +74,9 @@ export class GovernmentProjectComponent implements OnInit {
       // const endPoint = `${GovernmentProjectMetadata.serviceEndPoint}/${this.model.projectId}`;
       return this.dataHandler.put<GovernmentProject>(GovernmentProjectMetadata.serviceEndPoint, this.model);
     } else {
-      return this.dataHandler.post<GovernmentProject>(GovernmentProjectMetadata.serviceEndPoint, this.model);
+      const dummyFields = { companyId: 1, branchId: 1, userId: 1 , status : 1 };
+      const payload = { ...dummyFields, ...this.model };
+      return this.dataHandler.post<GovernmentProject>(GovernmentProjectMetadata.serviceEndPoint, payload);
     }
   }
 

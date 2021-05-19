@@ -239,6 +239,7 @@ th:first-child {
 .snackbar-error-message {
     color: #fff;
     background: #ad1e40;
+    max-width: 80vw !important;
 }
 
 
@@ -320,4 +321,44 @@ mat-paginator button:disabled {
 .projectunit-formfield-row-divider {
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     margin-bottom: 10px;
+}
+
+
+/**/
+
+.field-size-small .mat-form-field-infix {
+    width: 80px;
+}
+
+.field-size-small .flex-1 {
+    padding: 0;
+}
+
+.field-size-small .flex-1:first-child {
+    padding-right: 10px;
+}
+
+
+/**/
+
+
+/**/
+
+.readonly .mat-form-field-flex {
+    background-color: #e8e8e8;
+    pointer-events: none;
+}
+
+.readonly .mat-form-field {
+    cursor: not-allowed;
+}
+
+
+/**/
+
+
+/*cdk overlay*/
+
+.cdk-overlay-pane {
+    max-width: 95vw !important;
 }

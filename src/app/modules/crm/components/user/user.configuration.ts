@@ -17,6 +17,18 @@ export const UserMetadata = {
             "displayName": 'User Id'
         },
         {
+            "field": 'fullName',
+            "displayName": 'Name'
+        },
+        {
+            "field": 'mobile',
+            "displayName": 'Mobile'
+        },
+        {
+            "field": 'emailId',
+            "displayName": 'Email ID'
+        },
+        {
             "field": 'userGroupId',
             "displayName": 'User Type'
         },
@@ -82,6 +94,14 @@ export const UserMetadata = {
             "templateOptions": {
                 "label": "Email Id",
                 "required": true
+            }
+        },
+        {
+            "type": "checkbox",
+            "key": "siteUser",
+            "defaultValue":0,
+            "templateOptions": {
+                "label": "Site User"
             }
         }
     ]

@@ -1,0 +1,15 @@
+::ng-deep .project-status-component .field-size-small .mat-form-field-infix {
+    width: 100px;
+}
+
+button {
+    width: 150px;
+    margin: 0 20px;
+    color: #fff !important;
+}
+
+.stepper-container {
+    padding-top: 10px;
+    min-width: 80vw;
+    min-height: 50vh;
+}

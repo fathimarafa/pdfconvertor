@@ -1,36 +1,29 @@
 <ng-container [ngSwitch]="selectedValue">
 
-  <ng-container *ngSwitchCase="'One'">
-    <app-own-project></app-own-project>
-  </ng-container>
+    <ng-container *ngSwitchCase="'One'">
+        <app-own-project></app-own-project>
+    </ng-container>
 
-  <ng-container *ngSwitchCase="'Two'">
-    <app-normal-project></app-normal-project>
-  </ng-container>
+    <ng-container *ngSwitchCase="'Two'">
+        <app-normal-project></app-normal-project>
+    </ng-container>
 
-  <ng-container *ngSwitchCase="'Three'">
-    <app-govt-project></app-govt-project>
-  </ng-container>
+    <ng-container *ngSwitchCase="'Three'">
+        <app-govt-project></app-govt-project>
+    </ng-container>
 
 
-  <ng-container *ngSwitchDefault>
+    <ng-container *ngSwitchDefault>
 
-    <h2 style="width: 500px;" mat-dialog-title class="form-dialog header-color">Select Project Type</h2>
-    <!-- <label id="example-radio-group-label">Select Project Type</label> -->
-    <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" #selection>
-      <mat-radio-button style="padding: 20px" (click)="onRadioBtnClick(project)" class="example-radio-button" *ngFor="let project of projectTypes" [value]="project">
-        {{project}}
-        <!-- <div style="position: absolute;top: 35px;" *ngIf="project === 'Normal Project'">
-          <mat-radio-group aria-label="Select an option">
-            <mat-radio-button value="1">Option 1</mat-radio-button>
-            <mat-radio-button value="2">Option 2</mat-radio-button>
-          </mat-radio-group>
-        </div> -->
-      </mat-radio-button>
-    </mat-radio-group>
-    
-    <button style="float: right" (click)="onProceedBtnClick(selection)" mat-button class="save">Proceed</button>
+        <h2 style="width: 500px;" mat-dialog-title class="form-dialog header-color">Select Project Type</h2>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" #selection>
+            <mat-radio-button style="padding: 20px" (click)="onRadioBtnClick(project)" class="example-radio-button" *ngFor="let project of projectTypes" [value]="project">
+                {{project}}
+            </mat-radio-button>
+        </mat-radio-group>
 
-  </ng-container>
+        <button style="float: right" (click)="onProceedBtnClick(selection)" mat-button class="save">Proceed</button>
+
+    </ng-container>
 
 </ng-container>

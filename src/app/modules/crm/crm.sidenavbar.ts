@@ -76,6 +76,18 @@ export const CrmSideNavbar = {
             subItem: []
         },
         {
+            displayName: 'Project Status',
+            navLink: '/projectstatus',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Stage Status',
+            navLink: '/projectstagestatus',
+            showSubItem: false,
+            subItem: []
+        },
+        {
             displayName: 'Floor Registration',
             navLink: '/floor',
             showSubItem: false,
@@ -102,6 +114,24 @@ export const CrmSideNavbar = {
         {
             displayName: 'Consultancy Work',
             navLink: '/consultancywork',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Additional Bill',
+            navLink: '/additionalbill',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Additional Bill Approval',
+            navLink: '/additionalbillapproval',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Stage Receipt',
+            navLink: '/stagereceipt',
             showSubItem: false,
             subItem: []
         }

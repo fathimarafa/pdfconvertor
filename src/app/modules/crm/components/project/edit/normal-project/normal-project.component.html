@@ -1,74 +1,102 @@
-<!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
-        {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
-      </button> -->
-<!-- <h2 mat-dialog-title class="form-dialog header-color">Normal Project</h2> -->
+<div class="normal-project-component form-dialog">
+    <h2 style="display: flex;margin: 0;" mat-dialog-title class="form-dialog header-color">
+        <div style="margin-right: auto;">Normal Project</div>
+        <mat-icon (click)="onCancelBtnClick()" style="padding: 4px;">close</mat-icon>
+    </h2>
+    <form *ngIf="form" [formGroup]="form">
+        <mat-horizontal-stepper>
+            <mat-step *ngFor="let step of steps; let index = index; let last = last;">
+                <ng-template matStepLabel>{{ step.label }}</ng-template>
+                <div class="stepper-container">
 
-<h2 style="display: flex" mat-dialog-title class="form-dialog header-color">
-  <div style="margin-right: auto;">Normal Project</div>
-  <mat-icon (click)="onCancelBtnClick()" style="padding: 4px;">close</mat-icon>
-</h2>
+                    <formly-form [form]="form.at(index)" [model]="model" [fields]="step.fields" [options]="options[index]">
+                    </formly-form>
 
+                    <ng-container *ngIf="step.id === 'projectconsultancy'">
+                        <div class="" style="display: flex;justify-content: flex-end;">
+                            <button (click)="onAddConsultancyWorkBtnClick()" mat-button class="save">Add</button>
+                        </div>
+                        <div>
+                            <table class="table-compnay" mat-table [dataSource]="consultancyDatasource">
+                                <ng-container [matColumnDef]="column.field" *ngFor="let column of consultancyTableColumns;let firstColumn = first">
+                                    <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                                    <td mat-cell *matCellDef="let element;let i =index">
+                                        <ng-container *ngIf="firstColumn">
+                                            {{i + 1}}
+                                        </ng-container>
+                                        <ng-container *ngIf="!firstColumn">
+                                            <ng-container *ngIf="column.field !== 'action'">
+                                                {{element[column.field]}}
+                                            </ng-container>
+                                            <ng-container *ngIf=" column.field === 'action'">
+                                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                                                <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                                            </ng-container>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="consultancyDatacolumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: consultancyDatacolumns;"></tr>
+                            </table>
+                        </div>
+                        <div style="display: flex;justify-content: flex-end;">
+                            <mat-form-field style="margin-right: 20px">
+                                <mat-label>Payment Type</mat-label>
+                                <mat-select (selectionChange)="onConsultanyPaymentModeSelection($event.value)">
+                                    <mat-option *ngFor="let payment of paymentDataset" [value]="payment.id">
+                                        {{payment.paymentMode}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Total</mat-label>
+                                <input matInput type="text">
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
 
-<mat-horizontal-stepper [linear]="isLinear" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
-    <!-- <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Fill out your name</ng-template>
-      <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form> -->
-    <form [formGroup]="tabs.first.form">
-      <ng-template matStepLabel>Project Details</ng-template>
-      <formly-form [model]="tabs.first.model" [fields]="tabs.first.fields" [options]="tabs.first.options"
-        [form]="tabs.first.form"></formly-form>
+                    <ng-container *ngIf="step.id === 'stagework'">
+                        <div class="" style="display: flex;justify-content: flex-end;">
+                            <button (click)="onAddStageBtnClick(form.at(index))" mat-button class="save">Add</button>
+                        </div>
+                        <div>
+                            <table class="table-compnay" mat-table [dataSource]="stageDatasource">
+                                <ng-container [matColumnDef]="column.field" *ngFor="let column of stageTableColumns;let firstColumn = first">
+                                    <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                                    <td mat-cell *matCellDef="let element;let i =index">
+                                        <ng-container *ngIf="firstColumn">
+                                            {{i + 1}}
+                                        </ng-container>
+                                        <ng-container *ngIf="!firstColumn">
+                                            <ng-container *ngIf="column.field !== 'action'">
+                                                {{element[column.field]}}
+                                            </ng-container>
+                                            <ng-container *ngIf=" column.field === 'action'">
+                                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                                                <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                                            </ng-container>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="stageDatacolumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: stageDatacolumns;"></tr>
+                            </table>
+                        </div>
+                        <div style="display: flex;justify-content: flex-end;">
+                            <mat-form-field>
+                                <mat-label>Total</mat-label>
+                                <input matInput type="text">
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+
+                </div>
+                <div align="end">
+                    <button class="button-info" type="button" mat-button *ngIf="index !== 0" matStepperPrevious (click)="prevStep(index)">Back</button>
+                    <button class="button-info" type="button" *ngIf="!last" matStepperNext mat-button [disabled]="form.at(index) && !form.at(index).valid" (click)="nextStep(index)">Next</button>
+                    <button class="button-success" type="submit" (click)="onSaveBtnClick()" *ngIf="last" mat-button [disabled]="!form.valid">Submit</button>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
     </form>
-    <div class="button-group">
-      <button class="button-info" mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-    <!-- <form [formGroup]="secondFormGroup"> -->
-    <!-- <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form> -->
-    <form [formGroup]="tabs.second.form">
-      <ng-template matStepLabel>Client Details</ng-template>
-      <formly-form [model]="tabs.second.model" [fields]="tabs.second.fields" [options]="tabs.second.options"
-        [form]="tabs.second.form"></formly-form>
-    </form>
-    <div class="button-group">
-      <button class="button-info" mat-button matStepperPrevious>Back</button>
-      <button class="button-info" mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step>
-    <form [formGroup]="tabs.second.form">
-      <ng-template matStepLabel>Private Project Details</ng-template>
-      <formly-form [model]="tabs.third.model" [fields]="tabs.third.fields" [options]="tabs.third.options"
-        [form]="tabs.third.form"></formly-form>
-    </form>
-    <div class="button-group">
-      <button class="button-info" mat-button matStepperPrevious>Back</button>
-      <button class="button-info" mat-button matStepperNext>Next</button>
-    </div>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Stage Work</ng-template>
-    <app-stage-work></app-stage-work>
-    <div class="button-group">
-      <button class="button-info" mat-button matStepperPrevious>Back</button>
-      <button class="button-success" mat-button (click)="onSubmitBtnClick(stepper)">Submit</button>
-    </div>
-  </mat-step>
-
-</mat-horizontal-stepper>
+</div>

@@ -34,6 +34,15 @@ import { GovernmentProjectComponent } from './components/project/edit/govt-proje
 import { NormalProjectComponent } from './components/project/edit/normal-project/normal-project.component';
 import { OwnProjectComponent } from './components/project/edit/own-project/own-project.component';
 import { StageWorkComponent } from './components/project/edit/stage-work/stage-work.component';
+import { ProjectStatusComponent } from './components/project-status/project-status.component';
+import { ProjectStatusEditComponent } from './components/project-status/edit/project-status-edit.component';
+import { ProjectStageStatusComponent } from './components/project-stage-status/project-stage-status.component';
+import { ProjectStageStatusEditComponent } from './components/project-stage-status/edit/project-stage-status-edit.component';
+import { AdditionalBillGenerationComponent } from './components/additional-bill-generation/additional-bill-generation.component';
+import { AdditionalBillGenerationEditComponent } from './components/additional-bill-generation/edit/additional-bill-generation-edit.component';
+import { AdditionalBillApprovalComponent } from './components/additional-bill-approval/additional-bill-approval.component';
+import { StageReceiptComponent } from './components/stage-receipt/stage-receipt.component';
+import { StageReceiptEditComponent } from './components/stage-receipt/edit/stage-receipt-edit.component';
 
 export const CRMmoduleComponents = [
     ApproveLevelComponent,
@@ -71,5 +80,14 @@ export const CRMmoduleComponents = [
     TeamComponent,
     TeamEditComponent,
     ConsultancyWorkComponent,
-    ConsultancyWorkEditComponent
+    ConsultancyWorkEditComponent,
+    ProjectStatusComponent,
+    ProjectStatusEditComponent,
+    ProjectStageStatusComponent,
+    ProjectStageStatusEditComponent,
+    AdditionalBillGenerationComponent,
+    AdditionalBillGenerationEditComponent,
+    AdditionalBillApprovalComponent,
+    StageReceiptComponent,
+    StageReceiptEditComponent
 ]

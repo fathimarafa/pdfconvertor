@@ -14,6 +14,11 @@ import { UserGroupComponent } from './components/user-group/user-group.component
 import { TeamComponent } from './components/team/team.component';
 import { ProjectBlockRegistrationComponent } from './components/project-block-registration/project-block-registration.component';
 import { ProjectFloorRegistrationComponent } from './components/project-floor-registration/project-floor-registration.component';
+import { ProjectStatusComponent } from './components/project-status/project-status.component';
+import { ProjectStageStatusComponent } from './components/project-stage-status/project-stage-status.component';
+import { AdditionalBillGenerationComponent } from './components/additional-bill-generation/additional-bill-generation.component';
+import { AdditionalBillApprovalComponent } from './components/additional-bill-approval/additional-bill-approval.component';
+import { StageReceiptComponent } from './components/stage-receipt/stage-receipt.component';
 
 export const CRMmoduleRoutes = [
     { path: 'company', component: CompanyComponent },
@@ -31,5 +36,10 @@ export const CRMmoduleRoutes = [
     { path: 'consultancywork', component: ConsultancyWorkComponent },
     { path: 'floor', component: ProjectFloorRegistrationComponent },
     { path: 'block', component: ProjectBlockRegistrationComponent },
-    { path: 'assignblockfloors', component: AssignBlockFloorComponent }
+    { path: 'assignblockfloors', component: AssignBlockFloorComponent },
+    { path: 'projectstatus', component: ProjectStatusComponent },
+    { path: 'projectstagestatus', component: ProjectStageStatusComponent },
+    { path: 'additionalbill', component: AdditionalBillGenerationComponent },
+    { path: 'additionalbillapproval', component: AdditionalBillApprovalComponent },
+    { path: 'stagereceipt', component: StageReceiptComponent }
 ]

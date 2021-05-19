@@ -1,17 +1,51 @@
 .mat-stepper-horizontal {
     margin-top: 8px;
-  }
-  
-  .mat-form-field {
-    margin-top: 16px;
-  }
+}
 
-  button {
+.mat-form-field {
+    margin-top: 16px;
+}
+
+button {
     width: 150px;
     margin: 0 20px;
     color: #fff !important;
 }
 
-.button-group{
-  float: right;
+.button-group {
+    float: right;
+}
+
+.normal-project-component .stepper-container {
+    max-height: 60vh;
+    min-height: 55vh;
+}
+
+.padd-none {
+    padding: 0;
+}
+
+::ng-deep .normal-project-component .mat-form-field-infix {
+    width: 85px;
+}
+
+::ng-deep .normal-project-component .padd-top-20 {
+    padding-top: 20px;
+}
+
+::ng-deep .normal-project-component .padd-top-40 {
+    padding-top: 40px;
+}
+
+::ng-deep .normal-project-component .readonly .mat-form-field-flex {
+    background-color: #e8e8e8;
+    pointer-events: none;
+}
+
+::ng-deep .normal-project-component .readonly .mat-form-field {
+    cursor: not-allowed;
+}
+
+::ng-deep .checkbox-outline-none .mat-form-field-appearance-outline .mat-form-field-infix {
+    width: 85px;
 }

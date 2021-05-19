@@ -5,10 +5,10 @@
     <mat-card-content>
 
         <mat-card-title>Login</mat-card-title>
-        <form [formGroup]="form">
+        <form id="login-form" [formGroup]="form">
             <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
         </form>
-        <button (click)="onLoginBtnClick()" type="submit" mat-button>Login</button>
+        <button form="login-form" (click)="onLoginBtnClick()" type="submit" mat-button>Login</button>
 
     </mat-card-content>
 

@@ -176,304 +176,341 @@ export const ProjectBookingMetadata = {
                     "fieldGroup": [
                         {
                             "className": "flex-1",
-                            "type": "input",
-                            "key": "stageName",
-                            "templateOptions": {
-                                "label": "Stage Name",
-                                "required":"true"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "clientPer",
-                            "templateOptions": {
-                                "label": "Unit Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "clientAmount",
-                            "templateOptions": {
-                                "label": "Unit Amount",
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "paymentPercentage",
-                            "templateOptions": {
-                                "label": "Payment Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "sacCode",
-                            "templateOptions": {
-                                "label": "SAC Code"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "key": "taxInclusive",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Tax Inclusive",
-                                "options": [
-                                    {
-                                        "value": "Y",
-                                        "label": "Yes"
-                                    },
-                                    {
-                                        "value": "N",
-                                        "label": "No"
+                            "fieldGroup": [
+                                {
+                                    "type": "input",
+                                    "key": "projectId",
+                                    "templateOptions": {
+                                        "label": "Project Id",
+                                        "readonly": true
                                     }
-                                ]
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "key": "taxArea",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Tax Area",
-                                "options": [
-                                    {
-                                        "label": "INTER",
-                                        "value": "INTER"
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "projectName",
+                                    "templateOptions": {
+                                        "label": "Project Name",
+                                        "readonly": true
                                     }
-                                ]
-                            }
-                        }
-                    ]
-                },
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "key": "paymentModeId",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Payment Mode",
-                                "options": [
-                                    {
-                                        "label": "Cash",
-                                        "value": 1
+                                },
+                                {
+                                    "type": "select",
+                                    "key": "paymentModeId",
+                                    "templateOptions": {
+                                        "label": "Payment Mode",
+                                        "options": [],
+                                        "readonly": true
                                     }
-                                ]
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "sgstPercent",
-                            "templateOptions": {
-                                "label": "SGST Percent",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "sgstAmt",
-                            "templateOptions": {
-                                "label": "SGST Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "cgstPercent",
-                            "templateOptions": {
-                                "label": "CGST Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "cGSTAmt",
-                            "templateOptions": {
-                                "label": "CGST Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "igstPercent",
-                            "templateOptions": {
-                                "label": "IGST Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "igstAmt",
-                            "templateOptions": {
-                                "label": "IGST Amount",
-                                "type": "number"
-                            }
-                        }
-                    ]
-                },
-
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "labourWelfarePercent",
-                            "templateOptions": {
-                                "label": "Labour Welfare Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "labourWelfareAmount",
-                            "templateOptions": {
-                                "label": "Labour Welfare Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "tdsPercent",
-                            "templateOptions": {
-                                "label": "TDS Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "tdsAmount",
-                            "templateOptions": {
-                                "label": "TDS Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "kfcper",
-                            "templateOptions": {
-                                "label": "KFC Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "kfcAmt",
-                            "templateOptions": {
-                                "label": "KFC Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "discount",
-                            "templateOptions": {
-                                "label": "Discount",
-                                "type": "number"
-                            }
-                        },
-                    ]
-                },
-                {
-
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-2",
-                            "type": "textarea",
-                            "key": "stageRemarks",
-                            "templateOptions": {
-                                "label": "Remarks",
-                                "rows": 6
-                            }
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "totalAmount",
+                                    "templateOptions": {
+                                        "label": "Totoal Cost",
+                                        "readonly": true
+                                    }
+                                },
+                                {
+                                    "type": "select",
+                                    "key": "taxInclusive",
+                                    "templateOptions": {
+                                        "label": "Tax Type",
+                                        "options": [
+                                            {
+                                                "label": "Tax Inclusive",
+                                                "value": "Y"
+                                            },
+                                            {
+                                                "label": "Tax Exclusive",
+                                                "value": "N"
+                                            }
+                                        ],
+                                        "required": true
+                                    }
+                                }
+                            ]
                         },
                         {
                             "className": "flex-1",
                             "fieldGroup": [
                                 {
-                                    "fieldGroupClassName": "display-flex",
+                                    "type": "input",
+                                    "key": "stageName",
+                                    "templateOptions": {
+                                        "label": "Stage Name",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
                                     "fieldGroup": [
                                         {
                                             "className": "flex-1",
-                                            "key": "dateToStart",
-                                            "type": "datepicker",
+                                            "type": "input",
+                                            "key": "paymentPercentage",
                                             "templateOptions": {
-                                                "label": "Start Date"
-                                            }
-                                        },
-                                        {
-                                            "className": "flex-1",
-                                            "key": "dateToComplete",
-                                            "type": "datepicker",
-                                            "templateOptions": {
-                                                "label": "Date to Complete"
+                                                "label": "Unit Cost (%)",
+                                                "readonly": true
                                             }
                                         },
                                         {
                                             "className": "flex-1",
                                             "type": "input",
-                                            "key": "netAmount",
+                                            "key": "unitcostamount",
                                             "templateOptions": {
-                                                "label": "Net Amount",
-                                                "type": "number"
+                                                "label": "Unit Cost Amount",
+                                                "readonly": true
                                             }
-                                        },
+                                        }
                                     ]
                                 },
                                 {
-                                    "fieldGroupClassName": "display-flex",
+                                    "type": "input",
+                                    "key": "grossAmount",
+                                    "templateOptions": {
+                                        "label": "Gross Amount",
+                                        "type": "number",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "taxArea",
+                                    "templateOptions": {
+                                        "label": "Tax Area",
+                                        "options": [
+                                            {
+                                                "label": "INTER",
+                                                "value": "INTER"
+                                            },
+                                            {
+                                                "label": "INTRA",
+                                                "value": "INTRA"
+                                            }
+                                        ],
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
                                     "fieldGroup": [
                                         {
                                             "className": "flex-1",
-                                            "key": "dateCompleted",
-                                            "type": "datepicker",
+                                            "type": "input",
+                                            "key": "tdsPercent",
                                             "templateOptions": {
-                                                "label": "Completed Date"
-                                            }
-                                        },
-                                        {
-                                            "className": "flex-1",
-                                            "key": "dateDue",
-                                            "type": "datepicker",
-                                            "templateOptions": {
-                                                "label": "Due Date"
+                                                "label": "TDS (%)",
+                                                "type": "number",
+                                                "required": true
                                             }
                                         },
                                         {
                                             "className": "flex-1",
                                             "type": "input",
-                                            "key": "amountBalance",
+                                            "key": "tdsPercent",
                                             "templateOptions": {
-                                                "label": "Balance Amount",
+                                                "label": "TDS Amount",
+                                                "type": "number",
+                                                "required": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "labourWelfarePercent",
+                                            "templateOptions": {
+                                                "label": "LW (%)",
+                                                "type": "number",
+                                                "required": true
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "labourWelfareAmount",
+                                            "templateOptions": {
+                                                "label": "LW Amount",
+                                                "type": "number",
+                                                "required": true
+                                            }
+                                        }
+                                    ]
+                                },
+                            ]
+                        },
+                        {
+                            "className": "flex-1",
+                            "fieldGroup": [
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "sgstPercent",
+                                            "templateOptions": {
+                                                "label": "SGST (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "sgstAmt",
+                                            "templateOptions": {
+                                                "label": "SGST Amount",
                                                 "type": "number"
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "cgstPercent",
+                                            "templateOptions": {
+                                                "label": "CGST (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "cGSTAmt",
+                                            "templateOptions": {
+                                                "label": "CGST Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "igstPercent",
+                                            "templateOptions": {
+                                                "label": "IGST (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "igstAmt",
+                                            "templateOptions": {
+                                                "label": "IGST Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "kfcper",
+                                            "templateOptions": {
+                                                "label": "KFC (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "kfcAmt",
+                                            "templateOptions": {
+                                                "label": "KFC Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "datepicker",
+                                    "key": "dateToStart",
+                                    "templateOptions": {
+                                        "label": "Start Date",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "type": "datepicker",
+                                    "key": "dateCompleted",
+                                    "templateOptions": {
+                                        "label": "Completed Date",
+                                        "required": true
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            "className": "flex-1",
+                            "fieldGroup": [
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "discount",
+                                            "templateOptions": {
+                                                "label": "Discount (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "discountAmount",
+                                            "templateOptions": {
+                                                "label": "Discount Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "stageNetAmount",
+                                    "templateOptions": {
+                                        "label": "Stage Net Amount",
+                                        "type": "number",
+                                        "readonly": true
+                                    }
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "sacCode",
+                                    "templateOptions": {
+                                        "label": "SAC Code",
+                                        "options": []
+                                    }
+                                },
+                                {
+                                    "type": "textarea",
+                                    "key": "stageRemarks",
+                                    "templateOptions": {
+                                        "label": "Remarks",
+                                        "rows": 11
+                                    }
                                 }
                             ]
                         }
                     ]
-                },
+                }
             ]
         },
         {
@@ -485,304 +522,341 @@ export const ProjectBookingMetadata = {
                     "fieldGroup": [
                         {
                             "className": "flex-1",
-                            "type": "input",
-                            "key": "stageName",
-                            "templateOptions": {
-                                "label": "Stage Name",
-                                "required":"true"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "clientPer",
-                            "templateOptions": {
-                                "label": "Unit Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "clientAmount",
-                            "templateOptions": {
-                                "label": "Unit Amount",
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "paymentPercentage",
-                            "templateOptions": {
-                                "label": "Payment Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "sacCode",
-                            "templateOptions": {
-                                "label": "SAC Code"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "key": "taxInclusive",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Tax Inclusive",
-                                "options": [
-                                    {
-                                        "value": "Y",
-                                        "label": "Yes"
-                                    },
-                                    {
-                                        "value": "N",
-                                        "label": "No"
+                            "fieldGroup": [
+                                {
+                                    "type": "input",
+                                    "key": "projectId",
+                                    "templateOptions": {
+                                        "label": "Project Id",
+                                        "readonly": true
                                     }
-                                ]
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "key": "taxArea",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Tax Area",
-                                "options": [
-                                    {
-                                        "label": "INTER",
-                                        "value": "INTER"
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "projectName",
+                                    "templateOptions": {
+                                        "label": "Project Name",
+                                        "readonly": true
                                     }
-                                ]
-                            }
-                        }
-                    ]
-                },
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "key": "paymentModeId",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Payment Mode",
-                                "options": [
-                                    {
-                                        "label": "Cash",
-                                        "value": 1
+                                },
+                                {
+                                    "type": "select",
+                                    "key": "paymentModeId",
+                                    "templateOptions": {
+                                        "label": "Payment Mode",
+                                        "options": [],
+                                        "readonly": true
                                     }
-                                ]
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "sgstPercent",
-                            "templateOptions": {
-                                "label": "SGST Percent",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "sgstAmt",
-                            "templateOptions": {
-                                "label": "SGST Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "cgstPercent",
-                            "templateOptions": {
-                                "label": "CGST Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "cGSTAmt",
-                            "templateOptions": {
-                                "label": "CGST Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "igstPercent",
-                            "templateOptions": {
-                                "label": "IGST Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "igstAmt",
-                            "templateOptions": {
-                                "label": "IGST Amount",
-                                "type": "number"
-                            }
-                        }
-                    ]
-                },
-
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "labourWelfarePercent",
-                            "templateOptions": {
-                                "label": "Labour Welfare Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "labourWelfareAmount",
-                            "templateOptions": {
-                                "label": "Labour Welfare Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "tdsPercent",
-                            "templateOptions": {
-                                "label": "TDS Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "tdsAmount",
-                            "templateOptions": {
-                                "label": "TDS Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "kfcper",
-                            "templateOptions": {
-                                "label": "KFC Percentage",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "kfcAmt",
-                            "templateOptions": {
-                                "label": "KFC Amount",
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "discount",
-                            "templateOptions": {
-                                "label": "Discount",
-                                "type": "number"
-                            }
-                        },
-                    ]
-                },
-                {
-
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-2",
-                            "type": "textarea",
-                            "key": "stageRemarks",
-                            "templateOptions": {
-                                "label": "Remarks",
-                                "rows": 6
-                            }
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "totalAmount",
+                                    "templateOptions": {
+                                        "label": "Totoal Cost",
+                                        "readonly": true
+                                    }
+                                },
+                                {
+                                    "type": "select",
+                                    "key": "taxInclusive",
+                                    "templateOptions": {
+                                        "label": "Tax Type",
+                                        "options": [
+                                            {
+                                                "label": "Tax Inclusive",
+                                                "value": "Y"
+                                            },
+                                            {
+                                                "label": "Tax Exclusive",
+                                                "value": "N"
+                                            }
+                                        ],
+                                        "required": true
+                                    }
+                                }
+                            ]
                         },
                         {
                             "className": "flex-1",
                             "fieldGroup": [
                                 {
-                                    "fieldGroupClassName": "display-flex",
+                                    "type": "input",
+                                    "key": "stageName",
+                                    "templateOptions": {
+                                        "label": "Stage Name",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
                                     "fieldGroup": [
                                         {
                                             "className": "flex-1",
-                                            "key": "dateToStart",
-                                            "type": "datepicker",
+                                            "type": "input",
+                                            "key": "paymentPercentage",
                                             "templateOptions": {
-                                                "label": "Start Date"
-                                            }
-                                        },
-                                        {
-                                            "className": "flex-1",
-                                            "key": "dateToComplete",
-                                            "type": "datepicker",
-                                            "templateOptions": {
-                                                "label": "Date to Complete"
+                                                "label": "Unit Cost (%)",
+                                                "readonly": true
                                             }
                                         },
                                         {
                                             "className": "flex-1",
                                             "type": "input",
-                                            "key": "netAmount",
+                                            "key": "unitcostamount",
                                             "templateOptions": {
-                                                "label": "Net Amount",
-                                                "type": "number"
+                                                "label": "Unit Cost Amount",
+                                                "readonly": true
                                             }
-                                        },
+                                        }
                                     ]
                                 },
                                 {
-                                    "fieldGroupClassName": "display-flex",
+                                    "type": "input",
+                                    "key": "grossAmount",
+                                    "templateOptions": {
+                                        "label": "Gross Amount",
+                                        "type": "number",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "taxArea",
+                                    "templateOptions": {
+                                        "label": "Tax Area",
+                                        "options": [
+                                            {
+                                                "label": "INTER",
+                                                "value": "INTER"
+                                            },
+                                            {
+                                                "label": "INTRA",
+                                                "value": "INTRA"
+                                            }
+                                        ],
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
                                     "fieldGroup": [
                                         {
                                             "className": "flex-1",
-                                            "key": "dateCompleted",
-                                            "type": "datepicker",
+                                            "type": "input",
+                                            "key": "tdsPercent",
                                             "templateOptions": {
-                                                "label": "Completed Date"
-                                            }
-                                        },
-                                        {
-                                            "className": "flex-1",
-                                            "key": "dateDue",
-                                            "type": "datepicker",
-                                            "templateOptions": {
-                                                "label": "Due Date"
+                                                "label": "TDS (%)",
+                                                "type": "number",
+                                                "required": true
                                             }
                                         },
                                         {
                                             "className": "flex-1",
                                             "type": "input",
-                                            "key": "amountBalance",
+                                            "key": "tdsPercent",
                                             "templateOptions": {
-                                                "label": "Balance Amount",
+                                                "label": "TDS Amount",
+                                                "type": "number",
+                                                "required": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "labourWelfarePercent",
+                                            "templateOptions": {
+                                                "label": "LW (%)",
+                                                "type": "number",
+                                                "required": true
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "labourWelfareAmount",
+                                            "templateOptions": {
+                                                "label": "LW Amount",
+                                                "type": "number",
+                                                "required": true
+                                            }
+                                        }
+                                    ]
+                                },
+                            ]
+                        },
+                        {
+                            "className": "flex-1",
+                            "fieldGroup": [
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "sgstPercent",
+                                            "templateOptions": {
+                                                "label": "SGST (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "sgstAmt",
+                                            "templateOptions": {
+                                                "label": "SGST Amount",
                                                 "type": "number"
                                             }
                                         }
                                     ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "cgstPercent",
+                                            "templateOptions": {
+                                                "label": "CGST (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "cGSTAmt",
+                                            "templateOptions": {
+                                                "label": "CGST Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "igstPercent",
+                                            "templateOptions": {
+                                                "label": "IGST (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "igstAmt",
+                                            "templateOptions": {
+                                                "label": "IGST Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "kfcper",
+                                            "templateOptions": {
+                                                "label": "KFC (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "kfcAmt",
+                                            "templateOptions": {
+                                                "label": "KFC Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "datepicker",
+                                    "key": "dateToStart",
+                                    "templateOptions": {
+                                        "label": "Start Date",
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "type": "datepicker",
+                                    "key": "dateCompleted",
+                                    "templateOptions": {
+                                        "label": "Completed Date",
+                                        "required": true
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            "className": "flex-1",
+                            "fieldGroup": [
+                                {
+                                    "fieldGroupClassName": "display-flex field-size-small",
+                                    "fieldGroup": [
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "discount",
+                                            "templateOptions": {
+                                                "label": "Discount (%)",
+                                                "type": "number"
+                                            }
+                                        },
+                                        {
+                                            "className": "flex-1",
+                                            "type": "input",
+                                            "key": "discountAmount",
+                                            "templateOptions": {
+                                                "label": "Discount Amount",
+                                                "type": "number"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "stageNetAmount",
+                                    "templateOptions": {
+                                        "label": "Stage Net Amount",
+                                        "type": "number",
+                                        "readonly": true
+                                    }
+                                },
+                                {
+                                    "type": "input",
+                                    "key": "sacCode",
+                                    "templateOptions": {
+                                        "label": "SAC Code",
+                                        "options": []
+                                    }
+                                },
+                                {
+                                    "type": "textarea",
+                                    "key": "stageRemarks",
+                                    "templateOptions": {
+                                        "label": "Remarks",
+                                        "rows": 11
+                                    }
                                 }
                             ]
                         }
                     ]
-                },
+                }
             ]
         }
     ],
