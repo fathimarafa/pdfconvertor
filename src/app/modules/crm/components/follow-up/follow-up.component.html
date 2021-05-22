@@ -1,9 +1,10 @@
 <div class="module-default">
-    <mat-toolbar class="toolbar">
+    <!-- <mat-toolbar class="toolbar">
         {{module ? module.displayName : ''}}
-    </mat-toolbar>
-    <mat-card>
+    </mat-toolbar> -->
+    <mat-card class="mat-flex-card">
         <mat-card-header>
+            <mat-card-title>{{module ? module.displayName : ''}}</mat-card-title>
             <mat-form-field class="example-form-field">
                 <mat-label>Enquiry</mat-label>
                 <mat-select [value]="selectedEnquiry">
@@ -12,11 +13,12 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <button style="margin-right: 100px;" (click)="onDownloadBtnClick()" mat-button class="add-button">
+            <!-- <button style="margin-right: 100px;" (click)="onDownloadBtnClick()" mat-button class="add-button">
                 Download <mat-icon>download</mat-icon>
-            </button>
+            </button> -->
             <button (click)="openDialog()" mat-button class="add-button">
-                Add New <mat-icon>add</mat-icon>
+                <span class="btn-text">Add New </span>
+                <mat-icon>add_circle_outline</mat-icon>
             </button>
         </mat-card-header>
         <mat-card-content>
@@ -38,10 +40,12 @@
                         </ng-container>
                     </td>
                 </ng-container>
-                <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                <tr mat-header-row *matHeaderRowDef="dataColumns; sticky: true;"></tr>
                 <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </mat-card-content>
+        <mat-card-footer>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </mat-card-footer>
     </mat-card>
 </div>

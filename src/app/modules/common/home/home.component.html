@@ -1,9 +1,9 @@
 <mat-toolbar class="app-toolbar">
     <div class="left">
-        <button style="height: 100%;width: 30px;margin-right: 5px;" mat-icon-button aria-label="menu icon" (click)="sidenav.toggle()">
-            <mat-icon style="font-size: 30px;margin-bottom: 23px;" class="btn-toggle">menu</mat-icon>
+        <button mat-icon-button aria-label="menu icon" (click)="sidenav.toggle()">
+            <mat-icon class="btn-toggle md-18">menu</mat-icon>
         </button>
-        <img class="logo" src="../../../../assets/BuildExelogo-01.jpg" alt="">
+        <img class="logo" src="../../../../assets/dconstruct.svg" alt="">
     </div>
     <div>
         <button (click)="onLogoutBtnClick()" mat-button class="btn-logout">Logout <mat-icon>power_settings_new
@@ -15,7 +15,7 @@
     <mat-sidenav mode="side" opened #sidenav>
         <app-sidebar></app-sidebar>
     </mat-sidenav>
-    <mat-sidenav-content style="background-color: #fff">
+    <mat-sidenav-content>
         <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>
