@@ -1,0 +1,7 @@
+th {
+    width: 40%;
+}
+
+th:first-child {
+    width: 20%;
+}

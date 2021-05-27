@@ -19,6 +19,9 @@ import { ProjectStageStatusComponent } from './components/project-stage-status/p
 import { AdditionalBillGenerationComponent } from './components/additional-bill-generation/additional-bill-generation.component';
 import { AdditionalBillApprovalComponent } from './components/additional-bill-approval/additional-bill-approval.component';
 import { StageReceiptComponent } from './components/stage-receipt/stage-receipt.component';
+import { FormLevelSettingComponent } from './components/form-level-setting/form-level-setting.component';
+import { ModuleSettingsComponent } from './components/module-settings/module-settings.component';
+import { UserPrevilegeComponent } from './components/user-previlege/user-previlege.component';
 
 export const CRMmoduleRoutes = [
     { path: 'company', component: CompanyComponent },
@@ -41,5 +44,8 @@ export const CRMmoduleRoutes = [
     { path: 'projectstagestatus', component: ProjectStageStatusComponent },
     { path: 'additionalbill', component: AdditionalBillGenerationComponent },
     { path: 'additionalbillapproval', component: AdditionalBillApprovalComponent },
-    { path: 'stagereceipt', component: StageReceiptComponent }
+    { path: 'stagereceipt', component: StageReceiptComponent },
+    { path: 'levelsetting', component: FormLevelSettingComponent },
+    { path: 'modulesetting', component: ModuleSettingsComponent },
+    { path: 'userprevilege', component: UserPrevilegeComponent }
 ]

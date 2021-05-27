@@ -16,6 +16,16 @@ import { MaterialPurchaseOrderComponent } from './components/material-purchase-o
 import { MaterialPurchaseOrderEditComponent } from './components/material-purchase-order/edit/material-purchase-order-edit.component';
 import { MaterialIndentApprovalComponent } from './components/material-indent-approval/material-indent-approval.component';
 import { UnitRegistrationComponent } from './components/unit-registration/unit-registration.component';
+import { MaterialPurchaseOrderApprovalComponent } from './components/material-purchase-order-approval/material-purchase-order-approval.component';
+import { QuotationBaseRateFeedingComponent } from './components/quotation-base-rate-feeding/quotation-base-rate-feeding.component';
+import { MaterialStockEntryComponent } from './components/material-stock-entry/material-stock-entry.component';
+import { MaterialStockEntryApprovalComponent } from './components/material-stock-entry-approval/material-stock-entry-approval.component';
+import { MaterialQuotationApprovalComponent } from './components/material-quotation-approval/material-quotation-approval.component';
+import { MaterialIssueApprovalComponent } from './components/material-issue-approval/material-issue-approval.component';
+import { MaterialReceivedApprovalComponent } from './components/material-received-approval/material-received-approval.component';
+import { MaterialTransferRequestApprovalComponent } from './components/material-transfer-request-approval/material-transfer-request-approval.component';
+import { MaterialPurchaseReturnApprovalComponent } from './components/material-purchase-return-approval/material-purchase-return-approval.component';
+import { DamageStockEntryApprovalComponent } from './components/damage-stock-entry-approval/damage-stock-entry-approval.component';
 
 export const MaterialModuleRoutes = [
     { path: 'unitregistration', component: UnitRegistrationComponent },
@@ -24,17 +34,28 @@ export const MaterialModuleRoutes = [
     { path: 'materialindentcreation', component: MaterialIndentCreationComponent },
     { path: 'materialindentapproval', component: MaterialIndentApprovalComponent },
     { path: 'materialdamagestock', component: DamageStockEntryComponent },
+    { path: 'materialdamagestockapproval', component: DamageStockEntryApprovalComponent },
     { path: 'unitregistration', component: UnitRegistrationComponent },
     { path: 'materialbrandregistration', component: MaterialBrandRegistrationComponent },
     { path: 'materialcategoryregistration', component: MaterialCategoryRegistrationComponent },
     { path: 'materialusage', component: MaterialIssueComponent },
+    { path: 'materialusageapproval', component: MaterialIssueApprovalComponent },
     { path: 'materialquotation', component: MaterialQuotationComponent },
+    { path: 'materialquotationapproval', component: MaterialQuotationApprovalComponent },
     { path: 'materialsupplieradvance', component: MaterialSupplierAdvanceComponent },
     { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent },
     { path: 'materialtransferrequest', component: MaterialTransferRequestComponent },
+    { path: 'materialtransferrequestapproval', component: MaterialTransferRequestApprovalComponent },
     { path: 'materialreceived', component: MaterialReceivedComponent },
+    { path: 'materialreceivedapproval', component: MaterialReceivedApprovalComponent },
     { path: 'addmaterialreceived', component: MaterialReceivedEditComponent },
     { path: 'materialpurchasereturn', component: MaterialPurchaseReturnComponent },
+    { path: 'materialpurchasereturnapproval', component: MaterialPurchaseReturnApprovalComponent },
     { path: 'materialpurchaseorder', component: MaterialPurchaseOrderComponent },
-    { path: 'addmaterialpurchaseorder', component: MaterialPurchaseOrderEditComponent }
+    { path: 'addmaterialpurchaseorder', component: MaterialPurchaseOrderEditComponent },
+    { path: 'materialpurchaseorderapproval', component: MaterialPurchaseOrderApprovalComponent },
+    { path: 'quotationbaseratefeeding', component: QuotationBaseRateFeedingComponent },
+    { path: 'materialstockentry', component: MaterialStockEntryComponent },
+    { path: 'materialstockentrydirect', component: MaterialStockEntryComponent },
+    { path: 'materialstockentryapproval', component: MaterialStockEntryApprovalComponent }
 ]

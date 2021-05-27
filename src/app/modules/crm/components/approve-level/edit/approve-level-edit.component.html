@@ -12,10 +12,20 @@
 
     <div class="header">
         <div>
-            <mat-form-field class="example-form-field">
+            <!-- <mat-form-field class="example-form-field">
                 <mat-label>Form Name</mat-label>
                 <input matInput type="text" value="	Purchase Order Approval" readonly>
+            </mat-form-field> -->
+
+            <mat-form-field>
+                <mat-label>Form Name</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let form of approvalForms" [value]="form.menuId">
+                        {{form.menuName}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
+
         </div>
         <div>
             <button (click)="onAddNewLevelBtnClick()" mat-button class="add-button">

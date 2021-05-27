@@ -1,13 +1,13 @@
 <div class="module-default">
     <!-- <mat-toolbar class="toolbar">
-        {{module ? module.displayName :  ''}}
+        {{module ? module.displayName : ''}}
     </mat-toolbar> -->
     <mat-card class="mat-flex-card">
         <mat-card-header>
             <mat-card-title>{{module ? module.displayName : ''}}</mat-card-title>
             <mat-form-field>
                 <mat-label>Search</mat-label>
-                <input matInput type="text">
+                <input matInput type="text" (keyup)="doFilter($event.target.value)">
                 <button mat-button matSuffix mat-icon-button aria-label="Clear">
                     <mat-icon>close</mat-icon>
                 </button>
@@ -19,15 +19,20 @@
         </mat-card-header>
         <mat-card-content>
             <table class="table-compnay" mat-table [dataSource]="dataSource">
-                <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns">
+                <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
                     <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="column.field !== 'action'">
-                            {{element[column.field]}}
+                    <td mat-cell *matCellDef="let element;let i =index">
+                        <ng-container *ngIf="firstColumn">
+                            {{this.paginator.pageIndex == 0 ? i + 1 : 1 + i + this.paginator.pageIndex * this.paginator.pageSize}}
                         </ng-container>
-                        <ng-container *ngIf="column.field === 'action'">
-                            <mat-icon (click)="openDialog(element)">edit</mat-icon>
-                            <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                        <ng-container *ngIf="!firstColumn">
+                            <ng-container *ngIf="column.field !== 'action'">
+                                {{element[column.field]}}
+                            </ng-container>
+                            <ng-container *ngIf=" column.field === 'action'">
+                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                                <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                            </ng-container>
                         </ng-container>
                     </td>
                 </ng-container>

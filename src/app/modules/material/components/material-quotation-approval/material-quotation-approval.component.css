@@ -1,0 +1,22 @@
+tr {
+    cursor: pointer;
+}
+
+th {
+    width: 18%;
+}
+
+th:first-child {
+    width: 10%;
+}
+
+.margin-right-30 {
+    margin-right: 30px;
+}
+
+.info-text {
+    font-size: 11px;
+    padding: 20px 0px;
+    text-align: center;
+    color: rgba(0, 0, 0, .6);
+}

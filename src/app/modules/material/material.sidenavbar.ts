@@ -82,6 +82,12 @@ export const MaterialSideNavbar = {
             subItem: []
         },
         {
+            displayName: 'Base Rate Feeding',
+            navLink: '/quotationbaseratefeeding',
+            showSubItem: false,
+            subItem: []
+        },
+        {
             displayName: 'Material Supplier Advance',
             navLink: '/materialsupplieradvance',
             showSubItem: false,

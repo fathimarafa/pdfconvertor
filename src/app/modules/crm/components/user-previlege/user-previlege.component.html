@@ -1,0 +1,88 @@
+<div class="user-previlege-component module-default">
+    <mat-toolbar class="toolbar">
+        {{module ? module.displayName : ''}}
+    </mat-toolbar>
+    <mat-card>
+        <mat-card-header>
+
+        </mat-card-header>
+        <mat-card-content>
+
+            <!-- <div *ngFor="let  mainMenu of menuTree;let index = index">
+                <mat-checkbox style="margin-right: 15px;" [checked]="mainMenu.isSelected"></mat-checkbox> {{ mainMenu.menuName }}
+
+                <div [style.display]="mainMenu.displayBlock ? 'block': 'flex'">
+
+                    <div class="item" *ngFor="let subMenu of mainMenu.subItem">
+
+                        <mat-checkbox style="margin-right: 15px;" [checked]="subMenu.isSelected"></mat-checkbox>
+
+                        {{ subMenu.menuName }}
+
+                        <div *ngIf="subMenu.subItem && subMenu.subItem.length" style="display: flex;">
+
+                            <div class="item" *ngFor="let subItemChild of subMenu.subItem">
+
+                                <mat-checkbox style="margin-right: 15px;" [checked]="subItemChild.isSelected"></mat-checkbox>
+
+                                {{ subItemChild.menuName }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div> -->
+
+
+            <ng-container *ngFor="let  mainMenu of menuTree">
+
+                <mat-list-item (click)="onMenuSelection(mainMenu)">
+                    <button mat-icon-button>
+                        <mat-icon>{{ mainMenu.showSubItem ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                    </button>
+                    <mat-checkbox style="margin-right: 15px;" [checked]="mainMenu.isSelected"></mat-checkbox>
+                    {{ mainMenu.menuName }}
+                </mat-list-item>
+
+                <ng-container *ngIf="mainMenu.showSubItem">
+
+                    <ng-container *ngFor="let subMenu of mainMenu.subItem">
+
+                        <mat-list-item (click)="onMenuSelection(mainMenu, subMenu)" class="list-item-child">
+                            <button mat-icon-button>
+                                <mat-icon>{{ subMenu.showSubItem ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                            </button>
+                            <mat-checkbox style="margin-right: 15px;" [checked]="subMenu.isSelected"></mat-checkbox>
+                            {{ subMenu.menuName }}
+                        </mat-list-item>
+
+                        <ng-container *ngIf="subMenu.showSubItem">
+
+                            <mat-list-item (click)="onMenuSelection(mainMenu, subMenu, subItemChild)" class="list-item-grandchild" *ngFor="let subItemChild of subMenu.subItem">
+                                <button mat-icon-button>
+                                    <mat-icon>{{ subItemChild.showSubItem ? 'expand_more' : 'chevron_right' }}
+                                    </mat-icon>
+                                </button>
+                                <mat-checkbox style="margin-right: 15px;" [checked]="subItemChild.isSelected">
+                                </mat-checkbox>
+                                {{ subItemChild.menuName }}
+                            </mat-list-item>
+
+                        </ng-container>
+
+
+                    </ng-container>
+
+
+                </ng-container>
+
+
+            </ng-container>
+
+
+        </mat-card-content>
+    </mat-card>
+</div>

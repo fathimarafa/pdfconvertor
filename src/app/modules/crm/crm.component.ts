@@ -43,6 +43,10 @@ import { AdditionalBillGenerationEditComponent } from './components/additional-b
 import { AdditionalBillApprovalComponent } from './components/additional-bill-approval/additional-bill-approval.component';
 import { StageReceiptComponent } from './components/stage-receipt/stage-receipt.component';
 import { StageReceiptEditComponent } from './components/stage-receipt/edit/stage-receipt-edit.component';
+import { FormLevelSettingComponent } from './components/form-level-setting/form-level-setting.component';
+import { FormLevelSettingEditComponent } from './components/form-level-setting/edit/form-level-setting-edit.component';
+import { ModuleSettingsComponent } from './components/module-settings/module-settings.component';
+import { UserPrevilegeComponent } from './components/user-previlege/user-previlege.component';
 
 export const CRMmoduleComponents = [
     ApproveLevelComponent,
@@ -89,5 +93,9 @@ export const CRMmoduleComponents = [
     AdditionalBillGenerationEditComponent,
     AdditionalBillApprovalComponent,
     StageReceiptComponent,
-    StageReceiptEditComponent
+    StageReceiptEditComponent,
+    FormLevelSettingComponent,
+    FormLevelSettingEditComponent,
+    ModuleSettingsComponent,
+    UserPrevilegeComponent
 ]

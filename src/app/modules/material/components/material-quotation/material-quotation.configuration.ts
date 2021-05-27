@@ -48,14 +48,18 @@ export const MaterialQuotationMetadata = {
                     "type": "select",
                     "templateOptions": {
                         "label": "Quotation Type",
-                        "options":[
+                        "options": [
                             {
-                                "label":"Based On Indent",
-                                "value":"Based On Indent"
+                                "label": "Based On Indent",
+                                "value": "Based On Indent"
                             },
                             {
-                                "label":"Based On Project And Material",
-                                "value":"Based On Project And Material"
+                                "label": "Based On Project And Material",
+                                "value": "Based On Project And Material"
+                            },
+                            {
+                                "label": "Based On Material",
+                                "value": "Based On Material"
                             }
                         ],
                         "required": true
@@ -101,23 +105,25 @@ export const MaterialQuotationMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "projectId",
                     "type": "select",
                     "templateOptions": {
-                        "label": "Select project",
+                        "label": "Project",
                         "required": true,
-                        "options": []
+                        "options": [],
+                        "disabled": true
                     }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "materialId",
                     "type": "select",
                     "templateOptions": {
-                        "label": "Select material",
+                        "label": "Material",
                         "required": true,
-                        "options": []
+                        "options": [],
+                        "disabled": true
                     }
                 }
             ]
@@ -143,9 +149,32 @@ export const MaterialQuotationMetadata = {
                     "defaultValue": 0,
                     "templateOptions": {
                         "label": "Terms and Condition",
+                        "required":true
                     }
                 }
             ]
+        }
+    ],
+    "selectIndentTableColumns": [
+        {
+            "field": 'id',
+            "displayName": ''
+        },
+        {
+            "field": 'projectId',
+            "displayName": 'Project Id'
+        },
+        {
+            "field": 'supplierPreferred',
+            "displayName": 'Supplier Preferred'
+        },
+        {
+            "field": 'indentedDate',
+            "displayName": 'Indented Date'
+        },
+        {
+            "field": 'remarks',
+            "displayName": 'Remarks'
         }
     ]
 }

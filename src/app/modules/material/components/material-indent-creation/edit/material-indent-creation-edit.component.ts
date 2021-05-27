@@ -4,7 +4,7 @@ import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { MaterialIndentCreationMetadata } from '../material-indent-creation.configuration';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
-import { MaterialIndent } from '../definitions/material-indent-creation.definiton';
+import { IndentForm, MaterialIndent } from '../definitions/material-indent-creation.definiton';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable, Subscription } from 'rxjs';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
@@ -13,6 +13,7 @@ import { SupplierRegistration } from '../../supplier-registration/definitions/su
 import { SupplierRegistrationMetadata } from '../../supplier-registration/supplier-registration.configuration';
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-material-indent-creation-edit',
@@ -21,12 +22,13 @@ import { MaterialRegistration } from '../../material-registration/definitions/ma
 })
 export class MaterialIndentCreationEditComponent implements OnInit {
 
-    form = new FormGroup({});
-    model: MaterialIndent;
-    options: FormlyFormOptions = {};
-    fields: FormlyFieldConfig[];
     isEdit: boolean;
     subscribeProjectDivison: Subscription;
+
+    tableColumns = MaterialIndentCreationMetadata.itemDetails.tableColumns;
+    dataSource;
+
+    modalForm: IndentForm;
 
     constructor(
         private dialogRef: MatDialogRef<MaterialIndentCreationEditComponent>,
@@ -37,11 +39,36 @@ export class MaterialIndentCreationEditComponent implements OnInit {
         if (Object.keys(this.editData).length) {
             this.isEdit = true;
         }
-        this.fields = MaterialIndentCreationMetadata.formFields;
-        this.model = this.editData;
-        this.model['blockId'] = this.model.bockId; // service typo error
-        FormfieldHandler.initialize(this.fields);
+        this.defineForm();
+        FormfieldHandler.initialize(this.modalForm);
         this.loadDropdowns();
+    }
+
+    defineForm() {
+        this.modalForm = {
+            indent: {
+                form: new FormGroup({}),
+                model: this.editData,
+                options: {},
+                fields: MaterialIndentCreationMetadata.formFields
+            },
+            itemDetails: {
+                form: new FormGroup({}),
+                model: {},
+                options: {},
+                fields: MaterialIndentCreationMetadata.itemDetails.formFields
+            }
+        }
+        this.modalForm.indent.model.indentTypeId = 1;
+        this.dataSource = new MatTableDataSource(this.editData.indentDetails || [])
+    }
+
+    get dataColumns() {
+        if (this.tableColumns && this.tableColumns.length) {
+            return this.tableColumns.map(col => col.field);
+        } else {
+            return [];
+        }
     }
 
     loadDropdowns() {
@@ -56,7 +83,7 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             blockDropdown: FormfieldHandler.blockDropdown,
             floorDropdown: FormfieldHandler.floorDropdown,
             unitDropdown: FormfieldHandler.unitDropdown,
-            model: this.model,
+            model: this.modalForm.indent.model,
             isEdit: this.isEdit
         };
         this.projectDivisionFieldsHandler.initialize(projectControllerFields);
@@ -69,24 +96,36 @@ export class MaterialIndentCreationEditComponent implements OnInit {
     showHideProjectDivisionBasedFields(projectDivision: number) {
         switch (projectDivision) {
             case 1:
-                FormfieldHandler.unitDropdown.hideExpression = true;
-                FormfieldHandler.blockDropdown.hideExpression = true;
-                FormfieldHandler.floorDropdown.hideExpression = true;
+                FormfieldHandler.unitDropdown.templateOptions.disabled = true;
+                FormfieldHandler.unitDropdown.className = 'flex-1 readonly';
+                FormfieldHandler.blockDropdown.templateOptions.disabled = true;
+                FormfieldHandler.blockDropdown.className = 'flex-1 readonly';
+                FormfieldHandler.floorDropdown.templateOptions.disabled = true;
+                FormfieldHandler.floorDropdown.className = 'flex-1 readonly';
                 break;
             case 2:
-                FormfieldHandler.unitDropdown.hideExpression = false;
-                FormfieldHandler.blockDropdown.hideExpression = true;
-                FormfieldHandler.floorDropdown.hideExpression = true;
+                FormfieldHandler.unitDropdown.templateOptions.disabled = false;
+                FormfieldHandler.unitDropdown.className = 'flex-1';
+                FormfieldHandler.blockDropdown.templateOptions.disabled = true;
+                FormfieldHandler.blockDropdown.className = 'flex-1 readonly';
+                FormfieldHandler.floorDropdown.templateOptions.disabled = true;
+                FormfieldHandler.floorDropdown.className = 'flex-1 readonly';
                 break;
             case 3:
-                FormfieldHandler.unitDropdown.hideExpression = false;
-                FormfieldHandler.blockDropdown.hideExpression = false;
-                FormfieldHandler.floorDropdown.hideExpression = false;
+                FormfieldHandler.unitDropdown.templateOptions.disabled = false;
+                FormfieldHandler.unitDropdown.className = 'flex-1';
+                FormfieldHandler.blockDropdown.templateOptions.disabled = false;
+                FormfieldHandler.blockDropdown.className = 'flex-1';
+                FormfieldHandler.floorDropdown.templateOptions.disabled = false;
+                FormfieldHandler.floorDropdown.className = 'flex-1';
                 break;
             case 4:
-                FormfieldHandler.unitDropdown.hideExpression = true;
-                FormfieldHandler.blockDropdown.hideExpression = false;
-                FormfieldHandler.floorDropdown.hideExpression = false;
+                FormfieldHandler.unitDropdown.templateOptions.disabled = true;
+                FormfieldHandler.unitDropdown.className = 'flex-1 readonly';
+                FormfieldHandler.blockDropdown.templateOptions.disabled = false;
+                FormfieldHandler.blockDropdown.className = 'flex-1';
+                FormfieldHandler.floorDropdown.templateOptions.disabled = false;
+                FormfieldHandler.floorDropdown.className = 'flex-1';
                 break;
         }
     }
@@ -94,11 +133,11 @@ export class MaterialIndentCreationEditComponent implements OnInit {
     ngOnInit(): void { }
 
     onSaveBtnClick() {
-        if (this.form.valid) {
+        if (this.modalForm.indent.form.valid) {
             this.httpRequest.subscribe((res) => {
                 const closeEvent: IDialogEvent = {
                     action: this.isEdit ? DialogActions.edit : DialogActions.add,
-                    data: res || this.model
+                    data: res || this.modalForm.indent.model
                 }
                 this.dialogRef.close(closeEvent);
             })
@@ -111,13 +150,15 @@ export class MaterialIndentCreationEditComponent implements OnInit {
 
     get httpRequest(): Observable<MaterialIndent> {
         this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-        this.model.bockId =  this.model['blockId'];//service typo error
+        let payload: any = this.modalForm.indent.model
+        payload.indentDetails = this.dataSource.data;
         if (this.isEdit) {
-            return this.dataHandler.put<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, this.model);
+            return this.dataHandler.put<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, [payload]);
         } else {
             const defaultDummyFields = { purchaseFlag: 13, workId: 14, subContractorId: 15, approvedDate: new Date().toISOString(), approvedBy: 1, companyId: 1, branchId: 1, isDeleted: 0, approvalLevel: 1 };
-            const payload = { ...defaultDummyFields, ...this.model };
-            return this.dataHandler.post<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, payload);
+            payload = { ...defaultDummyFields, ...payload };
+            console.log(payload);
+            return this.dataHandler.post<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, [payload]);
         }
     }
 
@@ -151,8 +192,35 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             });
     }
 
+    onAddItemBtnClick() {
+        if (this.modalForm.itemDetails.form.valid) {
+            const data: any = Object.assign({}, this.modalForm.itemDetails.model);
+            this.dataSource.data.push(data);
+            this.dataSource._updateChangeSubscription();
+        }
+    }
+
+    openDialog(rowToEdit?: MaterialIndent) {
+        const data = Object.assign({}, rowToEdit);
+        this.modalForm.itemDetails.model = data;
+    }
+
+    openDeleteDialog(rowToDelete): void {
+        this.dataSource.data.splice(rowToDelete, 1);
+        this.dataSource._updateChangeSubscription();
+    }
+
+    ngAfterViewInit() {
+        const cdkDom = document.getElementsByClassName('cdk-overlay-pane');
+        if (cdkDom && cdkDom.length) {
+            let domStyle = cdkDom[0]['style'];
+            domStyle.minWidth = '80vw';
+        }
+    }
+
     ngOnDestroy() {
-        this.form.reset();
+        this.modalForm.indent.form.reset();
+        this.modalForm.itemDetails.form.reset();
         this.projectDivisionFieldsHandler.clear();
         this.subscribeProjectDivison.unsubscribe();
     }

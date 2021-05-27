@@ -7,6 +7,7 @@ import { LabourWorkRateSettingMetadata } from './labour-workrate-setting.configu
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { LabourWorkRate } from './definitions/labour-workrate-setting.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-labour-workrate-setting',
@@ -22,7 +23,8 @@ export class LabourWorkrateSettingComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService
   ) {
     this.module = LabourWorkRateSettingMetadata;
     this.tableColumns = this.module.tableColumns
@@ -41,11 +43,16 @@ export class LabourWorkrateSettingComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<LabourWorkRate[]>(this.module.serviceEndPoint)
+    this.dataHandler.get<LabourWorkRate[]>(this.serviceUrl)
       .subscribe((res: LabourWorkRate[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: LabourWorkRate) {
@@ -76,6 +83,10 @@ export class LabourWorkrateSettingComponent implements OnInit {
       indexToUpdate = this.dataSource.data.findIndex((row: LabourWorkRate) => row.companyId === affectedRow.companyId);
     }
     return indexToUpdate;
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
 }

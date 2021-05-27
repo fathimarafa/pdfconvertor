@@ -7,6 +7,8 @@ import { DataHandlerService } from 'src/app/services/datahandler/datahandler.ser
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Login } from './definitions/login.definition';
 import { Company } from '../../crm/components/company/definitions/company.definition';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { HttpRequest } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private dataHandler: DataHandlerService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {
     this.form = new FormGroup({});
     this.model = {};
@@ -38,17 +41,12 @@ export class LoginComponent implements OnInit {
 
   onLoginBtnClick() {
     if (this.form.valid) {
-      //Companyid/branchId/UserName / password
-      const endpoint: string = `${LoginMetadata.serviceEndPoint}/${this.model.companyId}/${this.model.branchId}/${this.model.username}/${this.model.password}`;
-      this.dataHandler.get(endpoint).subscribe(valid => {
-        if (valid) {
-          this.router.navigate(['/home'])
-        } else {
-          const message = 'LOGIN FAILED :  Wrong credentails or missing access rights to application';
-          this.snackBar.open(message, null, { panelClass: 'snackbar-error-message' });
-        }
-      })
+      this.authService.login(this.httpRequest, this.model);
     }
+  }
+
+  get httpRequest() {
+    return this.dataHandler.post(LoginMetadata.serviceEndPoint, this.model)
   }
 
   loadCompany() {

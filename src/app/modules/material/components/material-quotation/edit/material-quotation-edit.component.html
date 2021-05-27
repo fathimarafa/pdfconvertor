@@ -1,10 +1,26 @@
 <h2 mat-dialog-title class="form-dialog header-color">{{ isEdit ? 'Edit' : 'Add' }} Material Quotation </h2>
-<mat-dialog-content class="form-dialog mat-typography dialog-content">
-    <form [formGroup]="form">
+<mat-dialog-content class="form-dialog mat-typography dialog-content min-width-70vw">
+    <form id="modal-form" [formGroup]="form">
         <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+        <table *ngIf="model.quotationType === 'Based On Indent'" mat-table [dataSource]="dataSource">
+            <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                <td mat-cell *matCellDef="let element;let i =index">
+                    <ng-container *ngIf="firstColumn">
+                        <mat-radio-button [checked]="element.isSelected"></mat-radio-button>
+                    </ng-container>
+                    <ng-container *ngIf="!firstColumn">
+                        {{element[column.field]}}
+                    </ng-container>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+            <tr (click)="onRowSelection(row)" mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
-    <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <button form="modal-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
     <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
 </mat-dialog-actions>

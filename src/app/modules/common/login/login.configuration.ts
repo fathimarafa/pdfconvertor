@@ -28,7 +28,7 @@ export const LoginMetadata = {
         },
         {
             "type": "input",
-            "key": "username",
+            "key": "userId",
             "templateOptions": {
                 "label": "Username",
                 "required": true

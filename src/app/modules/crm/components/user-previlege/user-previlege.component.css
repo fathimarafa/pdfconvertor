@@ -1,0 +1,25 @@
+::ng-deep .user-previlege-component .mat-list-item {
+    color: #424952;
+    font-size: 13.4px;
+    border-bottom: 1px solid #edf2f7;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+::ng-deep .user-previlege-component .list-item-child .mat-list-item-content {
+    padding-left: 38px !important;
+}
+
+::ng-deep .user-previlege-component .list-item-grandchild .mat-list-item-content {
+    padding-left: 70px !important;
+}
+
+
+/* .item {
+    color: #424952;
+    font-size: 13.4px;
+    margin: 0 10px;
+    border-bottom: 1px solid #edf2f7;
+    box-sizing: border-box;
+    cursor: pointer;
+} */

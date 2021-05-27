@@ -1,7 +1,7 @@
 export const MaterialIndentApprovalMetadata = {
     "moduleId": "MaterialIndentApprovalMetadata",
     "moduleName": "Material Indent Approval",
-    "displayName": "Material / MaterialIndentApproval",
+    "displayName": "Material / Material Indent Approval",
     "hasAddNew": true,
     "hasEdit": true,
     "hasDelete": true,
@@ -10,113 +10,37 @@ export const MaterialIndentApprovalMetadata = {
     "tableColumns": [
         {
             "field": 'id',
-            "displayName": 'SNo'
+            "displayName": ''
         },
         {
-            "field": 'mode',
+            "field": 'projectId',
+            "displayName": 'Project Id'
+        },
+        {
+            "field": 'supplierPreferred',
+            "displayName": 'Supplier Preferred'
+        },
+        {
+            "field": 'indentedDate',
+            "displayName": 'Indented Date'
+        }
+    ],
+    "itemDetailstableColumns": [
+        {
+            "field": 'id',
+            "displayName": 'S.No'
+        },
+        {
+            "field": 'materialId',
             "displayName": 'Item'
         },
         {
-            "field": 'id',
-            "displayName": 'Required Date'
+            "field": 'quantityRequired',
+            "displayName": 'Required Quantity'
         },
         {
-            "field": 'mode',
-            "displayName": 'Quantity Required'
-        },
-        {
-            "field": 'action',
-            "displayName": 'Select All'
+            "field": 'requiredDate',
+            "displayName": 'Urgency'
         }
-    ],
-    "formFields": [
-        {
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "companyName",
-                    "templateOptions": {
-                        "label": "Select type",
-                        "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "3"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "projectId",
-                    "templateOptions": {
-                        "label": "Select project",
-                        "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "3"
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        {
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "type": "datepicker",
-                    "key": "companyName",
-                    "templateOptions": {
-                        "label": "Date",
-                        "required": true
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "materialId",
-                    "templateOptions": {
-                        "label": "Select unit",
-                        "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "3"
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
     ]
 }

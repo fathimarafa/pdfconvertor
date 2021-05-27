@@ -1,10 +1,42 @@
 <h2 mat-dialog-title class="form-dialog header-color"> {{ isEdit ? 'Edit' : 'Add' }} Indent Details</h2>
 <mat-dialog-content class="form-dialog mat-typography dialog-content">
-    <form id="modal-form" [formGroup]="form">
-        <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+
+    <form id="indent-form" [formGroup]="modalForm.indent.form">
+        <formly-form [model]="modalForm.indent.model" [fields]="modalForm.indent.fields" [options]="modalForm.indent.options" [form]="modalForm.indent.form"></formly-form>
     </form>
+
+    <form id="itemdetails-form" [formGroup]="modalForm.itemDetails.form">
+        <formly-form [model]="modalForm.itemDetails.model" [fields]="modalForm.itemDetails.fields" [options]="modalForm.itemDetails.options" [form]="modalForm.itemDetails.form"></formly-form>
+    </form>
+
+    <div style="display: flex;justify-content: flex-end;">
+        <button form="itemdetails-form" (click)="onAddItemBtnClick()" mat-button class="save">Add</button>
+    </div>
+
+    <table class="table-compnay" mat-table [dataSource]="dataSource">
+        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+            <td mat-cell *matCellDef="let element;let i =index">
+                <ng-container *ngIf="firstColumn">
+                    {{i+1}}
+                </ng-container>
+                <ng-container *ngIf="!firstColumn">
+                    <ng-container *ngIf="column.field !== 'action'">
+                        {{ column.field === 'requiredDate' ? element[column.field].toLocaleString() : element[column.field] }}
+                    </ng-container>
+                    <ng-container *ngIf=" column.field === 'action'">
+                        <mat-icon (click)="openDialog(element)">edit</mat-icon>
+                        <mat-icon (click)="openDeleteDialog(i)">delete_outline</mat-icon>
+                    </ng-container>
+                </ng-container>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+    </table>
+
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
-    <button form="modal-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <button form="indent-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
     <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
 </mat-dialog-actions>

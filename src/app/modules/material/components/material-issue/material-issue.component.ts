@@ -7,7 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialIssue } from './definitions//material-issue.definition';
 import { MaterialIssueEditComponent } from './edit//material-issue-edit.component';
 import { MaterialIssueMetadata } from './material-issue.configuration';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-issue',
@@ -24,7 +24,7 @@ export class MaterialIssueComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = MaterialIssueMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,13 +43,18 @@ export class MaterialIssueComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialIssue[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialIssue[]>(this.serviceUrl)
       .subscribe((res: MaterialIssue[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
 
   openDialog(rowToEdit?: MaterialIssue) {
     this.dialogEventHandler.openDialog(
@@ -61,9 +66,8 @@ export class MaterialIssueComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialIssue): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -84,15 +88,6 @@ export class MaterialIssueComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'material issue',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

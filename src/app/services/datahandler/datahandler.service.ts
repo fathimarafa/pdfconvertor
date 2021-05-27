@@ -12,13 +12,12 @@ export class DataHandlerService implements IDataHandlerService {
 
     private baseUrl = environment.baseUrl
     private basicHeaders: any;
-    
+
     constructor(
         private httpClient: HttpClient,
         private authService: AuthenticationService,
         private snackBar: MatSnackBar
     ) {
-        //this.baseUrl = 'http://167.86.72.223/BuildExeCRM/api/';
         this.basicHeaders = {
             'Content-Type': 'application/json'
         };
@@ -33,9 +32,15 @@ export class DataHandlerService implements IDataHandlerService {
 
     post<T>(endPoint: string, formData): Observable<T> {
         const url = `${this.baseUrl}${endPoint}`;
-        // if (endPoint.toLowerCase() !== 'company') {
-        //     formData = { ...formData }
-        // }
+        if (!endPoint.toLowerCase().includes('login')) {
+            if (Array.isArray(formData)) {
+                for (let i = 0; i < formData.length; i++) {
+                    formData[i] = { ...formData[i], ...this.authService.loggedInUser };
+                }
+            } else {
+                formData = { ...formData, ...this.authService.loggedInUser }
+            }
+        }
         return this.httpClient.post<T>(
             url,
             formData,

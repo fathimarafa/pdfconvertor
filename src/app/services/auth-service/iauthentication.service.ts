@@ -1,9 +1,9 @@
 export interface IAuthenticationService {
-    login(formData);
+    login(httpRequest, payload);
 }
 
 export interface ILoggedInUser {
-    userid: string;
-    companyId: string;
-    branchId: string
+    userId: number;
+    companyId: number;
+    branchId: number
 }

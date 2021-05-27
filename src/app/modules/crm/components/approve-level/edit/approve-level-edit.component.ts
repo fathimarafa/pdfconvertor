@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
+import { FormLevelSettingMetadata } from '../../form-level-setting/form-level-setting.configuration';
 import { User } from '../../user/definitions/user.definition';
 import { UserMetadata } from '../../user/user.configuration';
 
@@ -26,6 +27,7 @@ export class ApproveLevelEditComponent implements OnInit {
     this.userList = [];
     this.tableColumns = displayColumns;
     this.dataSource = new MatTableDataSource(dummyData);
+    this.fetchApprovalMenu();
   }
 
   ngOnInit(): void {
@@ -64,6 +66,14 @@ export class ApproveLevelEditComponent implements OnInit {
   onRemoveBtnClick(rowToRemove) {
     this.dataSource.data.splice(rowToRemove, 1)
     this.dataSource._updateChangeSubscription();
+  }
+
+  approvalForms;
+  fetchApprovalMenu() {
+    this.dataHandler.get(FormLevelSettingMetadata.serviceEndPoint.getMenuWithApproval)
+      .subscribe((res: any[]) => {
+        this.approvalForms = res;
+      });
   }
 
 }

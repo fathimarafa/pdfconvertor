@@ -9,6 +9,7 @@ import { MaterialPurchaseOrderMetadata } from './material-purchase-order.configu
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-purchase-order',
@@ -27,7 +28,8 @@ export class MaterialPurchaseOrderComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService
+    private pdfExportService: PdfExportService,
+    private authService: AuthenticationService
   ) {
     this.module = MaterialPurchaseOrderMetadata;
     this.tableColumns = this.module.tableColumns
@@ -46,8 +48,9 @@ export class MaterialPurchaseOrderComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialPurchaseOrder[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    const user = this.authService.loggedInUser;
+    const endpoint = `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`
+    this.dataHandler.get<MaterialPurchaseOrder[]>(endpoint)
       .subscribe((res: MaterialPurchaseOrder[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

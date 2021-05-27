@@ -79,7 +79,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       })
   }
 
-  loadDropdowns(){
+  loadDropdowns() {
     this.fetchMaterials();
     this.fetchSuppliers();
   }
@@ -189,9 +189,9 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     const indentList: MaterialIndent[] = this.indentBySelectedProject;
     if (indentList.length) {
       const dialogReference = this.dialog.open(SelectIndentComponent, { data: this.indentList });
-      dialogReference.afterClosed().subscribe((result: MaterialIndent[]) => {
+      dialogReference.afterClosed().subscribe((result: any[]) => {
         if (result) {
-          const purchaseOrderDetails = result.map((e: MaterialIndent) => {
+          const purchaseOrderDetails = result.map((e) => {
             return {
               itemId: e.materialId,
               indentId: e.id,
