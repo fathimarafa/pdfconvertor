@@ -45,27 +45,6 @@ export const MaterialStockEntryMetadata = {
                 {
                     "className": "flex-1",
                     "type": "select",
-                    "key": "indentTypeId",
-                    "hideExpression": true,
-                    "defaulValue": 1,
-                    "templateOptions": {
-                        "label": "Indent Type",
-                        "required": true,
-                        "options": [
-                            {
-                                "label": "material",
-                                "value": 1
-                            },
-                            {
-                                "label": "sub-contract",
-                                "value": 2
-                            }
-                        ]
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "select",
                     "key": "projectId",
                     "templateOptions": {
                         "label": "Select project",
@@ -73,31 +52,6 @@ export const MaterialStockEntryMetadata = {
                         "options": []
                     }
                 },
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "supplierPreferred",
-                    "templateOptions": {
-                        "label": "Select supplier name",
-                        "required": true,
-                        "options": []
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "datepicker",
-                    "key": "indentedDate",
-                    "templateOptions": {
-                        "label": "Enter date",
-                        "required": true
-                    }
-                }
-            ]
-        },
-        {
-            "id": "row-2",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
                 {
                     "className": "flex-1 readonly",
                     "key": "blockId",
@@ -130,22 +84,95 @@ export const MaterialStockEntryMetadata = {
                         "options": [],
                         "required": true
                     }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "supplierId",
+                    "templateOptions": {
+                        "label": "Select supplier name",
+                        "required": true,
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "datepicker",
+                    "key": "indentedDate",
+                    "templateOptions": {
+                        "label": "Enter date",
+                        "required": true
+                    }
                 }
             ]
         },
         {
-            "id": "row-3",
+            "id": "row-2",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-2 checkbox-outline-none",
-                    "type": "checkbox",
-                    "key": "quotation",
-                    "defaultValue": 0,
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "taxarea",
+                    "defaultValue": 'INTRA',
                     "templateOptions": {
-                        "label": "For Quotation",
-                    },
-                    "hideExpression": true
+                        "options": [
+                            {
+                                "label": "INTRA",
+                                "value": "INTRA"
+                            },
+                            {
+                                "label": "INTER",
+                                "value": "INTER"
+                            }
+                        ],
+                        "label": "Tax Area",
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "paymentModeId",
+                    "templateOptions": {
+                        "label": "Payment Mode",
+                        "options": [
+                            {
+                                "label": "Credit",
+                                "value": "1"
+                            },
+                            {
+                                "label": "Cash",
+                                "value": "2"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "siteManagerId",
+                    "templateOptions": {
+                        "label": "Site Manager",
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "category",
+                    "templateOptions": {
+                        "label": "Work Category",
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-2",
+                    "type": "textarea",
+                    "key": "remarks",
+                    "templateOptions": {
+                        "label": "Remarks",
+                        "rows": 1
+                    }
                 }
             ]
         }
@@ -156,15 +183,15 @@ export const MaterialStockEntryMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'itemId',
+            "field": 'materialId',
             "displayName": 'Item'
         },
         {
-            "field": 'quantityPurchased',
+            "field": 'quantity',
             "displayName": 'Quantity'
         },
         {
-            "field": 'itemRate',
+            "field": 'rate',
             "displayName": 'Rate'
         },
         {
@@ -179,10 +206,10 @@ export const MaterialStockEntryMetadata = {
             "fieldGroup": [
                 {
                     "className": "flex-4",
-                    "fieldGroup":[
+                    "fieldGroup": [
                         {
                             "fieldGroupClassName": "display-flex",
-                            "fieldGroup":[
+                            "fieldGroup": [
                                 {
                                     "className": "flex-1",
                                     "type": "input",
@@ -202,12 +229,7 @@ export const MaterialStockEntryMetadata = {
                                         "required": true,
                                         "type": "number"
                                     }
-                                }
-                            ]
-                        },
-                        {
-                            "fieldGroupClassName": "display-flex",
-                            "fieldGroup":[
+                                },
                                 {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
@@ -224,6 +246,31 @@ export const MaterialStockEntryMetadata = {
                                     "key": "loadingUnloadingPer",
                                     "templateOptions": {
                                         "label": "Loading Unloading Percent",
+                                        "required": true,
+                                        "type": "number"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "fieldGroupClassName": "display-flex",
+                            "fieldGroup": [
+                                {
+                                    "className": "flex-1 field-size-small",
+                                    "type": "input",
+                                    "key": "otherCharges",
+                                    "templateOptions": {
+                                        "label": "Other Charges",
+                                        "required": true,
+                                        "type": "number"
+                                    }
+                                },
+                                {
+                                    "className": "flex-1 field-size-small",
+                                    "type": "input",
+                                    "key": "otherChargesPer",
+                                    "templateOptions": {
+                                        "label": "Other Charges Percent",
                                         "required": true,
                                         "type": "number"
                                     }
@@ -245,31 +292,6 @@ export const MaterialStockEntryMetadata = {
                                     "templateOptions": {
                                         "label": "GST Amount",
                                         "readonly": true
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            "fieldGroupClassName": "display-flex",
-                            "fieldGroup":[
-                                {
-                                    "className": "flex-1 field-size-small",
-                                    "type": "input",
-                                    "key": "otherCharges",
-                                    "templateOptions": {
-                                        "label": "Other Charges",
-                                        "required": true,
-                                        "type": "number"
-                                    }
-                                },
-                                {
-                                    "className": "flex-1 field-size-small",
-                                    "type": "input",
-                                    "key": "otherChargesPer",
-                                    "templateOptions": {
-                                        "label": "Other Charges Percent",
-                                        "required": true,
-                                        "type": "number"
                                     }
                                 },
                                 {
@@ -295,7 +317,7 @@ export const MaterialStockEntryMetadata = {
                         },
                         {
                             "fieldGroupClassName": "display-flex",
-                            "fieldGroup":[
+                            "fieldGroup": [
                                 {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
@@ -340,7 +362,7 @@ export const MaterialStockEntryMetadata = {
                     "className": "flex-1",
                     "fieldGroup": [
                         {
-                            "className":"field-size-small",
+                            "className": "field-size-small",
                             "type": "input",
                             "key": "transportationCharge",
                             "templateOptions": {
@@ -350,7 +372,7 @@ export const MaterialStockEntryMetadata = {
                             }
                         },
                         {
-                            "className":"field-size-small",
+                            "className": "field-size-small",
                             "type": "input",
                             "key": "transportationCharge",
                             "templateOptions": {
@@ -360,7 +382,7 @@ export const MaterialStockEntryMetadata = {
                             }
                         },
                         {
-                            "className":"field-size-small readonly",
+                            "className": "field-size-small readonly",
                             "type": "input",
                             "key": "transportationCharge",
                             "templateOptions": {
@@ -383,10 +405,10 @@ export const MaterialStockEntryMetadata = {
             "field": 'orderNo',
             "displayName": 'Order No:'
         },
-        {
-            "field": 'dateOrdered',
-            "displayName": 'Order Date'
-        },
+        // {
+        //     "field": 'dateOrdered',
+        //     "displayName": 'Order Date'
+        // },
         {
             "field": 'projectId',
             "displayName": 'Project'
@@ -395,5 +417,27 @@ export const MaterialStockEntryMetadata = {
             "field": 'supplierPreffered',
             "displayName": 'Supplier'
         }
+    ],
+    "materialTableColumns": [
+        {
+            "field": 'id',
+            "displayName": ''
+        },
+        {
+            "field": 'materialName',
+            "displayName": 'Name'
+        },
+        // {
+        //     "field": 'materialTypeId',
+        //     "displayName": 'Type'
+        // },
+        {
+            "field": 'materialBrandId',
+            "displayName": 'Brand Name'
+        },
+        {
+            "field": 'materialCategoryId',
+            "displayName": 'Category'
+        },
     ]
 }

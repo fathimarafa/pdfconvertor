@@ -59,8 +59,8 @@ export const SideNavigationMenu = {
     3013: { menuId: 3013, menuName: 'Purchase Order', route: '/materialpurchaseorder' },
     3014: { menuId: 3014, menuName: 'Purchase Order Approval', route: '/materialpurchaseorderapproval' },
     3015: { menuId: 3015, menuName: 'Stock entry', route: '/materialstockentry' },
-    3016: { menuId: 3016, menuName: 'Direct stock entry', route: '/materialstockentrydirect' },
-    3017: { menuId: 3017, menuName: 'Direct stock entry approval', route: '/materialstockentryapproval' },
+    3016: { menuId: 3016, menuName: 'Direct stock entry', route: '/materialdirectstockentry' },
+    3017: { menuId: 3017, menuName: 'Direct stock entry approval', route: '/materialdirectstockentryapproval' },
     3018: { menuId: 3018, menuName: 'Damage Stock Entry', route: '/materialdamagestock' },
     3019: { menuId: 3019, menuName: 'Damage Stock Entry Approval', route: '/materialdamagestockapproval' },
     3020: { menuId: 3020, menuName: 'Material Purchase Return', route: '/materialpurchasereturn' },
@@ -99,7 +99,5 @@ export const SideNavigationMenu = {
     9003: { menuId: 9003, menuName: 'Approval Level', route: '/levelsetting' },
     9004: { menuId: 9004, menuName: 'User Approval Level Setting', route: '/approvelevel' },
     9005: { menuId: 9005, menuName: 'User Previlege ', route: '/userprevilege' },
-    3031: { menuId: 3031, menuName: 'Stock Entry approval ', route: '/userprevilege' }
-
-
+    3031: { menuId: 3031, menuName: 'Stock Entry approval ', route: '/materialstockentryapproval' }
   }

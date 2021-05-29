@@ -61,7 +61,7 @@ export const MaterialIssueMetadata = {
         },
         {
             "id": "row-2",
-            "fieldGroupClassName": "display-flex",
+            "fieldGroupClassName": "display-flex readonly",
             "fieldGroup": [
                 {
                     "className": "flex-1",
@@ -83,15 +83,14 @@ export const MaterialIssueMetadata = {
                         "options": []
                     }
                 }
-            ],
-            "hideExpression": true
+            ]
         },
         {
             "id": "row-3",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "unitId",
                     "type": "select",
                     "templateOptions": {
@@ -101,8 +100,7 @@ export const MaterialIssueMetadata = {
                     },
 
                 }
-            ],
-            "hideExpression": true
+            ]
         },
         {
             "id": "row-4",

@@ -25,7 +25,6 @@ export class DamageStockEntryEditComponent implements OnInit {
   isEdit: boolean;
   isBlockFloorLoaded: boolean;
   projectDivision: number;
-  subscribeProjectDivison: Subscription;
 
   constructor(
     private dialogRef: MatDialogRef<DamageStockEntryEditComponent>,
@@ -39,9 +38,6 @@ export class DamageStockEntryEditComponent implements OnInit {
     this.fields = DamageStockEntryMetadata.formFields;
     this.model = this.editData;
     this.bindFormSelectOptions();
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange.subscribe((res: number) => {
-      this.showHideProjectDivisionBasedFields(res);
-    })
   }
 
   ngOnInit(): void { }
@@ -154,30 +150,8 @@ export class DamageStockEntryEditComponent implements OnInit {
       });
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        this.unitDropdown.hideExpression = true;
-        this.blockFloorDropdown.hideExpression = true;
-        break;
-      case 2:
-        this.blockFloorDropdown.hideExpression = true;
-        this.unitDropdown.hideExpression = false;
-        break;
-      case 3:
-        this.unitDropdown.hideExpression = false;
-        this.blockFloorDropdown.hideExpression = false;
-        break;
-      case 4:
-        this.blockFloorDropdown.hideExpression = false;
-        this.unitDropdown.hideExpression = true;
-        break;
-    }
-  }
-
   ngOnDestroy() {
     this.projectDivisionFieldsHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

@@ -53,21 +53,20 @@ export const DamageStockEntryMetadata = {
                     }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "unitId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Select unit",
                         "required": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 }
             ]
         },
         {
             "id": "block-floor",
-            "fieldGroupClassName": "display-flex",
+            "fieldGroupClassName": "display-flex readonly",
             "fieldGroup": [
                 {
                     "className": "flex-1",
@@ -89,8 +88,7 @@ export const DamageStockEntryMetadata = {
                         "options": []
                     }
                 }
-            ],
-            "hideExpression": true
+            ]
         },
         {
             "id":"material-row",

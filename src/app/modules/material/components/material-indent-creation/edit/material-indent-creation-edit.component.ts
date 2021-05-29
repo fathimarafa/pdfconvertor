@@ -87,47 +87,6 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             isEdit: this.isEdit
         };
         this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-        this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-            .subscribe((res: number) => {
-                this.showHideProjectDivisionBasedFields(res);
-            })
-    }
-
-    showHideProjectDivisionBasedFields(projectDivision: number) {
-        switch (projectDivision) {
-            case 1:
-                FormfieldHandler.unitDropdown.templateOptions.disabled = true;
-                FormfieldHandler.unitDropdown.className = 'flex-1 readonly';
-                FormfieldHandler.blockDropdown.templateOptions.disabled = true;
-                FormfieldHandler.blockDropdown.className = 'flex-1 readonly';
-                FormfieldHandler.floorDropdown.templateOptions.disabled = true;
-                FormfieldHandler.floorDropdown.className = 'flex-1 readonly';
-                break;
-            case 2:
-                FormfieldHandler.unitDropdown.templateOptions.disabled = false;
-                FormfieldHandler.unitDropdown.className = 'flex-1';
-                FormfieldHandler.blockDropdown.templateOptions.disabled = true;
-                FormfieldHandler.blockDropdown.className = 'flex-1 readonly';
-                FormfieldHandler.floorDropdown.templateOptions.disabled = true;
-                FormfieldHandler.floorDropdown.className = 'flex-1 readonly';
-                break;
-            case 3:
-                FormfieldHandler.unitDropdown.templateOptions.disabled = false;
-                FormfieldHandler.unitDropdown.className = 'flex-1';
-                FormfieldHandler.blockDropdown.templateOptions.disabled = false;
-                FormfieldHandler.blockDropdown.className = 'flex-1';
-                FormfieldHandler.floorDropdown.templateOptions.disabled = false;
-                FormfieldHandler.floorDropdown.className = 'flex-1';
-                break;
-            case 4:
-                FormfieldHandler.unitDropdown.templateOptions.disabled = true;
-                FormfieldHandler.unitDropdown.className = 'flex-1 readonly';
-                FormfieldHandler.blockDropdown.templateOptions.disabled = false;
-                FormfieldHandler.blockDropdown.className = 'flex-1';
-                FormfieldHandler.floorDropdown.templateOptions.disabled = false;
-                FormfieldHandler.floorDropdown.className = 'flex-1';
-                break;
-        }
     }
 
     ngOnInit(): void { }

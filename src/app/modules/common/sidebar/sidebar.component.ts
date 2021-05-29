@@ -90,13 +90,15 @@ export class SidebarComponent implements OnInit {
   }
 
   bindInitialSelection(menu: SidebarMenu) {
-    const pathArray = this.router.url.split('/');
-    const endPath = pathArray[pathArray.length - 1];
-    const navLinkArr = menu.navLink.split('/');
-    const endLink = navLinkArr[navLinkArr.length - 1];
-    if (endPath === endLink) {
-      this.selectedNavItem = menu;
-      this.selectedNavItem.isSelected = true;
+    if(menu.navLink){
+      const pathArray = this.router.url.split('/');
+      const endPath = pathArray[pathArray.length - 1];
+      const navLinkArr = menu.navLink.split('/');
+      const endLink = navLinkArr[navLinkArr.length - 1];
+      if (endPath === endLink) {
+        this.selectedNavItem = menu;
+        this.selectedNavItem.isSelected = true;
+      }
     }
   }
 

@@ -108,15 +108,15 @@ export const MaterialPurchaseReturnMetadata = {
                     }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "unitId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Unit",
                         "required": true,
+                        "disabled":true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 }
             ]
         },
@@ -125,26 +125,26 @@ export const MaterialPurchaseReturnMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "blockId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Block",
                         "required": true,
+                        "disabled":true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "floorId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Floor",
+                        "disabled":true,
                         "required": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 }
             ]
         }

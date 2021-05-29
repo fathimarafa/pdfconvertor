@@ -24,14 +24,11 @@ export class ProjectDivisionFieldsHandlerService {
   private fields: ProjectDivisionFields<any>;
   private projectDivision: number;
   private isBlockFloorLoaded: boolean;
-  private onProjectDivisionChange: Subject<number>;
 
   constructor(
     private projectDivisionService: ProjectDivisionService,
     private dataHandler: DataHandlerService
-  ) {
-    this.onProjectDivisionChange = new Subject<number>();
-  }
+  ) { }
 
   initialize(controllerBasedFields: ProjectDivisionFields<any>) {
     this.fields = controllerBasedFields;
@@ -45,10 +42,6 @@ export class ProjectDivisionFieldsHandlerService {
     this.fields = undefined;
     this.projectDivision = null;
     this.isBlockFloorLoaded = false;
-  }
-
-  get listenProjectDivisionChange(): Observable<number> {
-    return this.onProjectDivisionChange.asObservable();
   }
 
   private fetchProjectSelectOptions() {
@@ -90,7 +83,7 @@ export class ProjectDivisionFieldsHandlerService {
         this.fetchProjectDivisionUnit();
       }
       this.projectDivision = currentDivision;
-      this.onProjectDivisionChange.next(this.projectDivision);
+      this.showHideProjectDivisionBasedFields();
     }
   }
 
@@ -168,6 +161,43 @@ export class ProjectDivisionFieldsHandlerService {
         break;
       case 4:
         this.fields.model.unitId = 0;
+        break;
+    }
+  }
+
+  showHideProjectDivisionBasedFields() {
+    switch (this.projectDivision) {
+      case 1:
+        this.fields.unitDropdown.templateOptions.disabled = true;
+        this.fields.unitDropdown.className = 'flex-1 readonly';
+        this.fields.blockDropdown.templateOptions.disabled = true;
+        this.fields.blockDropdown.className = 'flex-1 readonly';
+        this.fields.floorDropdown.templateOptions.disabled = true;
+        this.fields.floorDropdown.className = 'flex-1 readonly';
+        break;
+      case 2:
+        this.fields.unitDropdown.templateOptions.disabled = false;
+        this.fields.unitDropdown.className = 'flex-1';
+        this.fields.blockDropdown.templateOptions.disabled = true;
+        this.fields.blockDropdown.className = 'flex-1 readonly';
+        this.fields.floorDropdown.templateOptions.disabled = true;
+        this.fields.floorDropdown.className = 'flex-1 readonly';
+        break;
+      case 3:
+        this.fields.unitDropdown.templateOptions.disabled = false;
+        this.fields.unitDropdown.className = 'flex-1';
+        this.fields.blockDropdown.templateOptions.disabled = false;
+        this.fields.blockDropdown.className = 'flex-1';
+        this.fields.floorDropdown.templateOptions.disabled = false;
+        this.fields.floorDropdown.className = 'flex-1';
+        break;
+      case 4:
+        this.fields.unitDropdown.templateOptions.disabled = true;
+        this.fields.unitDropdown.className = 'flex-1 readonly';
+        this.fields.blockDropdown.templateOptions.disabled = false;
+        this.fields.blockDropdown.className = 'flex-1';
+        this.fields.floorDropdown.templateOptions.disabled = false;
+        this.fields.floorDropdown.className = 'flex-1';
         break;
     }
   }

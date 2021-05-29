@@ -35,7 +35,6 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   enableItemEdit: boolean;
   indentList: MaterialIndent[]
   editData: MaterialPurchaseOrder;
-  subscribeProjectDivison: Subscription;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
@@ -73,10 +72,6 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerToFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
   }
 
   loadDropdowns() {
@@ -225,31 +220,6 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     }
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 2:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 3:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-      case 4:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-    }
-  }
-
   fetchMaterials() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
     this.dataHandler.get<MaterialRegistration[]>(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
@@ -288,7 +258,6 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     if (this.isEdit) {
       this.stateService.clear(MaterialPurchaseOrderMetadata.moduleId);
     }
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

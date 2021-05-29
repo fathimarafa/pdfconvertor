@@ -36,6 +36,9 @@
                 <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
                 <tr (click)="onRowSelection(row)" mat-row *matRowDef="let row; columns: dataColumns;"></tr>
             </table>
+            <div class="info-text" *ngIf="dataSource && dataSource.data.length < 1 ">
+                No data
+            </div>
             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
             <table class="table-compnay" mat-table [dataSource]="itemDatasource">

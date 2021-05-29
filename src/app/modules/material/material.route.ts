@@ -56,6 +56,7 @@ export const MaterialModuleRoutes = [
     { path: 'materialpurchaseorderapproval', component: MaterialPurchaseOrderApprovalComponent },
     { path: 'quotationbaseratefeeding', component: QuotationBaseRateFeedingComponent },
     { path: 'materialstockentry', component: MaterialStockEntryComponent },
-    { path: 'materialstockentrydirect', component: MaterialStockEntryComponent },
-    { path: 'materialstockentryapproval', component: MaterialStockEntryApprovalComponent }
+    { path: 'materialstockentryapproval', component: MaterialStockEntryApprovalComponent },
+    { path: 'materialdirectstockentry', component: MaterialStockEntryComponent },
+    { path: 'materialdirectstockentryapproval', component: MaterialStockEntryApprovalComponent }
 ]

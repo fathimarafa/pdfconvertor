@@ -9,6 +9,7 @@ import { MaterialIndentCreationMetadata } from '../material-indent-creation/mate
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialStockEntry } from '../material-stock-entry/definitions/material-stock-entry.definition';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-material-stock-entry-approval',
@@ -31,9 +32,11 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private authService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.module = MaterialStockEntryApprovalMetadata;
+    this.module.displayName = this.isDirectEntry ? 'Material / Direct Stock Entry Approval' : 'Material / Stock Entry Approval';
     this.tableColumns = this.module.tableColumns
     this.itemTableColumns = this.module.itemDetailstableColumns;
   }
@@ -44,6 +47,10 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
     } else {
       return [];
     }
+  }
+
+  get isDirectEntry() {
+    return this.router.url.includes('directstockentry');
   }
 
   get itemDataColumns() {
@@ -63,7 +70,13 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
     const endpoint = `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`
     this.dataHandler.get<MaterialStockEntry[]>(endpoint)
       .subscribe((res: MaterialStockEntry[]) => {
-        this.dataSource = new MatTableDataSource(res);
+        let data = [];
+        if (this.isDirectEntry) {
+          data = res.filter(e => !e.purchaseOrderNo); // orders without purchase order
+        } else {
+          data = res.filter(e => e.purchaseOrderNo)
+        }
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
       });
   }

@@ -66,7 +66,7 @@
                 No data
             </div>
             <div *ngIf="itemDatasource && itemDatasource.data.length" class="total-input-box">
-                <mat-form-field>
+                <mat-form-field class="readonly">
                     <mat-label>Total</mat-label>
                     <input [value]="totalAmount" matInput type="text">
                 </mat-form-field>

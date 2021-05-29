@@ -28,7 +28,6 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
   isEdit: boolean;
   editData;
   documentTypes: BasicDocumentType[];
-  subscribeProjectDivison: Subscription;
 
   constructor(
     private dataHandler: DataHandlerService,
@@ -64,35 +63,6 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
-  }
-
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 2:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 3:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-      case 4:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-    }
   }
 
   onSaveBtnClick() {

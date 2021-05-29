@@ -82,37 +82,37 @@ export const BasicSitemanagerTransactionMetadata = {
                     }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "blockId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Select block",
                         "required": true,
+                        "disabled": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    } 
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "floorId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Select floor",
                         "required": true,
+                        "disabled": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "unitId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Select unit",
                         "required": true,
+                        "disabled": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 }
             ]
         },

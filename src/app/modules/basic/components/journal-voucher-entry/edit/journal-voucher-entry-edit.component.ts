@@ -24,7 +24,6 @@ export class JournalVoucherEntryEditComponent implements OnInit {
   fields: FormlyFieldConfig[];
   isEdit: boolean;
   editData: Journal;
-  subscribeProjectDivison: Subscription;
 
   constructor(
     private dataHandler: DataHandlerService,
@@ -53,10 +52,6 @@ export class JournalVoucherEntryEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerToFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
   }
 
   ngOnInit(): void { }
@@ -86,38 +81,12 @@ export class JournalVoucherEntryEditComponent implements OnInit {
     }
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 2:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 3:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-      case 4:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-    }
-  }
-
   ngOnDestroy() {
     this.form.reset();
     if (this.isEdit) {
       this.stateService.clear(JournalVoucherEntryMetadata.moduleId);
     }
     this.projectDivisionFieldsHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

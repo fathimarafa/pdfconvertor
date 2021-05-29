@@ -30,7 +30,6 @@ export class MaterialRegistrationEditComponent implements OnInit {
   tableColumns;
   dataSource;
   addedStocks = [];
-  subscribeProjectDivison: Subscription;
   hasOpeningStock: boolean;
   enableStockEdit: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -59,10 +58,6 @@ export class MaterialRegistrationEditComponent implements OnInit {
       isEdit: false
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
   }
 
   checkOpeningStock() {
@@ -171,31 +166,6 @@ export class MaterialRegistrationEditComponent implements OnInit {
     }
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 2:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 3:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-      case 4:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-    }
-  }
-
   fetchMaterialCategory() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
     const endPoint = `${MaterialCategoryRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
@@ -266,7 +236,6 @@ export class MaterialRegistrationEditComponent implements OnInit {
     this.modalForms.material.form.reset();
     this.modalForms.stock.form.reset();
     this.projectDivisionFieldsHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

@@ -24,7 +24,6 @@ export class MaterialIssueEditComponent implements OnInit {
   isEdit: boolean;
   tableColumns;
   dataSource;
-  subscribeProjectDivison: Subscription;
   enableStockEdit: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -51,10 +50,6 @@ export class MaterialIssueEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
   }
 
 
@@ -147,27 +142,6 @@ export class MaterialIssueEditComponent implements OnInit {
     }
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitFieldRow.hideExpression = true;
-        FormfieldHandler.blockFloorRow.hideExpression = true;
-        break;
-      case 2:
-        FormfieldHandler.unitFieldRow.hideExpression = false;
-        FormfieldHandler.blockFloorRow.hideExpression = true;
-        break;
-      case 3:
-        FormfieldHandler.unitFieldRow.hideExpression = false;
-        FormfieldHandler.blockFloorRow.hideExpression = false;
-        break;
-      case 4:
-        FormfieldHandler.unitFieldRow.hideExpression = true;
-        FormfieldHandler.blockFloorRow.hideExpression = false;
-        break;
-    }
-  }
-
   fetchMaterial() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
     const endPoint = `${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
@@ -206,7 +180,6 @@ export class MaterialIssueEditComponent implements OnInit {
     this.modalForms.issued.form.reset();
     this.modalForms.usage.form.reset();
     this.projectDivisionFieldsHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

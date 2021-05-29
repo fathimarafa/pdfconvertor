@@ -16,6 +16,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MaterialPurchaseOrder } from '../../material-purchase-order/definitions/material-purchase-order.definition';
 import { MatPaginator } from '@angular/material/paginator';
 import { MaterialPurchaseOrderMetadata } from '../../material-purchase-order/material-purchase-order.configuration';
+import { Router } from '@angular/router';
+import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
+import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
+import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
+import { BasicWorkCategory } from 'src/app/modules/basic/components/work-category/definitions/basic-work-category.definition';
 
 @Component({
   selector: 'app-material-stock-entry-edit',
@@ -35,6 +40,9 @@ export class MaterialStockEntryEditComponent implements OnInit {
   itemTableColumns;
   itemDatasource;
   selection;
+  modalName;
+
+  totalAmount = 0;
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
@@ -43,15 +51,25 @@ export class MaterialStockEntryEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private editData: MaterialStockEntry,
     private dataHandler: DataHandlerService,
     private authService: AuthenticationService,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private router: Router
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
     this.defineModalForms();
-    this.tableColumns = MaterialStockEntryMetadata.purchaseOrderTableColumns;
+    this.tableColumns = this.tableToDisplay;
     this.itemTableColumns = MaterialStockEntryMetadata.itemDetailstableColumns;
-    this.fetchPurchaseOrder();
+    this.modalName = this.isDirectEntry ? 'Direct Stock Entry' : 'Stock Entry';
+    this.isDirectEntry ? this.fetchMaterial() : this.fetchPurchaseOrder();
+  }
+
+  get isDirectEntry() {
+    return this.router.url.includes('directstockentry');
+  }
+
+  get tableToDisplay() {
+    return this.isDirectEntry ? MaterialStockEntryMetadata.materialTableColumns : MaterialStockEntryMetadata.purchaseOrderTableColumns;
   }
 
   defineModalForms() {
@@ -69,6 +87,8 @@ export class MaterialStockEntryEditComponent implements OnInit {
         fields: MaterialStockEntryMetadata.transferChargeFormfields
       }
     }
+    FormfieldHandler.initialize(this.modalForms.stockentry.fields);
+    this.loadDropdowns();
   }
 
   get dataColumns() {
@@ -107,7 +127,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
 
   get httpRequest(): Observable<MaterialStockEntry> {
     let payload = { ...this.modalForms.stockentry.model, ...this.modalForms.transferCharges.model }
-    payload.purchaseDetail = this.dataSource.data;
+    payload.purchaseDetail = this.itemDatasource.data;
     if (this.isEdit) {
       return this.dataHandler.put<MaterialStockEntry>(MaterialStockEntryMetadata.serviceEndPoint, [payload]);
     } else {
@@ -118,6 +138,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
   loadDropdowns() {
     this.fetchSuppliers();
     this.bindProjectDivisionFields();
+    this.loadWorkCategory();
   }
 
   bindProjectDivisionFields() {
@@ -130,47 +151,6 @@ export class MaterialStockEntryEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
-  }
-
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitDropdown.templateOptions.disabled = true;
-        FormfieldHandler.unitDropdown.className = 'flex-1 readonly';
-        FormfieldHandler.blockDropdown.templateOptions.disabled = true;
-        FormfieldHandler.blockDropdown.className = 'flex-1 readonly';
-        FormfieldHandler.floorDropdown.templateOptions.disabled = true;
-        FormfieldHandler.floorDropdown.className = 'flex-1 readonly';
-        break;
-      case 2:
-        FormfieldHandler.unitDropdown.templateOptions.disabled = false;
-        FormfieldHandler.unitDropdown.className = 'flex-1';
-        FormfieldHandler.blockDropdown.templateOptions.disabled = true;
-        FormfieldHandler.blockDropdown.className = 'flex-1 readonly';
-        FormfieldHandler.floorDropdown.templateOptions.disabled = true;
-        FormfieldHandler.floorDropdown.className = 'flex-1 readonly';
-        break;
-      case 3:
-        FormfieldHandler.unitDropdown.templateOptions.disabled = false;
-        FormfieldHandler.unitDropdown.className = 'flex-1';
-        FormfieldHandler.blockDropdown.templateOptions.disabled = false;
-        FormfieldHandler.blockDropdown.className = 'flex-1';
-        FormfieldHandler.floorDropdown.templateOptions.disabled = false;
-        FormfieldHandler.floorDropdown.className = 'flex-1';
-        break;
-      case 4:
-        FormfieldHandler.unitDropdown.templateOptions.disabled = true;
-        FormfieldHandler.unitDropdown.className = 'flex-1 readonly';
-        FormfieldHandler.blockDropdown.templateOptions.disabled = false;
-        FormfieldHandler.blockDropdown.className = 'flex-1';
-        FormfieldHandler.floorDropdown.templateOptions.disabled = false;
-        FormfieldHandler.floorDropdown.className = 'flex-1';
-        break;
-    }
   }
 
   fetchSuppliers() {
@@ -190,27 +170,147 @@ export class MaterialStockEntryEditComponent implements OnInit {
 
   onRowSelection(selected) {
     this.selection = selected;
+    if (this.isDirectEntry) {
+      this.materialRowSelection(selected);
+    } else {
+      this.purchaseRowSelection(selected);
+    }
+    this.calculateItemDetailsTableTotal();
+    this.itemDatasource._updateChangeSubscription();
+  }
+
+  materialRowSelection(selected) {
+    selected.isSelected = !selected.isSelected;
+    this.dataSource._updateChangeSubscription();
+    if (!this.itemDatasource) {
+      this.itemDatasource = new MatTableDataSource();
+    }
+    let index = this.itemDatasource.data.findIndex(e => e.id === selected.id);
+    if (index !== -1) {
+      this.itemDatasource.data.splice(index, 1);
+    } else {
+      let data = {
+        "materialId": selected.id,
+        "quantity": 1,
+        "rate": selected.materialUnitRate,
+        "disount": selected.tax || 0,
+        "tax": selected.tax || 0,
+        "total": selected.materialUnitRate
+      }
+      this.itemDatasource.data.push(data);
+    }
+  }
+
+  purchaseRowSelection(selected) {
     this.dataSource.data.forEach((row) => {
       row.id === selected.id ? row.isSelected = true : row.isSelected = false;
     });
     this.dataSource._updateChangeSubscription();
-    selected.purchaseOrderDetail.forEach(e => {
-      e['total'] = e.quantityPurchased * e.itemRate;
-    })
-    this.itemDatasource = new MatTableDataSource(selected.purchaseOrderDetail);
+    let data = selected.purchaseOrderDetail.map(e => {
+      return {
+        "materialId": e.itemId,
+        "quantity": 1,
+        "rate": e.itemRate,
+        "disount": e.disount,
+        "tax": e.tax,
+        "total": e.itemRate
+      }
+    });
+    this.itemDatasource = new MatTableDataSource(data);
+  }
+
+  fetchMaterial() {
+    this.dataHandler.get<MaterialRegistration[]>(this.materialServiceEndpoint)
+      .subscribe((res: MaterialRegistration[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+      });
+  }
+
+  onUserInput($event, row, column) {
+    row[column] = $event.target.value;
+    row['total'] = row.quantity * row.rate;
+    this.calculateItemDetailsTableTotal();
+  }
+
+  calculateItemDetailsTableTotal() {
+    this.totalAmount = 0;
+    this.itemDatasource.data.forEach((row) => {
+      this.totalAmount = this.totalAmount + row['total'];
+    });
+  }
+
+  get materialServiceEndpoint() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   fetchPurchaseOrder() {
-    this.dataHandler.get<MaterialPurchaseOrder[]>(this.serviceEndpoint)
+    this.dataHandler.get<MaterialPurchaseOrder[]>(this.purchaseOrderServiceEndpoint)
       .subscribe((res: MaterialPurchaseOrder[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  get serviceEndpoint() {
+  get purchaseOrderServiceEndpoint() {
     const user = this.authService.loggedInUser;
     return `${MaterialPurchaseOrderMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  private loadWorkCategory() {
+    this.dataHandler.get(this.workCategoryServiceEndpoint)
+      .subscribe((res: BasicWorkCategory[]) => {
+        if (res) {
+          FormfieldHandler.workCategoryDropdown.templateOptions.options = res.map((e: BasicWorkCategory) => (
+            {
+              label: e.workCategoryName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  get workCategoryServiceEndpoint() {
+    const user = this.authService.loggedInUser;
+    return `${BasicWorkCategoryMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  private listenTaxAreaChange() {
+    FormfieldHandler.taxAreaDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      // if (this.modalForms.transferCharges.model.taxArea === 'INTRA') {
+      //   this.sgstPerInputbox.className = 'flex-1';
+      //   this.igstPerInputbox.className = 'flex-1 readonly';
+      //   this.cgstPerInputbox.className = 'flex-1 readonly';
+      //   this.sgstPerInputbox.templateOptions.readonly = false;
+      //   this.igstPerInputbox.templateOptions.readonly = true;
+      //   this.cgstPerInputbox.templateOptions.readonly = true;
+      //   this.detailsModel.igstPercent = 0;
+      //   this.detailsModel.igstAmt = 0;
+      //   this.detailsModel.cgstPercent = 0;
+      //   this.detailsModel.cgstAmount = 0;
+      // }
+      // if (this.modalForms.transferCharges.model.taxArea === 'INTER') {
+      //   this.sgstPerInputbox.className = 'flex-1 readonly';
+      //   this.igstPerInputbox.className = 'flex-1';
+      //   this.cgstPerInputbox.className = 'flex-1 readonly';
+      //   this.sgstPerInputbox.templateOptions.readonly = true;
+      //   this.igstPerInputbox.templateOptions.readonly = false;
+      //   this.cgstPerInputbox.templateOptions.readonly = true;
+      //   this.detailsModel.sgstPercent = 0;
+      //   this.detailsModel.sgstAmt = 0;
+      //   this.detailsModel.cgstPercent = 0;
+      //   this.detailsModel.cGSTAmt = 0;
+      // }
+      this.modalForms.transferCharges.model = { ...this.modalForms.transferCharges.model }
+    }
+  }
+
+  ngOnDestroy() {
+    this.modalForms.stockentry.form.reset();
+    this.modalForms.transferCharges.form.reset();
+    this.projectDivisionFieldsHandler.clear();
   }
 
 }

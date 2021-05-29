@@ -2,15 +2,3 @@
 th:first-child {
     width: 30px;
 }
-
-
-/* ::ng-deep .mat-dialog-container {
-    min-width: 95vw;
-} */
-
-.info-text {
-    font-size: 11px;
-    padding: 20px 0px;
-    text-align: center;
-    color: rgba(0, 0, 0, .6);
-}

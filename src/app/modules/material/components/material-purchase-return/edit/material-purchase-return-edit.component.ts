@@ -30,7 +30,6 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
   dataSource;
   hasOpeningStock: boolean;
   enableItemEdit: boolean;
-  subscribeProjectDivison: Subscription;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
@@ -56,10 +55,6 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldHandler.initialize(projectControllerFromFields);
-    this.subscribeProjectDivison = this.projectDivisionFieldHandler.listenProjectDivisionChange
-      .subscribe((res: number) => {
-        this.showHideProjectDivisionBasedFields(res);
-      })
   }
 
   ngOnInit(): void {
@@ -208,37 +203,11 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
       });
   }
 
-  showHideProjectDivisionBasedFields(projectDivision: number) {
-    switch (projectDivision) {
-      case 1:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 2:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = true;
-        FormfieldHandler.floorDropdown.hideExpression = true;
-        break;
-      case 3:
-        FormfieldHandler.unitDropdown.hideExpression = false;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-      case 4:
-        FormfieldHandler.unitDropdown.hideExpression = true;
-        FormfieldHandler.blockDropdown.hideExpression = false;
-        FormfieldHandler.floorDropdown.hideExpression = false;
-        break;
-    }
-  }
-
   ngOnDestroy() {
     this.modalForms.purchaseReturn.form.reset();
     this.modalForms.purchaseReturnDetail.form.reset();
     this.modalForms.transferCharges.form.reset();
     this.projectDivisionFieldHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

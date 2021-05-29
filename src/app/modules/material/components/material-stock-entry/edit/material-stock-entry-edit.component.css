@@ -1,0 +1,32 @@
+.item-detaisl-table th:nth-child(2) {
+    width: 25%;
+}
+
+::ng-deep .stock-entry-edit-component .mat-form-field-infix {
+    width: 90px;
+}
+
+.selection-table {
+    width: 45%;
+    margin-right: 20px;
+}
+
+.selection-table th {
+    width: 30%;
+}
+
+.selection-table th:first-child {
+    width: 10%;
+}
+
+.item-details-table {
+    width: 55%;
+}
+
+.item-details-table th {
+    width: 30%;
+}
+
+.item-details-table th:first-child {
+    width: 10%;
+}

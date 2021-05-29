@@ -8,6 +8,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialStockEntryMetadata } from './material-stock-entry.configuration';
 import { MaterialStockEntry } from './definitions/material-stock-entry.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-material-stock-entry',
@@ -25,9 +26,11 @@ export class MaterialStockEntryComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private authService: AuthenticationService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private router: Router
   ) {
     this.module = MaterialStockEntryMetadata;
+    this.module.displayName = this.isDirectEntry ? 'Material / Direct Stock Entry' : 'Material / Stock Entry';
     this.tableColumns = this.module.tableColumns
   }
 
@@ -37,6 +40,10 @@ export class MaterialStockEntryComponent implements OnInit {
     } else {
       return [];
     }
+  }
+
+  get isDirectEntry() {
+    return this.router.url.includes('directstockentry');
   }
 
   ngOnInit() {
