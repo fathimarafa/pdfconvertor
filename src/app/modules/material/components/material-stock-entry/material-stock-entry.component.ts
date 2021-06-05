@@ -9,6 +9,7 @@ import { MaterialStockEntryMetadata } from './material-stock-entry.configuration
 import { MaterialStockEntry } from './definitions/material-stock-entry.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { Router } from '@angular/router';
+import { SideNavigationMenu } from 'src/app/modules/common/sidebar/sidebar.configuration';
 
 @Component({
   selector: 'app-material-stock-entry',
@@ -50,8 +51,21 @@ export class MaterialStockEntryComponent implements OnInit {
     this.fetchData();
   }
 
+  get menuId() {
+    const urlHashArray = this.router.url.split('/');
+    const endUrl = urlHashArray[urlHashArray.length - 1];
+    for (let x in SideNavigationMenu) {
+      if (SideNavigationMenu[x].route === `/${endUrl}`) {
+        return SideNavigationMenu[x].menuId;
+      }
+    }
+  }
+
   fetchData() {
-    this.dataHandler.get<MaterialStockEntry[]>(this.serviceEndpoint)
+    let user = this.authService.loggedInUser;
+    let endPoint = `BuildExeMaterial/api/PurchaseList/${user.companyId}/${user.branchId}/${user.userId}/${this.menuId}`;
+    this.dataHandler.get<MaterialStockEntry[]>(endPoint)
+      // (this.serviceEndpoint)
       .subscribe((res: MaterialStockEntry[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

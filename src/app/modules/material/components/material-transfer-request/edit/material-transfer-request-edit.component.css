@@ -1,59 +1,28 @@
-.form-child {
-    max-height: 65vh;
-    overflow: auto;
-    min-height: 65vh;
+.indent-table-container th {
+    width: 30%;
 }
 
-.form-title {
-    color: #3182ce;
-    position: relative;
-    top: 11px;
-    display: inline-block;
-    background-color: #fff;
-    padding: 0 10px;
-    font-size: 10px;
-    margin-left: 10px;
+.indent-table-container th:first-child {
+    width: 10%;
 }
 
-.form-container {
-    border: 1px solid rgba(0, 0, 0, .12);
-    border-radius: 10px;
-    padding: 10px;
+.indent-table-container tr {
+    cursor: pointer;
 }
 
-::ng-deep .cdk-overlay-pane {
-    max-width: 95vw!important;
-    width: 95vw;
+.add-item-btn-container {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.inner-table-container {
-    max-height: 30vh;
-    overflow: auto;
-    width: 100%;
+.items-table-container th {
+    width: 10%;
 }
 
-.add-block {
-    float: right;
-    margin-bottom: 20px;
+.items-table-container th:first-child {
+    width: 8%;
 }
 
-.add-stock-disabled {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-::ng-deep .mat-paginator-icon {
-    color: rgba(0, 0, 0, 0.54);
-}
-
-::ng-deep .mat-form-field-infix {
-    width: 150px;
-}
-
-.transfer-charge-form-container {
-    margin-top: 20px;
-}
-
-.padd-right-20 {
-    padding-right: 20px;
+.items-table-container th:nth-child(2) {
+    width: 20%;
 }

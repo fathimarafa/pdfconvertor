@@ -16,7 +16,7 @@ export class AuthenticationService implements IAuthenticationService {
         this.user = { // dummy for test
             userId: 1,
             companyId: 1,
-            branchId: 0
+            branchId: 2
         };
         const userdata = sessionStorage.getItem('user-session');
         if (userdata) {

@@ -2,14 +2,23 @@ tr {
     cursor: pointer;
 }
 
-th {
-    width: 30%;
+.margin-right-30 {
+    margin-right: 30px;
 }
 
-th:first-child {
+.main-table th {
+    width: 20%;
+}
+
+.main-table th:first-child,
+.main-table th:last-child {
     width: 10%;
 }
 
-.margin-right-30 {
-    margin-right: 30px;
+.details-table th {
+    width: 30%;
+}
+
+.details-table th:first-child {
+    width: 10%;
 }

@@ -7,7 +7,6 @@ import { ApproveLevelMetadata } from './approve-level.configuration';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { ApproveLevel } from './definitions/approvelevel.definition';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-approve-level',
@@ -23,11 +22,11 @@ export class ApproveLevelComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private dialogEventHandler: DialogEventHandlerService
   ) {
     this.module = ApproveLevelMetadata;
-    this.tableColumns = this.module.tableColumns
+    this.tableColumns = this.module.tableColumns;
+    this.fetchData();
   }
 
   get dataColumns() {
@@ -38,14 +37,26 @@ export class ApproveLevelComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.fetchData();
-  }
+  ngOnInit() { }
 
   fetchData() {
     this.dataHandler.get<ApproveLevel[]>(this.module.serviceEndPoint)
       .subscribe((res: ApproveLevel[]) => {
-        this.dataSource = new MatTableDataSource(res);
+        let obj = {};
+        res.forEach(e => {
+          if (!obj[e.menuId]) {
+            obj[e.menuId] = {
+              menuId: e.menuId,
+              teamId: e.teamId,
+              user: []
+            }
+          }
+          obj[e.menuId].user.push({
+            userId: e.userid,
+            formlevel: e.formlevel
+          })
+        })
+        this.dataSource = new MatTableDataSource(Object.values(obj));
         this.dataSource.paginator = this.paginator;
       });
   }
@@ -58,7 +69,6 @@ export class ApproveLevelComponent implements OnInit {
       this.affectedRowIndex(rowToEdit)
     )
   }
-
 
   openDeleteDialog(rowToDelete: ApproveLevel): void {
     const dataToComponent = {
@@ -83,15 +93,6 @@ export class ApproveLevelComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'approve-levels',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

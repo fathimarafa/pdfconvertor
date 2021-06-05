@@ -64,3 +64,8 @@ th:last-child {
     font-size: 14px;
     font-weight: 500;
 }
+
+.mat-dialog-container {
+    max-height: 90vh;
+    overflow: scroll;
+}

@@ -10,24 +10,28 @@
 </div> -->
 <mat-dialog-content class="form-dialog mat-typography dialog-content">
 
-    <div class="header">
+    <div style="display: flex;width: 100%;" class="header1">
         <div>
-            <!-- <mat-form-field class="example-form-field">
-                <mat-label>Form Name</mat-label>
-                <input matInput type="text" value="	Purchase Order Approval" readonly>
-            </mat-form-field> -->
-
             <mat-form-field>
                 <mat-label>Form Name</mat-label>
-                <mat-select>
+                <mat-select [(value)]="model.menuId">
                     <mat-option *ngFor="let form of approvalForms" [value]="form.menuId">
                         {{form.menuName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
         </div>
         <div>
+            <mat-form-field>
+                <mat-label>Team</mat-label>
+                <mat-select [(value)]="model.teamId" (selectionChange)="onTeamSelection()">
+                    <mat-option *ngFor="let team of teamList" [value]="team.id">
+                        {{team.teamName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div style="margin-left: auto;">
             <button (click)="onAddNewLevelBtnClick()" mat-button class="add-button">
                 Add New Level <mat-icon>add</mat-icon>
             </button>
@@ -35,7 +39,7 @@
     </div>
 
     <table class="table-compnay" mat-table [dataSource]="dataSource">
-        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns">
+        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let i=index">
             <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
             <td mat-cell *matCellDef="let element;let rowIndex = index">
                 <ng-container *ngIf="column.field !== 'action' && column.field !== 'userId'">
@@ -44,8 +48,8 @@
                 <ng-container *ngIf="column.field === 'userId'">
                     <mat-form-field>
                         <mat-label>Select User</mat-label>
-                        <mat-select multiple>
-                            <mat-option *ngFor="let user of userList" [value]="user.id">
+                        <mat-select [(value)]="element.userId" multiple>
+                            <mat-option *ngFor="let user of teamUserList" [value]="user.id">
                                 {{user.fullName}}
                             </mat-option>
                         </mat-select>

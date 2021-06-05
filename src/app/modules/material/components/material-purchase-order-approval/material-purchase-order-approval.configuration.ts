@@ -6,7 +6,7 @@ export const MaterialPurchaseOrderApprovalMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "BuildExeMaterial/api/PurchcaseOrder",
+    "serviceEndPoint": "BuildExeMaterial/api/PurchaseOrder",
     "tableColumns": [
         {
             "field": 'id',
@@ -21,11 +21,11 @@ export const MaterialPurchaseOrderApprovalMetadata = {
             "displayName": 'Order Date'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project'
         },
         {
-            "field": 'supplierPreffered',
+            "field": 'supplierName',
             "displayName": 'Supplier'
         },
         {
@@ -35,6 +35,10 @@ export const MaterialPurchaseOrderApprovalMetadata = {
         {
             "field": 'contactNo',
             "displayName": 'Contact No:'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [

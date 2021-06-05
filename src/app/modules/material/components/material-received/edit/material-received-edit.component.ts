@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { Observable } from 'rxjs';
 import { MaterialReceived, RecieptDetail } from '../definitions/material-received.definition';
@@ -12,10 +11,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ReceivedToProjectDivision } from '../handlers/received-to-project-division';
 import { MaterialTransferRequest, TransferDetail } from '../../material-transfer-request/definitions/material-transfer-request.definition';
 import { MaterialTransferRequestMetadata } from '../../material-transfer-request/material-transfer-request.configuration';
-import { SelectTransferComponent } from './select-transfer/select-transfer.component';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../../../../services/app-state-service/app-state.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-received-edit',
@@ -32,15 +31,20 @@ export class MaterialReceivedEditComponent implements OnInit {
   enableItemEdit: boolean;
   materialsTransferedList: MaterialTransferRequest[]
   editData;
+  totalAmount = 0;
+
+  transferTableColumns;
+  transferDataSource;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private receivedToProjectDivision: ReceivedToProjectDivision,
-    private dialog: MatDialog,
     private router: Router,
     private stateService: AppStateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {
     this.editData = this.stateService.getState(MaterialRecieveMetadata.moduleId);
     if (this.editData) {
@@ -83,12 +87,11 @@ export class MaterialReceivedEditComponent implements OnInit {
         fields: MaterialRecieveMetadata.transferCharges.formFields
       }
     }
-    FormfieldHandler.initialize(this.modalForms.materialReceived.fields);
+    FormfieldHandler.initialize(this.modalForms.materialReceived.fields, this.modalForms.transferCharges.fields);
     this.dataSource = new MatTableDataSource(this.editData ? this.editData.recieptDetail || [] : []);
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    if (this.isEdit) {
+      this.calculateNetAmount();
+    }
   }
 
   onSaveBtnClick() {
@@ -130,6 +133,14 @@ export class MaterialReceivedEditComponent implements OnInit {
     }
   }
 
+  get transferDataColumns() {
+    if (this.transferTableColumns && this.transferTableColumns.length) {
+      return this.transferTableColumns.map(col => col.field);
+    } else {
+      return [];
+    }
+  }
+
   removeItem(rowIndex: number) {
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
@@ -143,31 +154,31 @@ export class MaterialReceivedEditComponent implements OnInit {
     if (ev.target.value) {
       row[column] = Number(ev.target.value);
       row['total'] = row.quantity * row.rate;
+      this.calculateItemDetailsTableTotal();
     }
+  }
+
+  calculateItemDetailsTableTotal() {
+    this.totalAmount = 0;
+    this.dataSource.data.forEach((row) => {
+      this.totalAmount = this.totalAmount + row['total'];
+    });
+    this.calculateNetAmount();
   }
 
   fetchMaterialsTransfered() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialTransferRequest[]>(`${MaterialTransferRequestMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.transferTableColumns = MaterialRecieveMetadata.transferTableColumns;
+    this.dataHandler.get<MaterialTransferRequest[]>(this.materialServiceUrl)
       .subscribe((res: MaterialTransferRequest[]) => {
-        this.materialsTransferedList = res.filter(e => e.approvalStatus);
+        let rows = res.filter(e => e.approvalStatus);
+        this.transferDataSource = new MatTableDataSource(rows);
+        this.transferDataSource.paginator = this.paginator;
       });
   }
 
-  onSelectTransferBtnClick() {
-    const transferList: MaterialTransferRequest[] = this.materialsTransferedToProject;
-    if (transferList.length) {
-      const dialogReference = this.dialog.open(SelectTransferComponent, { data: this.materialsTransferedList });
-      dialogReference.afterClosed().subscribe((result: TransferDetail[]) => {
-        if (result) {
-          result.forEach((e: TransferDetail) => e['total'] = e.quantity * e.rate);
-          this.dataSource.data = result;
-        }
-      });
-    } else {
-      const errorMessage = 'No matching records found , please clear filter fields and try again';
-      this.snackBar.open(errorMessage, null, { panelClass: 'snackbar-error-message' });
-    }
+  get materialServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialTransferRequestMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   get materialsTransferedToProject() {
@@ -178,6 +189,11 @@ export class MaterialReceivedEditComponent implements OnInit {
     }
   }
 
+  private calculateNetAmount() {
+    this.modalForms.transferCharges.model.netAmount = this.totalAmount + this.modalForms.transferCharges.model.transportationCharge + this.modalForms.transferCharges.model.loadingUnloadingCharge + this.modalForms.transferCharges.model.otherCharges + this.modalForms.transferCharges.model.miscellaneousExpense;
+    this.modalForms.transferCharges.model = { ...this.modalForms.transferCharges.model };
+  }
+
   ngOnDestroy() {
     this.modalForms.materialReceived.form.reset();
     this.modalForms.transferCharges.form.reset();
@@ -185,6 +201,32 @@ export class MaterialReceivedEditComponent implements OnInit {
     if (this.isEdit) {
       this.stateService.clear(MaterialRecieveMetadata.moduleId);
     }
+  }
+
+  doFilter(value: string) {
+    this.transferDataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onRowSelection(selected: MaterialTransferRequest) {
+    this.modalForms.materialReceived.transferId = selected.id;
+    this.transferDataSource.data.forEach((row) => {
+      row.id === selected.id ? row.isSelected = true : row.isSelected = false;
+    });
+    this.dataSource._updateChangeSubscription();
+    let itemRow = selected.transferDetail.map(e => {
+      return {
+        materialId: e.materialId,
+        quantity: e.quantity,
+        rate: e.rate,
+        tax: e.tax,
+        total: e.quantity * e.rate
+      }
+    })
+    this.dataSource = new MatTableDataSource(itemRow);
+    Object.keys(this.modalForms.transferCharges.model).forEach(e => {
+      this.modalForms.transferCharges.model[e] = selected[e];
+    })
+    this.calculateItemDetailsTableTotal();
   }
 
 }

@@ -3,7 +3,6 @@
     font-size: 13.4px;
     border-bottom: 1px solid #edf2f7;
     box-sizing: border-box;
-    cursor: pointer;
 }
 
 ::ng-deep .user-previlege-component .list-item-child .mat-list-item-content {
@@ -16,12 +15,3 @@
 .mat-card-header{
     margin-bottom: 2rem;
 }
-
-/* .item {
-    color: #424952;
-    font-size: 13.4px;
-    margin: 0 10px;
-    border-bottom: 1px solid #edf2f7;
-    box-sizing: border-box;
-    cursor: pointer;
-} */

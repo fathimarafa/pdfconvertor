@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Comment</h2>
+<div mat-dialog-content>
+    <mat-form-field style="width: 100%;">
+        <textarea [(ngModel)]="comment" matInput rows="10"></textarea>
+    </mat-form-field>
+</div>
+<div class="form-dialog" mat-dialog-actions>
+    <button class="save" (click)="onConfirmBtnClick()" mat-button>Save</button>
+    <button class="cancel" mat-button mat-dialog-close>Cancel</button>
+</div>

@@ -13,16 +13,24 @@ export const MaterialIndentApprovalMetadata = {
             "displayName": ''
         },
         {
-            "field": 'projectId',
-            "displayName": 'Project Id'
+            "field": 'projectName',
+            "displayName": 'Project'
         },
         {
-            "field": 'supplierPreferred',
+            "field": 'supplierName',
             "displayName": 'Supplier Preferred'
         },
         {
             "field": 'indentedDate',
             "displayName": 'Indented Date'
+        },
+        {
+            "field": 'remarks',
+            "displayName": 'Remarks'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [
@@ -31,15 +39,15 @@ export const MaterialIndentApprovalMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'materialId',
+            "field": 'MaterialName',
             "displayName": 'Item'
         },
         {
-            "field": 'quantityRequired',
+            "field": 'QuantityRequired',
             "displayName": 'Required Quantity'
         },
         {
-            "field": 'requiredDate',
+            "field": 'RequiredDate',
             "displayName": 'Urgency'
         }
     ]

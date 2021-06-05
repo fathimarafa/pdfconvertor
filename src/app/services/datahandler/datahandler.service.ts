@@ -12,6 +12,7 @@ export class DataHandlerService implements IDataHandlerService {
 
     private baseUrl = environment.baseUrl
     private basicHeaders: any;
+    private endpointOverridingUserId = ['login', 'levelsetting'];
 
     constructor(
         private httpClient: HttpClient,
@@ -32,7 +33,8 @@ export class DataHandlerService implements IDataHandlerService {
 
     post<T>(endPoint: string, formData): Observable<T> {
         const url = `${this.baseUrl}${endPoint}`;
-        if (!endPoint.toLowerCase().includes('login')) {
+        if (!this.isOverridingUserId(endPoint)) {
+            console.log('isOverridingUserId')
             if (Array.isArray(formData)) {
                 for (let i = 0; i < formData.length; i++) {
                     formData[i] = { ...formData[i], ...this.authService.loggedInUser };
@@ -48,6 +50,12 @@ export class DataHandlerService implements IDataHandlerService {
         ).pipe(
             catchError((error: HttpErrorResponse) => this.handleError(error))
         );
+    }
+
+    private isOverridingUserId(endPoint: string): boolean {
+        let urlHashArray = endPoint.split('/');
+        let urlEnd = urlHashArray[urlHashArray.length - 1];
+        return this.endpointOverridingUserId.includes(urlEnd.toLowerCase());
     }
 
     put<T>(endPoint: string, formData): Observable<T> {

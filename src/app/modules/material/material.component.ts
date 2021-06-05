@@ -27,7 +27,6 @@ import { MaterialQuotationEditComponent } from './components/material-quotation/
 import { MaterialSupplierAdvanceEditComponent } from './components/material-supplier-advance/edit/material-supplier-advance-edit.component';
 import { MaterialSupplierPaymentEditComponent } from './components/material-supplier-payment/edit/material-supplier-payment-edit.component';
 import { MaterialTransferRequestEditComponent } from './components/material-transfer-request/edit/material-transfer-request-edit.component';
-import { SelectTransferComponent } from './components/material-received/edit/select-transfer/select-transfer.component';
 import { MaterialPurchaseReturnEditComponent } from './components/material-purchase-return/edit/material-purchase-return-edit.component';
 import { SelectIndentComponent } from './components/material-purchase-order/edit/select-indent/select-indent.component';
 import { UnitRegistrationComponent } from './components/unit-registration/unit-registration.component';
@@ -77,7 +76,6 @@ export const MaterialModuleComponents = [
     MaterialReceivedComponent,
     MaterialReceivedEditComponent,
     MaterialReceivedApprovalComponent,
-    SelectTransferComponent,
     MaterialPurchaseReturnComponent,
     MaterialPurchaseReturnEditComponent,
     MaterialPurchaseReturnApprovalComponent,

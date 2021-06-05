@@ -52,7 +52,7 @@ export class MaterialIndentCreationComponent implements OnInit {
 
   get serviceUrl() {
     const user = this.authService.loggedInUser;
-    return `${MaterialIndentCreationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`
+    return `${MaterialIndentCreationMetadata.serviceEndPoint}List/${user.companyId}/${user.branchId}`
   }
 
   openDialog(rowToEdit?: MaterialIndent) {

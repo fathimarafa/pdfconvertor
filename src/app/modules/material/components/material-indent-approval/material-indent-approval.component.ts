@@ -5,10 +5,12 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { MaterialIndentApprovalMetadata } from './material-indent-approval.configuration';
 import { MaterialIndent } from '../material-indent-creation/definitions/material-indent-creation.definiton';
-import { MaterialIndentCreationMetadata } from '../material-indent-creation/material-indent-creation.configuration';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Router } from '@angular/router';
+import { MaterialIndentCreationEditComponent } from '../material-indent-creation/edit/material-indent-creation-edit.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 @Component({
   selector: 'app-material-indent-approval',
   templateUrl: './material-indent-approval.component.html',
@@ -29,11 +31,13 @@ export class MaterialIndentApprovalComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private authService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.module = MaterialIndentApprovalMetadata;
     this.tableColumns = this.module.tableColumns
     this.itemTableColumns = this.module.itemDetailstableColumns;
+    this.fetchData();
   }
 
   get dataColumns() {
@@ -52,30 +56,56 @@ export class MaterialIndentApprovalComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.fetchData();
-  }
+  ngOnInit() { }
 
   fetchData() {
-    const user = this.authService.loggedInUser;
-    const endpoint = `${MaterialIndentCreationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`
-    this.dataHandler.get<MaterialIndent[]>(endpoint)
+    this.dataHandler.get<MaterialIndent[]>(this.approvalServiceUrl)
       .subscribe((res: MaterialIndent[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  onApproveBtnClick() {
+  get approvalServiceUrl() {
+    let user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}/${user.userId}`;
+  }
+
+  openApproveRemarkDialog(isApproved: boolean): void {
     if (!this.selectedIndent) {
-      this.snackBar.open('WARNING :  Please select an indent');
+      const message = 'WARNING : Please select an indent';
+      this.snackBar.open(message, null, { panelClass: 'snackbar-error-message' });
       return;
     }
-    this.selectedIndent.approvalLevel++;
-    this.selectedIndent.approvedBy = this.authService.loggedInUser.userId;
-    this.selectedIndent.approvedDate = new Date();
-    this.dataHandler.put<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, [this.selectedIndent]).subscribe((res) => {
-      this.snackBar.open('Indent Approved Successfully');
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges(isApproved);
+      }
+    });
+  }
+
+  onApproveBtnClick() {
+    const isApproved = true;
+    this.openApproveRemarkDialog(isApproved);
+  }
+
+  onRejectBtnClick() {
+    const isApproved = false;
+    this.openApproveRemarkDialog(isApproved);
+  }
+
+  saveChanges(isApproved: boolean) {
+    if (isApproved) {
+      this.selectedIndent.approvalLevel++;
+      this.selectedIndent.approvedBy = this.authService.loggedInUser.userId;
+      this.selectedIndent.approvedDate = new Date();
+    } else {
+      this.selectedIndent.approvalLevel--;
+    }
+    this.selectedIndent.indentDetails = this.itemDatasource.data;
+    this.dataHandler.put<MaterialIndent>(this.module.serviceEndPoint, [this.selectedIndent]).subscribe((res) => {
+      this.snackBar.open(`Indent ${isApproved ? 'Approved' : 'Rejected'} Successfully`);
       const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selectedIndent.id);
       if (rowToRemove !== -1) {
         this.dataSource.data.splice(rowToRemove, 1);
@@ -84,13 +114,6 @@ export class MaterialIndentApprovalComponent implements OnInit {
         this.itemDatasource._updateChangeSubscription();
       }
     })
-  }
-
-  onRejectBtnClick() {
-    if (!this.selectedIndent) {
-      this.snackBar.open('WARNING :  Please select an indent');
-      return;
-    }
   }
 
   doFilter(value: string) {
@@ -103,7 +126,31 @@ export class MaterialIndentApprovalComponent implements OnInit {
       row.id === selectedIndent.id ? row.isSelected = true : row.isSelected = false;
     });
     this.dataSource._updateChangeSubscription();
-    this.itemDatasource = new MatTableDataSource(selectedIndent.indentDetails);
+    this.fetchDetails();
+  }
+
+  fetchDetails() {
+    let endpoint = `${this.module.serviceEndPoint}List/${this.selectedIndent.id}`;
+    this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+      this.itemDatasource = new MatTableDataSource(res);
+    })
+  }
+
+  openEditDialog(rowToEdit?: MaterialIndent) {
+    this.dialogEventHandler.openDialog(
+      MaterialIndentCreationEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
+  }
+
+  private affectedRowIndex(affectedRow?: MaterialIndent) {
+    let indexToUpdate;
+    if (affectedRow) {
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialIndent) => row.id === affectedRow.id);
+    }
+    return indexToUpdate;
   }
 
 }

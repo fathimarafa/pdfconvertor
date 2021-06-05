@@ -137,24 +137,36 @@ export class TransferFromProjectDivision {
   private showHideProjectDivisionBasedFields() {
     switch (this.projectDivision) {
       case 1:
-        this.fields.unitDropdown.hideExpression = true;
-        this.fields.blockDropdown.hideExpression = true;
-        this.fields.floorDropdown.hideExpression = true;
+        this.fields.unitDropdown.templateOptions.disabled = true;
+        this.fields.unitDropdown.className = 'flex-1 readonly';
+        this.fields.blockDropdown.templateOptions.disabled = true;
+        this.fields.blockDropdown.className = 'flex-1 readonly';
+        this.fields.floorDropdown.templateOptions.disabled = true;
+        this.fields.floorDropdown.className = 'flex-1 readonly';
         break;
       case 2:
-        this.fields.unitDropdown.hideExpression = false;
-        this.fields.blockDropdown.hideExpression = true;
-        this.fields.floorDropdown.hideExpression = true;
+        this.fields.unitDropdown.templateOptions.disabled = false;
+        this.fields.unitDropdown.className = 'flex-1';
+        this.fields.blockDropdown.templateOptions.disabled = true;
+        this.fields.blockDropdown.className = 'flex-1 readonly';
+        this.fields.floorDropdown.templateOptions.disabled = true;
+        this.fields.floorDropdown.className = 'flex-1 readonly';
         break;
       case 3:
-        this.fields.unitDropdown.hideExpression = false;
-        this.fields.blockDropdown.hideExpression = false;
-        this.fields.floorDropdown.hideExpression = false;
+        this.fields.unitDropdown.templateOptions.disabled = false;
+        this.fields.unitDropdown.className = 'flex-1';
+        this.fields.blockDropdown.templateOptions.disabled = false;
+        this.fields.blockDropdown.className = 'flex-1';
+        this.fields.floorDropdown.templateOptions.disabled = false;
+        this.fields.floorDropdown.className = 'flex-1';
         break;
       case 4:
-        this.fields.unitDropdown.hideExpression = true;
-        this.fields.blockDropdown.hideExpression = false;
-        this.fields.floorDropdown.hideExpression = false;
+        this.fields.unitDropdown.templateOptions.disabled = true;
+        this.fields.unitDropdown.className = 'flex-1 readonly';
+        this.fields.blockDropdown.templateOptions.disabled = false;
+        this.fields.blockDropdown.className = 'flex-1';
+        this.fields.floorDropdown.templateOptions.disabled = false;
+        this.fields.floorDropdown.className = 'flex-1';
         break;
     }
   }

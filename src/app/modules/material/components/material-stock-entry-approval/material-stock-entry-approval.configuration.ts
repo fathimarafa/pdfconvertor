@@ -13,7 +13,7 @@ export const MaterialStockEntryApprovalMetadata = {
             "displayName": ''
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project'
         },
         {
@@ -25,7 +25,7 @@ export const MaterialStockEntryApprovalMetadata = {
             "displayName": 'Purchase Date'
         },
         {
-            "field": 'supplierId',
+            "field": 'supplierName',
             "displayName": 'Supplier'
         },
         {
@@ -39,27 +39,27 @@ export const MaterialStockEntryApprovalMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'materialId',
+            "field": 'MaterialName',
             "displayName": 'Item'
         },
         {
-            "field": 'quantity',
+            "field": 'Quantity',
             "displayName": 'Quantity'
         },
         {
-            "field": 'rate',
+            "field": 'Rate',
             "displayName": 'Rate'
         },
         {
-            "field": 'tax',
+            "field": 'Tax',
             "displayName": 'Tax'
         },
         {
-            "field": 'disount',
+            "field": 'Disount',
             "displayName": 'Disount'
         },
         {
-            "field": 'total',
+            "field": 'Total',
             "displayName": 'Total'
         }
     ]

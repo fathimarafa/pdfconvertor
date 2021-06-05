@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { Observable, Subscription } from 'rxjs';
 import { PurchaseOrderDetail, MaterialPurchaseOrder } from '../definitions/material-purchase-order.definition';
@@ -8,7 +8,6 @@ import { MaterialPurchaseOrderMetadata } from '../material-purchase-order.config
 import { MatTableDataSource } from '@angular/material/table';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
 import { FormfieldHandler } from '../handlers/form-field-handler';
-import { MatPaginator } from '@angular/material/paginator';
 import { MaterialIndent } from '../../material-indent-creation/definitions/material-indent-creation.definiton';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../../../../services/app-state-service/app-state.service';
@@ -19,6 +18,9 @@ import { MaterialRegistration } from '../../material-registration/definitions/ma
 import { SupplierRegistrationMetadata } from '../../supplier-registration/supplier-registration.configuration';
 import { SupplierRegistration } from '../../supplier-registration/definitions/supplier-registration.definition';
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { DialogActions, IDialogEvent } from 'src/app/definitions/dialog.definitions';
 
 @Component({
   selector: 'app-material-purchase-order-edit',
@@ -35,7 +37,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   enableItemEdit: boolean;
   indentList: MaterialIndent[]
   editData: MaterialPurchaseOrder;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  totalAmount = 0;
 
   constructor(
     private dataHandler: DataHandlerService,
@@ -43,23 +45,18 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private stateService: AppStateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {
     this.editData = this.stateService.getState(MaterialPurchaseOrderMetadata.moduleId);
     if (this.editData) {
       this.isEdit = true;
     }
-    this.calculateOrderTotal();
     this.defineModalForms();
+    this.populateItemDetailsTable();
     this.bindProjectDivisionFields();
     this.loadDropdowns();
     this.fetchIndent();
-  }
-
-  calculateOrderTotal() {
-    if (this.isEdit) {
-      this.editData.purchaseOrderDetail.forEach((e: PurchaseOrderDetail) => e['total'] = e.quantityPurchased * e.itemRate);
-    }
   }
 
   bindProjectDivisionFields() {
@@ -79,9 +76,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     this.fetchSuppliers();
   }
 
-  ngOnInit(): void {
-    this.tableColumns = MaterialPurchaseOrderMetadata.purchaseOrderDetail.tableColumns;
-  }
+  ngOnInit(): void { }
 
   defineModalForms() {
     this.modalForms = {
@@ -99,24 +94,64 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       }
     }
     FormfieldHandler.initialize(this.modalForms.purchaseOrder.fields);
-    this.dataSource = new MatTableDataSource(this.editData ? this.editData.purchaseOrderDetail || [] : []);
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
-  onSaveBtnClick() {
-    if (this.modalForms.purchaseOrder.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        this.snackBar.open('Data Saved Successfully');
-        this.onCancelBtnClick();
+  populateItemDetailsTable() {
+    this.tableColumns = MaterialPurchaseOrderMetadata.purchaseOrderDetail.tableColumns;
+    if (this.isEdit) {
+      const endpoint = `${MaterialPurchaseOrderMetadata.serviceEndPoint}List/${this.editData.id}`;
+      this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+        this.totalAmount = 0;
+        res.forEach(e => {
+          e['total'] = e.quantityPurchased * e.itemRate;
+          this.totalAmount = this.totalAmount + e['total'];
+        })
+        this.dataSource = new MatTableDataSource(res);
       });
+    } else {
+      this.dataSource = new MatTableDataSource([]);
+    }
+  }
+
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.httpRequest.subscribe((res) => {
+          this.snackBar.open('Data Saved Successfully');
+        })
+      }
+    });
+  }
+
+  get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+  }
+
+  onSaveBtnClick(nextLevel?: boolean) {
+    if (this.modalForms.purchaseOrder.form.valid) {
+      if (this.isEditedFromApproval) {
+        this.openApproveDialog();
+      } else {
+        if (nextLevel) {
+          this.modalForms.purchaseOrder.model.approvedDate = new Date();
+          this.modalForms.purchaseOrder.model.approvedBy = this.authService.loggedInUser.userId;
+          this.modalForms.purchaseOrder.model.approvalLevel = 1;
+        }
+        this.httpRequest.subscribe((res) => {
+          this.snackBar.open('Data Saved Successfully');
+          this.onCancelBtnClick();
+        });
+      }
     }
   }
 
   onCancelBtnClick() {
-    this.router.navigateByUrl('/home/materialpurchaseorder');
+    if (this.isEditedFromApproval) {
+      document.getElementsByClassName('cdk-overlay-container')[0].remove();
+    } else {
+      this.router.navigateByUrl('/home/materialpurchaseorder');
+    }
   }
 
   get httpRequest(): Observable<MaterialPurchaseOrder> {
@@ -145,6 +180,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   }
 
   removeItem(rowIndex: number) {
+    this.totalAmount = this.totalAmount - this.dataSource.data[rowIndex]['total'];
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
   }
@@ -162,6 +198,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
       this.modalForms.purchaseOrderDetails.form.reset();
+      this.totalAmount = this.totalAmount + dataRow['total'];
     }
   }
 
@@ -173,11 +210,15 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   }
 
   fetchIndent() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialIndent[]>(`${MaterialIndentCreationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialIndent[]>(this.indentServiceUrl)
       .subscribe((res: MaterialIndent[]) => {
         this.indentList = res;
       });
+  }
+
+  get indentServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialIndentCreationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onSelectIndentBtnClick() {
@@ -208,6 +249,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   }
 
   onCancelUpdateBtnClick() {
+
     this.enableItemEdit = false;
     this.modalForms.purchaseOrderDetails.form.reset();
   }
@@ -221,8 +263,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   }
 
   fetchMaterials() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialRegistration[]>(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
           FormfieldHandler.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -235,10 +276,13 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       });
   }
 
+  get materialServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
 
   fetchSuppliers() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<SupplierRegistration[]>(`${SupplierRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<SupplierRegistration[]>(this.supplierServiceUrl)
       .subscribe((res: SupplierRegistration[]) => {
         if (res) {
           FormfieldHandler.supplierDropdown.templateOptions.options = res.map((e: SupplierRegistration) => (
@@ -249,6 +293,21 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
           ));
         }
       });
+  }
+
+  get supplierServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${SupplierRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  ngAfterViewInit() {
+    const cdkDom = document.getElementsByClassName('cdk-overlay-pane');
+    if (cdkDom && cdkDom.length) {
+      let domStyle = cdkDom[0]['style'];
+      domStyle.maxHeight = '90vh';
+      domStyle.overflow = 'scroll';
+      // domStyle.height = '94vh';
+    }
   }
 
   ngOnDestroy() {

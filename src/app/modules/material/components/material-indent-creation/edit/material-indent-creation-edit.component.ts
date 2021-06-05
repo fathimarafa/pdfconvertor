@@ -1,12 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { MaterialIndentCreationMetadata } from '../material-indent-creation.configuration';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { IndentForm, MaterialIndent } from '../definitions/material-indent-creation.definiton';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
 import { FormfieldHandler } from '../handlers/form-field.handler';
 import { SupplierRegistration } from '../../supplier-registration/definitions/supplier-registration.definition';
@@ -14,6 +13,10 @@ import { SupplierRegistrationMetadata } from '../../supplier-registration/suppli
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 import { MatTableDataSource } from '@angular/material/table';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormApprovalDialogComponent } from '../../../../common/form-approval-dialog/form-approval-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-material-indent-creation-edit',
@@ -23,18 +26,20 @@ import { MatTableDataSource } from '@angular/material/table';
 export class MaterialIndentCreationEditComponent implements OnInit {
 
     isEdit: boolean;
-    subscribeProjectDivison: Subscription;
-
     tableColumns = MaterialIndentCreationMetadata.itemDetails.tableColumns;
     dataSource;
-
     modalForm: IndentForm;
+    materialList: MaterialRegistration[];
 
     constructor(
         private dialogRef: MatDialogRef<MaterialIndentCreationEditComponent>,
         @Inject(MAT_DIALOG_DATA) private editData: MaterialIndent,
         private dataHandler: DataHandlerService,
-        private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+        private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+        private authService: AuthenticationService,
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog,
+        private router: Router
     ) {
         if (Object.keys(this.editData).length) {
             this.isEdit = true;
@@ -60,7 +65,18 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             }
         }
         this.modalForm.indent.model.indentTypeId = 1;
-        this.dataSource = new MatTableDataSource(this.editData.indentDetails || [])
+        this.loadItemDetails()
+    }
+
+    loadItemDetails() {
+        if (this.isEdit) {
+            const endpoint = `${MaterialIndentCreationMetadata.serviceEndPoint}List/${this.editData.id}`;
+            this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+                this.dataSource = new MatTableDataSource(res)
+            });
+        } else {
+            this.dataSource = new MatTableDataSource([]);
+        }
     }
 
     get dataColumns() {
@@ -91,16 +107,42 @@ export class MaterialIndentCreationEditComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    onSaveBtnClick() {
+    openApproveDialog(): void {
+        const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.saveChanges();
+            }
+        });
+    }
+
+    get isEditedFromApproval() {
+        return this.router.url.includes('approval');
+    }
+
+    onSaveBtnClick(nextLevel?: boolean) {
         if (this.modalForm.indent.form.valid) {
-            this.httpRequest.subscribe((res) => {
-                const closeEvent: IDialogEvent = {
-                    action: this.isEdit ? DialogActions.edit : DialogActions.add,
-                    data: res || this.modalForm.indent.model
+            if (this.isEditedFromApproval) {
+                this.openApproveDialog();
+            } else {
+                if (nextLevel) {
+                    this.modalForm.indent.model.approvedDate = new Date();
+                    this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
+                    this.modalForm.indent.model.approvalLevel = 1;
                 }
-                this.dialogRef.close(closeEvent);
-            })
+                this.saveChanges();
+            }
         }
+    }
+
+    saveChanges() {
+        this.httpRequest.subscribe((res) => {
+            const closeEvent: IDialogEvent = {
+                action: this.isEdit ? DialogActions.edit : DialogActions.add,
+                data: res || this.modalForm.indent.model
+            }
+            this.dialogRef.close(closeEvent);
+        })
     }
 
     onCancelBtnClick() {
@@ -114,16 +156,13 @@ export class MaterialIndentCreationEditComponent implements OnInit {
         if (this.isEdit) {
             return this.dataHandler.put<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, [payload]);
         } else {
-            const defaultDummyFields = { purchaseFlag: 13, workId: 14, subContractorId: 15, approvedDate: new Date().toISOString(), approvedBy: 1, companyId: 1, branchId: 1, isDeleted: 0, approvalLevel: 1 };
-            payload = { ...defaultDummyFields, ...payload };
-            console.log(payload);
+            payload.isDeleted = 0;
             return this.dataHandler.post<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, [payload]);
         }
     }
 
     fetchSuppliers() {
-        const dummyCompanyId = 1; const dummyBranchId = 0;
-        this.dataHandler.get<SupplierRegistration[]>(`${SupplierRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        this.dataHandler.get<SupplierRegistration[]>(this.supplierServiceUrl)
             .subscribe((res: SupplierRegistration[]) => {
                 if (res) {
                     FormfieldHandler.supplierDropdown.templateOptions.options = res.map((e: SupplierRegistration) => (
@@ -136,11 +175,16 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             });
     }
 
+    get supplierServiceUrl() {
+        const user = this.authService.loggedInUser;
+        return `${SupplierRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+    }
+
     fetchMaterials() {
-        const dummyCompanyId = 1; const dummyBranchId = 0;
-        this.dataHandler.get<MaterialRegistration[]>(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)
             .subscribe((res: MaterialRegistration[]) => {
                 if (res) {
+                    this.materialList = res;
                     FormfieldHandler.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
                         {
                             label: e.materialName,
@@ -151,12 +195,31 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             });
     }
 
+    get materialServiceUrl() {
+        const user = this.authService.loggedInUser;
+        return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+    }
+
     onAddItemBtnClick() {
-        if (this.modalForm.itemDetails.form.valid) {
+        if (this.isValid) {
             const data: any = Object.assign({}, this.modalForm.itemDetails.model);
+            data.materialName = this.materialList.find(e => e.id === data.materialId).materialName;
             this.dataSource.data.push(data);
             this.dataSource._updateChangeSubscription();
+            this.modalForm.itemDetails.form.reset();
         }
+    }
+
+    get isValid() {
+        if (!this.modalForm.itemDetails.model['materialId']) {
+            this.snackBar.open('Warning : Please select material', null, { panelClass: 'snackbar-error-message' });
+            return false;
+        }
+        if (!this.modalForm.itemDetails.model['quantityRequired']) {
+            this.snackBar.open('Warning : Please input quantity', null, { panelClass: 'snackbar-error-message' });
+            return false;
+        }
+        return true;
     }
 
     openDialog(rowToEdit?: MaterialIndent) {
@@ -181,7 +244,6 @@ export class MaterialIndentCreationEditComponent implements OnInit {
         this.modalForm.indent.form.reset();
         this.modalForm.itemDetails.form.reset();
         this.projectDivisionFieldsHandler.clear();
-        this.subscribeProjectDivison.unsubscribe();
     }
 
 }

@@ -10,6 +10,7 @@ import { AuthenticationService } from 'src/app/services/auth-service/authenticat
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialStockEntry } from '../material-stock-entry/definitions/material-stock-entry.definition';
 import { Router } from '@angular/router';
+import { SideNavigationMenu } from 'src/app/modules/common/sidebar/sidebar.configuration';
 
 @Component({
   selector: 'app-material-stock-entry-approval',
@@ -65,32 +66,54 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
     this.fetchData();
   }
 
+  get menuId() {
+    const urlHashArray = this.router.url.split('/');
+    const endUrl = urlHashArray[urlHashArray.length - 1];
+    for (let x in SideNavigationMenu) {
+      if (SideNavigationMenu[x].route === `/${endUrl}`) {
+        return SideNavigationMenu[x].menuId;
+      }
+    }
+  }
+
   fetchData() {
-    const user = this.authService.loggedInUser;
-    const endpoint = `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`
-    this.dataHandler.get<MaterialStockEntry[]>(endpoint)
+    this.dataHandler.get<MaterialStockEntry[]>(this.serviceUrl)
       .subscribe((res: MaterialStockEntry[]) => {
-        let data = [];
-        if (this.isDirectEntry) {
-          data = res.filter(e => !e.purchaseOrderNo); // orders without purchase order
-        } else {
-          data = res.filter(e => e.purchaseOrderNo)
-        }
-        this.dataSource = new MatTableDataSource(data);
+        this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
+  get serviceUrl() {
+    let user = this.authService.loggedInUser;
+    return `BuildExeMaterial/api/PurchaseList/${user.companyId}/${user.branchId}/${user.userId}/${this.menuId}`;
+  }
+
   onApproveBtnClick() {
+    const isApproved = true;
+    this.saveChanges(isApproved)
+  }
+
+  onRejectBtnClick() {
+    const isApproved = false;
+    this.saveChanges(isApproved)
+  }
+
+  saveChanges(isApproved: boolean) {
     if (!this.selection) {
       this.snackBar.open('WARNING :  Please select a stock entry');
       return;
     }
-    this.selection.approvalLevel++;
-    this.selection.approvedBy = this.authService.loggedInUser.userId;
-    this.selection.approvedDate = new Date();
-    this.dataHandler.put<MaterialIndent>(MaterialIndentCreationMetadata.serviceEndPoint, [this.selection]).subscribe((res) => {
-      this.snackBar.open('Stock Entry Approved Successfully');
+    if (isApproved) {
+      this.selection.approvalLevel++;
+      this.selection.approvedBy = this.authService.loggedInUser.userId;
+      this.selection.approvedDate = new Date();
+    } else {
+      this.selection.approvalLevel--;
+    }
+    this.selection.purchaseDetail = this.itemDatasource.data;
+    this.dataHandler.put<MaterialStockEntry>(this.module.serviceEndPoint, [this.selection]).subscribe((res) => {
+      this.snackBar.open(`Stock Entry ${isApproved ? 'Approved' : 'Rejected'} Successfully`);
       const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selection.id);
       if (rowToRemove !== -1) {
         this.dataSource.data.splice(rowToRemove, 1);
@@ -99,13 +122,6 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
         this.itemDatasource._updateChangeSubscription();
       }
     })
-  }
-
-  onRejectBtnClick() {
-    if (!this.selection) {
-      this.snackBar.open('WARNING :  Please select a stock entry');
-      return;
-    }
   }
 
   doFilter(value: string) {
@@ -118,11 +134,22 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
       row.id === selected.id ? row.isSelected = true : row.isSelected = false;
     });
     this.dataSource._updateChangeSubscription();
-    selected.purchaseDetail.forEach(e => {
-      e['total'] = e.quantity * e.rate;
-      this.totalAmount = this.totalAmount + e['total'];
+    this.fetchDetails(selected);
+  }
+
+  fetchDetails(selected: MaterialStockEntry) {
+    let endpoint = `BuildExeMaterial/api/PurchaseList/${selected.id}`;
+    this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+      this.totalAmount = 0;
+      res.forEach(e => {
+        const total = e.Quantity * e.Rate;
+        const tax = total * (e.Tax / 100);
+        const discount = total * (e.Tax / 100);
+        e.Total = total + tax - discount;
+        this.totalAmount = this.totalAmount + e.Total;
+      });
+      this.itemDatasource = new MatTableDataSource(res);
     })
-    this.itemDatasource = new MatTableDataSource(selected.purchaseDetail);
   }
 
 }

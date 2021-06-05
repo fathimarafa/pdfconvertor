@@ -13,11 +13,11 @@ export const MaterialIndentCreationMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'projectId',
-            "displayName": 'Project Id'
+            "field": 'projectName',
+            "displayName": 'Project'
         },
         {
-            "field": 'supplierPreferred',
+            "field": 'supplierName',
             "displayName": 'Supplier Preferred'
         },
         {
@@ -98,7 +98,7 @@ export const MaterialIndentCreationMetadata = {
                         "label": "Select block",
                         "options": [],
                         "disabled": true,
-                        "required":true
+                        "required": true
                     },
                 },
                 {
@@ -109,7 +109,7 @@ export const MaterialIndentCreationMetadata = {
                         "label": "Select floor",
                         "disabled": true,
                         "options": [],
-                        "required":true
+                        "required": true
                     }
                 },
                 {
@@ -120,9 +120,28 @@ export const MaterialIndentCreationMetadata = {
                         "label": "Select unit",
                         "disabled": true,
                         "options": [],
-                        "required":true
+                        "required": true
                     }
-                }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "indentCategoryId",
+                    "templateOptions": {
+                        "label": "Category",
+                        "options": [
+                            {
+                                "label": "capital",
+                                "value": 1
+                            },
+                            {
+                                "label": "consumable",
+                                "value": 2
+                            }
+                        ],
+                        "required": true
+                    }
+                },
             ]
         },
         {
@@ -140,16 +159,7 @@ export const MaterialIndentCreationMetadata = {
                     "hideExpression": true
                 }
             ]
-        },
-        {
-            "className": "checkbox-outline-none",
-            "type": "checkbox",
-            "key": "nextLevel",
-            "defaultValue": 0,
-            "templateOptions": {
-                "label": "Next Level",
-            }
-        },
+        }
     ],
     "itemDetails": {
         "tableColumns": [
@@ -158,16 +168,16 @@ export const MaterialIndentCreationMetadata = {
                 "displayName": 'SNo'
             },
             {
-                "field": 'indentCategoryId',
-                "displayName": 'Category'
-            },
-            {
-                "field": 'materialId',
+                "field": 'materialName',
                 "displayName": 'Item'
             },
             {
                 "field": 'quantityRequired',
                 "displayName": 'Required Quantity'
+            },
+            {
+                "field": 'quantityOrdered',
+                "displayName": 'Required Ordered'
             },
             {
                 "field": 'requiredDate',
@@ -186,29 +196,9 @@ export const MaterialIndentCreationMetadata = {
                     {
                         "className": "flex-1",
                         "type": "select",
-                        "key": "indentCategoryId",
-                        "templateOptions": {
-                            "label": "Category",
-                            "options": [
-                                {
-                                    "label": "capital",
-                                    "value": 1
-                                },
-                                {
-                                    "label": "consumable",
-                                    "value": 2
-                                }
-                            ],
-                            "required": true
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "select",
                         "key": "materialId",
                         "templateOptions": {
                             "label": "Select items",
-                            "required": true,
                             "options": []
                         }
                     },
@@ -217,8 +207,16 @@ export const MaterialIndentCreationMetadata = {
                         "type": "input",
                         "key": "quantityRequired",
                         "templateOptions": {
-                            "label": "Requested Quantity",
-                            "required": true,
+                            "label": "Quantity Required",
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "className": "flex-1 field-size-small",
+                        "type": "input",
+                        "key": "quantityOrdered",
+                        "templateOptions": {
+                            "label": "Quantity Ordered",
                             "type": "number"
                         }
                     },
@@ -227,8 +225,7 @@ export const MaterialIndentCreationMetadata = {
                         "type": "datepicker",
                         "key": "requiredDate",
                         "templateOptions": {
-                            "label": "Urgency",
-                            "required": true
+                            "label": "Urgency"
                         }
                     }
                 ]
@@ -243,7 +240,6 @@ export const MaterialIndentCreationMetadata = {
                         "key": "remarks",
                         "templateOptions": {
                             "label": "Remarks",
-                            "required": true,
                             "rows": 1
                         }
                     }

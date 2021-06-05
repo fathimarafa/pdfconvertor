@@ -6,23 +6,37 @@ export const ApproveLevelMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint":"BuildExeCRM/api/Level",
+    "serviceEndPoint": "BuildExeCRM/api/LevelSetting",
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'S.No'
         },
         {
-            "field": 'formName',
+            "field": 'menuId',
             "displayName": 'Form Name'
         },
         {
-            "field": 'formlevel',
-            "displayName": 'Approve Levels'
+            "field": 'teamId',
+            "displayName": 'Team'
         },
         {
             "field": 'action',
             "displayName": 'Action'
+        }
+    ],
+    "levelTableColumns": [
+        {
+            "field": 'formlevel',
+            "displayName": 'Level'
+        },
+        {
+            "field": 'userId',
+            "displayName": 'User'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "formFields": []

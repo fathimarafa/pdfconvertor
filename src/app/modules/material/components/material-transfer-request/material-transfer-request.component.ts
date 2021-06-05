@@ -7,7 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialTransferRequest } from './definitions/material-transfer-request.definition';
 import { MaterialTransferRequestEditComponent } from './edit/material-transfer-request-edit.component';
 import { MaterialTransferRequestMetadata } from './material-transfer-request.configuration';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-transfer-request',
@@ -24,10 +24,11 @@ export class MaterialTransferRequestComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = MaterialTransferRequestMetadata;
-    this.tableColumns = this.module.tableColumns
+    this.tableColumns = this.module.tableColumns;
+    this.fetchData();
   }
 
   get dataColumns() {
@@ -38,17 +39,19 @@ export class MaterialTransferRequestComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.fetchData();
-  }
+  ngOnInit() { }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialTransferRequest[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialTransferRequest[]>(this.serviceUrl)
       .subscribe((res: MaterialTransferRequest[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: MaterialTransferRequest) {
@@ -61,9 +64,8 @@ export class MaterialTransferRequestComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialTransferRequest): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -84,15 +86,6 @@ export class MaterialTransferRequestComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'material transfer request',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

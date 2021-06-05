@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormlyModule } from '@ngx-formly/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyMaterialModule } from '@ngx-formly/material';
@@ -32,6 +32,7 @@ import { HRmoduleComponents } from './modules/hr/hr.component';
 import { MaterialModuleComponents } from './modules/material/material.component';
 import { PrebudgetModuleComponents } from './modules/prebudget/prebudget.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { FormApprovalDialogComponent } from './modules/common/form-approval-dialog/form-approval-dialog.component';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -48,6 +49,7 @@ const appearance: MatFormFieldDefaultOptions = {
     ModuleDefaultListingComponent,
     ModuleDefaultFormComponent,
     ModuleDefaultFormMultistepComponent,
+    FormApprovalDialogComponent,
     ...CRMmoduleComponents,
     ...HRmoduleComponents,
     ...MaterialModuleComponents,
@@ -58,7 +60,8 @@ const appearance: MatFormFieldDefaultOptions = {
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule,
+    FormsModule,
+    ReactiveFormsModule, 
     FormlyModule.forRoot(CustomValidationMessages),
     BrowserAnimationsModule,
     FormlyMaterialModule,

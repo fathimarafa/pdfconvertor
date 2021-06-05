@@ -8,7 +8,6 @@ import { MaterialPurchaseOrder } from './definitions//material-purchase-order.de
 import { MaterialPurchaseOrderMetadata } from './material-purchase-order.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
@@ -28,7 +27,6 @@ export class MaterialPurchaseOrderComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService,
     private authService: AuthenticationService
   ) {
     this.module = MaterialPurchaseOrderMetadata;
@@ -65,9 +63,8 @@ export class MaterialPurchaseOrderComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialPurchaseOrder): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -88,15 +85,6 @@ export class MaterialPurchaseOrderComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'purchase order',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

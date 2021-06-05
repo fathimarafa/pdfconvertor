@@ -1,8 +1,10 @@
 export interface ApproveLevel {
-    id: number,
-    formName: string,
-    component: string,
-    formlevel: number,
-    companyId: number,
-    branchId: number
+    id: number;
+    userid: number;
+    menuId: number;
+    formlevel: number;
+    teamId: number;
+    companyId: number;
+    branchId: number;
+    entryUserId: number;
 }

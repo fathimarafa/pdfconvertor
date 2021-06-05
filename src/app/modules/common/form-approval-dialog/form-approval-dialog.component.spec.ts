@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectTransferComponent } from './select-transfer.component';
+import { FormApprovalDialogComponent } from './form-approval-dialog.component';
 
-describe('SelectTransferComponent', () => {
-  let component: SelectTransferComponent;
-  let fixture: ComponentFixture<SelectTransferComponent>;
+describe('FormApprovalDialogComponent', () => {
+  let component: FormApprovalDialogComponent;
+  let fixture: ComponentFixture<FormApprovalDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectTransferComponent ]
+      declarations: [ FormApprovalDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectTransferComponent);
+    fixture = TestBed.createComponent(FormApprovalDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -41,7 +41,7 @@ export const MaterialRecieveMetadata = {
                 {
                     "className": "flex-1",
                     "key": "projectIdTo",
-                    "type": "select",   
+                    "type": "select",
                     "templateOptions": {
                         "label": "To Project",
                         "required": true,
@@ -55,7 +55,7 @@ export const MaterialRecieveMetadata = {
                     "templateOptions": {
                         "label": "Transfer No",
                         "required": true,
-                        "type":"number"
+                        "type": "number"
                     }
                 },
                 {
@@ -74,37 +74,37 @@ export const MaterialRecieveMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "blockIdTo",
                     "type": "select",
                     "templateOptions": {
                         "label": "To block",
                         "required": true,
+                        "disabled": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "floorIdTo",
                     "type": "select",
                     "templateOptions": {
                         "label": "To floor",
                         "required": true,
+                        "disabled": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 },
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "key": "unitIdTo",
                     "type": "select",
                     "templateOptions": {
                         "label": "To unit",
                         "required": true,
+                        "disabled": true,
                         "options": []
-                    },
-                    "hideExpression": true
+                    }
                 }
             ]
         }
@@ -134,10 +134,6 @@ export const MaterialRecieveMetadata = {
             {
                 "field": 'total',
                 "displayName": 'Total'
-            },
-            {
-                "field": 'action',
-                "displayName": 'Action'
             }
         ]
     },
@@ -145,97 +141,151 @@ export const MaterialRecieveMetadata = {
         "formFields": [
             {
                 "id": "row-1",
-                "fieldGroupClassName": "display-flex",
+                "fieldGroupClassName": "display-flex readonly",
                 "fieldGroup": [
                     {
-                        "className": "flex-1",
+                        "id": "row-1",
+                        "className": "flex-4",
+                        "fieldGroup": [
+                            {
+                                "id": "row-1",
+                                "fieldGroupClassName": "display-flex",
+                                "fieldGroup": [
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "transportationCharge",
+                                        "templateOptions": {
+                                            "label": "Transportation Charge",
+                                            "type": "number",
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "transportationPer",
+                                        "templateOptions": {
+                                            "label": "Transportation Rate",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "loadingUnloadingCharge",
+                                        "templateOptions": {
+                                            "label": "Loading Unloading Charge",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "loadingUnloadingPer",
+                                        "templateOptions": {
+                                            "label": "Loading Unloading Per",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "row-2",
+                                "fieldGroupClassName": "display-flex",
+                                "fieldGroup": [
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "otherCharges",
+                                        "templateOptions": {
+                                            "label": "Other Charges",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "otherChargesPer",
+                                        "templateOptions": {
+                                            "label": "Other Charges Per",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "miscellaneousExpense",
+                                        "templateOptions": {
+                                            "label": "Additional Expense",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "defaultValue": 0,
+                                        "key": "miscellaneousExpensePer",
+                                        "templateOptions": {
+                                            "label": "Additional Expense Per",
+                                            "required": true,
+                                            "type": "number"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "row-2",
+                        "className": "readonly flex-1 field-font-bold",
                         "type": "input",
-                        "key": "transportationCharge",
+                        "key": "netAmount",
+                        "defaultValue": 0,
                         "templateOptions": {
-                            "label": "Transportation Charge",
+                            "label": "Net Amount",
                             "type": "number",
-                            "required": true
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "transportationPer",
-                        "templateOptions": {
-                            "label": "Transportation Rate",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "loadingUnloadingCharge",
-                        "templateOptions": {
-                            "label": "Loading Unloading Charge",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "loadingUnloadingPer",
-                        "templateOptions": {
-                            "label": "Loading Unloading Per",
-                            "required": true,
-                            "type": "number"
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "row-2",
-                "fieldGroupClassName": "display-flex",
-                "fieldGroup": [
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "otherCharges",
-                        "templateOptions": {
-                            "label": "Other Charges",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "otherChargesPer",
-                        "templateOptions": {
-                            "label": "Other Charges Per",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "miscellaneousExpense",
-                        "templateOptions": {
-                            "label": "Miscellaneous Expense",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "miscellaneousExpensePer",
-                        "templateOptions": {
-                            "label": "Miscellaneous Expense Per",
-                            "required": true,
-                            "type": "number"
+                            "readonly": true
                         }
                     }
                 ]
             }
         ]
-    }
+    },
+    "transferTableColumns": [
+        {
+            "field": 'id',
+            "displayName": ''
+        },
+        {
+            "field": 'companyId',
+            "displayName": 'From Company'
+        },
+        {
+            "field": 'branchId',
+            "displayName": 'From Branch'
+        },
+        {
+            "field": 'toCompany',
+            "displayName": 'To Company'
+        },
+        {
+            "field": 'transferDate',
+            "displayName": 'Transfer Date'
+        },
+    ]
 
 }

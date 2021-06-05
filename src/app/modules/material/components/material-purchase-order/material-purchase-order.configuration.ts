@@ -21,11 +21,11 @@ export const MaterialPurchaseOrderMetadata = {
             "displayName": 'Order Date'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project'
         },
         {
-            "field": 'supplierPreffered',
+            "field": 'supplierName',
             "displayName": 'Supplier'
         },
         {
@@ -160,7 +160,7 @@ export const MaterialPurchaseOrderMetadata = {
                 "displayName": 'SNo'
             },
             {
-                "field": 'itemId',
+                "field": 'materialName',
                 "displayName": 'Item'
             },
             {

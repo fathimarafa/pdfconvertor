@@ -13,7 +13,7 @@ export const MaterialStockEntryMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project'
         },
         {
@@ -25,7 +25,7 @@ export const MaterialStockEntryMetadata = {
             "displayName": 'Purchase Date'
         },
         {
-            "field": 'supplierId',
+            "field": 'supplierName',
             "displayName": 'Supplier'
         },
         {

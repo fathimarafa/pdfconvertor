@@ -15,6 +15,11 @@ import { MaterialRegistration } from '../../material-registration/definitions/ma
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 import { TransferFromProjectDivision } from '../handlers/transfer-from-project-division';
 import { TransferToProjectDivision } from '../handlers/transfer-to-project-division';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MaterialIndentCreationMetadata } from '../../material-indent-creation/material-indent-creation.configuration';
+import { MaterialIndent } from '../../material-indent-creation/definitions/material-indent-creation.definiton';
+import { MaterialBrandRegistration } from '../../material-brand-registration/definitions/material-brand.definition';
+import { MaterialBrandRegistrationMetadata } from '../../material-brand-registration/material-brand-registration.configuration';
 
 @Component({
   selector: 'app-material-transfer-request-edit',
@@ -29,6 +34,14 @@ export class MaterialTransferRequestEditComponent implements OnInit {
   dataSource;
   hasOpeningStock: boolean;
   enableItemEdit: boolean;
+  totalAmount = 0;
+
+  indentTableColumns;
+  indentDataSource;
+
+  selectFromIndent: boolean;
+
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
@@ -36,13 +49,30 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private editData: MaterialTransferRequest,
     private dataHandler: DataHandlerService,
     private transferFromProjectDivision: TransferFromProjectDivision,
-    private transferToProjectDivision: TransferToProjectDivision
+    private transferToProjectDivision: TransferToProjectDivision,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
     this.defineModalForms();
     this.bindProjectDivisionFields();
+  }
+
+  onSelectFromIndentChange() {
+    this.selectFromIndent = !this.selectFromIndent;
+    if (this.selectFromIndent) {
+      this.tableColumns.pop();
+    } else {
+      this.tableColumns.push({
+        "field": 'action',
+        "displayName": 'Action'
+      });
+    }
+    if (this.selectFromIndent && !this.indentDataSource) {
+      this.fetchIndent();
+    }
+    this.dataSource.data = [];
   }
 
   bindProjectDivisionFields() {
@@ -68,6 +98,51 @@ export class MaterialTransferRequestEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.tableColumns = MaterialTransferRequestMetadata.transferDetail.tableColumns;
+    this.indentTableColumns = MaterialTransferRequestMetadata.indentTableColumns;
+    this.listenNetAmountChange();
+  }
+
+  onRowSelection(selected: MaterialIndent) {
+    this.indentDataSource.data.forEach((row) => {
+      row.id === selected.id ? row.isSelected = true : row.isSelected = false;
+    });
+    this.indentDataSource._updateChangeSubscription();
+    let rows = selected.indentDetails.map(e => {
+      return {
+        materialId: e.materialId,
+        quantity: 1,
+        rate: 0,
+        tax: 0,
+        total: 0
+      }
+    })
+    this.dataSource = new MatTableDataSource(rows);
+  }
+
+  onUserInput($event, row, column) {
+    row[column] = $event.target.value;
+    row['total'] = row.quantity * row.rate;
+    this.calculateItemDetailsTableTotal();
+  }
+
+  calculateItemDetailsTableTotal() {
+    this.totalAmount = 0;
+    this.dataSource.data.forEach((row) => {
+      this.totalAmount = this.totalAmount + row['total'];
+    });
+    this.calculateNetAmount();
+  }
+
+  fetchIndent() {
+    this.dataHandler.get<MaterialIndent[]>(this.indentServiceUrl)
+      .subscribe((res: MaterialIndent[]) => {
+        this.indentDataSource = new MatTableDataSource(res);
+      });
+  }
+
+  get indentServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialIndentCreationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   defineModalForms() {
@@ -91,9 +166,12 @@ export class MaterialTransferRequestEditComponent implements OnInit {
         fields: MaterialTransferRequestMetadata.transferCharges.formFields
       }
     }
-    FormfieldHandler.initialize(this.modalForms.material.fields);
+    FormfieldHandler.initialize(this.modalForms.material.fields, this.modalForms.transferCharges.fields);
     this.loadDropdowns();
     this.dataSource = new MatTableDataSource(this.editData.transferDetail || []);
+    if (this.isEdit) {
+      this.calculateItemDetailsTableTotal();
+    }
   }
 
   ngAfterViewInit() {
@@ -101,7 +179,9 @@ export class MaterialTransferRequestEditComponent implements OnInit {
   }
 
   loadDropdowns() {
+    this.fetchMaterialBrand();
     this.fetchMaterials();
+    this.fetchIndent();
   }
 
   onSaveBtnClick() {
@@ -148,6 +228,14 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     }
   }
 
+  get indentDataColumns() {
+    if (this.indentTableColumns && this.indentTableColumns.length) {
+      return this.indentTableColumns.map(col => col.field);
+    } else {
+      return [];
+    }
+  }
+
   onAddItemBtnClick() {
     if (this.modalForms.transferDetail.form.valid) {
       const dataRow: TransferDetail = Object.assign({}, this.modalForms.transferDetail.model);
@@ -155,6 +243,7 @@ export class MaterialTransferRequestEditComponent implements OnInit {
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
       this.modalForms.transferDetail.form.reset();
+      this.calculateItemDetailsTableTotal();
     }
   }
 
@@ -179,13 +268,12 @@ export class MaterialTransferRequestEditComponent implements OnInit {
 
   get materialDropdown(): FormlyFieldConfig {
     return this.modalForms.transferDetail.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+      .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
       .find((x: FormlyFieldConfig) => x.key === 'materialId');
   }
 
   fetchMaterials() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialRegistration[]>(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
           this.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -197,6 +285,85 @@ export class MaterialTransferRequestEditComponent implements OnInit {
         }
       });
   }
+
+  get materialServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  get materialBrandDropdown(): FormlyFieldConfig {
+    return this.modalForms.transferDetail.fields
+      .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+      .find((x: FormlyFieldConfig) => x.key === 'brandId');
+  }
+
+  fetchMaterialBrand() {
+    this.dataHandler.get<MaterialBrandRegistration[]>(this.brandServiceUrl)
+      .subscribe((res: MaterialBrandRegistration[]) => {
+        if (res) {
+          this.materialBrandDropdown.templateOptions.options = res.map((e: MaterialBrandRegistration) => (
+            {
+              label: e.materialBrandName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  get brandServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialBrandRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  doFilter(value: string) {
+    this.indentDataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  private listenNetAmountChange() {
+    //transportation charge
+    FormfieldHandler.transportChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.transportationPer = (this.modalForms.transferCharges.model.transportationCharge / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.transportChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.transportationCharge = (this.totalAmount * this.modalForms.transferCharges.model.transportationPer) / 100
+      this.calculateNetAmount();
+    }
+    // loading charge
+    FormfieldHandler.loadingChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.loadingUnloadingPer = (this.modalForms.transferCharges.model.loadingUnloadingCharge / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.loadingChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.loadingUnloadingCharge = (this.totalAmount * this.modalForms.transferCharges.model.loadingUnloadingPer) / 100
+      this.calculateNetAmount();
+    }
+    //other charge
+    FormfieldHandler.otherChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.otherChargesPer = (this.modalForms.transferCharges.model.otherCharges / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.otherChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.otherCharges = (this.totalAmount * this.modalForms.transferCharges.model.otherChargesPer) / 100
+      this.calculateNetAmount();
+    }
+    // additional charge
+    FormfieldHandler.miscellaneousExpenseAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.miscellaneousExpensePer = (this.modalForms.transferCharges.model.miscellaneousExpense / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.miscellaneousExpensePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.miscellaneousExpense = (this.totalAmount * this.modalForms.transferCharges.model.miscellaneousExpensePer) / 100
+      this.calculateNetAmount();
+    }
+  }
+
+  private calculateNetAmount() {
+    this.modalForms.transferCharges.model.netAmount = this.totalAmount + this.modalForms.transferCharges.model.transportationCharge + this.modalForms.transferCharges.model.loadingUnloadingCharge + this.modalForms.transferCharges.model.otherCharges + this.modalForms.transferCharges.model.miscellaneousExpense;
+    this.modalForms.transferCharges.model = { ...this.modalForms.transferCharges.model };
+  }
+
 
   ngOnDestroy() {
     this.modalForms.material.form.reset();
