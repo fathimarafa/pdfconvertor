@@ -5,7 +5,7 @@
     <mat-card  class="mat-flex-card">
         <mat-card-header>
             <mat-card-title>{{module ? module.displayName : ''}}</mat-card-title>
-            <mat-form-field>
+            <mat-form-field appearance="legacy">
                 <mat-label>Search</mat-label>
                 <input matInput type="text" (keyup)="doFilter($event.target.value)">
                 <button mat-button matSuffix mat-icon-button aria-label="Clear">

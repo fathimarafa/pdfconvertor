@@ -1,3 +1,10 @@
 tr {
     cursor: pointer;
 }
+.table-wrap{
+    width: 100%;
+    overflow-x: auto;
+}
+.table-compnay{
+    min-width: 1024px;
+}

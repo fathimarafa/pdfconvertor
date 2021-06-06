@@ -13,7 +13,9 @@
 ::ng-deep .user-previlege-component .list-item-grandchild .mat-list-item-content {
     padding-left: 70px !important;
 }
-
+.mat-card-header{
+    margin-bottom: 2rem;
+}
 
 /* .item {
     color: #424952;
