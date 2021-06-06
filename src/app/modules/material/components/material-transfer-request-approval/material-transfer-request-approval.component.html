@@ -32,7 +32,12 @@
                             <mat-radio-button [checked]="element.isSelected"></mat-radio-button>
                         </ng-container>
                         <ng-container *ngIf="!firstColumn">
-                            {{element[column.field]}}
+                            <ng-container *ngIf="column.field !== 'action'">
+                                {{element[column.field]}}
+                            </ng-container>
+                            <ng-container *ngIf=" column.field === 'action'">
+                                <mat-icon (click)="openEditDialog(element)">edit</mat-icon>
+                            </ng-container>
                         </ng-container>
                     </td>
                 </ng-container>

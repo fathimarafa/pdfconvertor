@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { MaterialStockEntryMetadata } from '../material-stock-entry.configuration';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { MaterialStockEntry } from '../definitions/material-stock-entry.definition';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
@@ -21,6 +21,9 @@ import { MaterialRegistrationMetadata } from '../../material-registration/materi
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
 import { BasicWorkCategory } from 'src/app/modules/basic/components/work-category/definitions/basic-work-category.definition';
+import { Employee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
+import { EmployeeRegistrationMetadata } from 'src/app/modules/hr/components/employee-registration/employee-registration.configuration';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 
 @Component({
   selector: 'app-material-stock-entry-edit',
@@ -52,6 +55,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private authService: AuthenticationService,
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private dialog: MatDialog,
     private router: Router
   ) {
     if (Object.keys(this.editData).length) {
@@ -87,7 +91,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
         fields: MaterialStockEntryMetadata.transferChargeFormfields
       }
     }
-    FormfieldHandler.initialize(this.modalForms.stockentry.fields);
+    FormfieldHandler.initialize(this.modalForms.stockentry.fields, this.modalForms.transferCharges.fields);
     this.loadDropdowns();
   }
 
@@ -107,18 +111,46 @@ export class MaterialStockEntryEditComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.listenNetAmountChange();
+  }
 
-  onSaveBtnClick() {
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges();
+      }
+    });
+  }
+
+  get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+  }
+
+  onSaveBtnClick(nextLevel?: boolean) {
     if (this.modalForms.stockentry.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: res || this.modalForms.stockentry.model
+      if (this.isEditedFromApproval) {
+        this.openApproveDialog();
+      } else {
+        if (nextLevel) {
+          this.modalForms.stockentry.model.approvedDate = new Date();
+          this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
+          this.modalForms.stockentry.model.approvalLevel = 1;
         }
-        this.dialogRef.close(closeEvent);
-      })
+        this.saveChanges();
+      }
     }
+  }
+
+  saveChanges() {
+    this.httpRequest.subscribe((res) => {
+      const closeEvent: IDialogEvent = {
+        action: this.isEdit ? DialogActions.edit : DialogActions.add,
+        data: res || this.modalForms.stockentry.model
+      }
+      this.dialogRef.close(closeEvent);
+    })
   }
 
   onCancelBtnClick() {
@@ -139,6 +171,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
     this.fetchSuppliers();
     this.bindProjectDivisionFields();
     this.loadWorkCategory();
+    this.fetchSitemanager();
   }
 
   bindProjectDivisionFields() {
@@ -277,6 +310,26 @@ export class MaterialStockEntryEditComponent implements OnInit {
     return `${BasicWorkCategoryMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
+  fetchSitemanager() {
+    this.dataHandler.get<Employee[]>(this.sitemanagerServiceUrl)
+      .subscribe((res: Employee[]) => {
+        if (res) {
+          FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e: Employee) => (
+            {
+              label: e.fullName,
+              value: e['id']
+            }
+          ));
+        }
+      });
+  }
+
+  get sitemanagerServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${EmployeeRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`
+  }
+
+
   private listenTaxAreaChange() {
     FormfieldHandler.taxAreaDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
       // if (this.modalForms.transferCharges.model.taxArea === 'INTRA') {
@@ -305,6 +358,45 @@ export class MaterialStockEntryEditComponent implements OnInit {
       // }
       this.modalForms.transferCharges.model = { ...this.modalForms.transferCharges.model }
     }
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  private listenNetAmountChange() {
+    //transportation charge
+    FormfieldHandler.transportChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.transportationPer = (this.modalForms.transferCharges.model.transportationCharge / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.transportChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.transportationCharge = (this.totalAmount * this.modalForms.transferCharges.model.transportationPer) / 100
+      this.calculateNetAmount();
+    }
+    // loading charge
+    FormfieldHandler.loadingChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.loadingUnloadingPer = (this.modalForms.transferCharges.model.loadingUnloadingCharge / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.loadingChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.loadingUnloadingCharge = (this.totalAmount * this.modalForms.transferCharges.model.loadingUnloadingPer) / 100
+      this.calculateNetAmount();
+    }
+    //other charge
+    FormfieldHandler.otherChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.otherChargesPer = (this.modalForms.transferCharges.model.otherCharges / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.otherChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.otherCharges = (this.totalAmount * this.modalForms.transferCharges.model.otherChargesPer) / 100
+      this.calculateNetAmount();
+    }
+  }
+
+  private calculateNetAmount() {
+    this.modalForms.transferCharges.model.netamount = this.totalAmount + this.modalForms.transferCharges.model.transportationCharge + this.modalForms.transferCharges.model.loadingUnloadingCharge + this.modalForms.transferCharges.model.otherCharges;
+    this.modalForms.transferCharges.model = { ...this.modalForms.transferCharges.model };
   }
 
   ngOnDestroy() {

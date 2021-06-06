@@ -27,6 +27,10 @@ export const MaterialPurchaseReturnApprovalMetadata = {
         {
             "field": 'supplierId',
             "displayName": 'Supplier'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [
@@ -35,7 +39,7 @@ export const MaterialPurchaseReturnApprovalMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'materialId',
+            "field": 'materialName',
             "displayName": 'Item'
         },
         {
@@ -49,6 +53,10 @@ export const MaterialPurchaseReturnApprovalMetadata = {
         {
             "field": 'tax',
             "displayName": 'Tax'
+        },
+        {
+            "field": 'disount',
+            "displayName": 'Discount'
         },
         {
             "field": 'total',

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable, Subscriber, Subscription } from 'rxjs';
@@ -15,6 +15,9 @@ import { MaterialRegistration } from '../../material-registration/definitions/ma
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 import { SupplierRegistration } from '../../supplier-registration/definitions/supplier-registration.definition';
 import { SupplierRegistrationMetadata } from '../../supplier-registration/supplier-registration.configuration';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 
 @Component({
@@ -37,6 +40,9 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private editData: MaterialPurchaseReturn,
     private dataHandler: DataHandlerService,
     private projectDivisionFieldHandler: ProjectDivisionFieldsHandlerService,
+    private dialog: MatDialog,
+    private router: Router,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -84,7 +90,18 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(this.modalForms.purchaseReturn.fields);
     this.loadDropdowns();
-    this.dataSource = new MatTableDataSource(this.editData.purchaseReturnDetail || []);
+    this.loadItemDetails();
+  }
+
+  loadItemDetails() {
+    if (this.isEdit) {
+      const endpoint = `${MaterialPurchaseReturnMetadata.serviceEndPoint}List/${this.editData.id}`;
+      this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+        this.dataSource = new MatTableDataSource(res)
+      });
+    } else {
+      this.dataSource = new MatTableDataSource([]);
+    }
   }
 
   ngAfterViewInit() {
@@ -96,16 +113,42 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
     this.fetchMaterials();
   }
 
-  onSaveBtnClick() {
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges();
+      }
+    });
+  }
+
+  get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+  }
+
+  onSaveBtnClick(nextLevel?: boolean) {
     if (this.modalForms.purchaseReturn.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: res || this.modalForms.purchaseReturn.model
+      if (this.isEditedFromApproval) {
+        this.openApproveDialog();
+      } else {
+        if (nextLevel) {
+          this.modalForms.purchaseReturn.model.approvedDate = new Date();
+          this.modalForms.purchaseReturn.model.approvedBy = this.authService.loggedInUser.userId;
+          this.modalForms.purchaseReturn.model.approvalLevel = 1;
         }
-        this.dialogRef.close(closeEvent);
-      });
+        this.saveChanges();
+      }
     }
+  }
+
+  saveChanges() {
+    this.httpRequest.subscribe((res) => {
+      const closeEvent: IDialogEvent = {
+        action: this.isEdit ? DialogActions.edit : DialogActions.add,
+        data: res || this.modalForms.purchaseReturn.model
+      }
+      this.dialogRef.close(closeEvent);
+    });
   }
 
   onCancelBtnClick() {

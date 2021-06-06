@@ -6,6 +6,10 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DamageStockEntry } from '../damage-stock-entry/definitions/damage-stock-entry.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { DialogEventHandlerService } from 'src/app/services/dialog-event-handler/dialogeventhandler.service';
+import { DamageStockEntryEditComponent } from '../damage-stock-entry/edit/damage-stock-entry-edit.component';
 
 @Component({
   selector: 'app-damage-stock-entry-approval',
@@ -18,17 +22,22 @@ export class DamageStockEntryApprovalComponent implements OnInit {
   tableColumns;
   dataSource;
   projectStatusTypes;
+  selectedItem: DamageStockEntry;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private snackBar: MatSnackBar,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private dialog: MatDialog,
+    private dialogEventHandler: DialogEventHandlerService,
   ) {
     this.module = DamageStockEntryApprovalMetadata;
     this.tableColumns = this.module.tableColumns;
     this.fetchData();
   }
+
+  ngOnInit() { }
 
   get dataColumns() {
     if (this.tableColumns && this.tableColumns.length) {
@@ -37,12 +46,6 @@ export class DamageStockEntryApprovalComponent implements OnInit {
       return [];
     }
   }
-
-  doFilter(value: string) {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  ngOnInit() { }
 
   fetchData() {
     this.dataHandler.get<DamageStockEntry[]>(this.serviceUrl)
@@ -53,24 +56,74 @@ export class DamageStockEntryApprovalComponent implements OnInit {
   }
 
   get serviceUrl() {
-    const user = this.authService.loggedInUser;
-    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+    let user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}/${user.userId}`;
   }
 
-  onApproveBtnClick(selectedRow?: DamageStockEntry) {
-    selectedRow.approvalStatus = 1;
-    selectedRow.approvalLevel++;
-    selectedRow.approvedBy = this.authService.loggedInUser.userId
-    this.dataHandler.put<DamageStockEntry[]>(this.module.serviceEndPoint, selectedRow)
-      .subscribe((res: DamageStockEntry[]) => {
-        this.snackBar.open('Data Saved Successfully');
-        const rowToDelete = this.dataSource.data.findIndex(e => e.id === selectedRow.id);
-        if (rowToDelete !== -1) {
-          this.dataSource.data.splice(rowToDelete, 1);
-          this.dataSource._updateChangeSubscription();
-        }
-      })
+  openApproveRemarkDialog(isApproved: boolean): void {
+    if (!this.selectedItem) {
+      const message = 'WARNING : Please select a stock entry';
+      this.snackBar.open(message, null, { panelClass: 'snackbar-error-message' });
+      return;
+    }
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges(isApproved);
+      }
+    });
   }
+
+  onApproveBtnClick(item: DamageStockEntry) {
+    this.selectedItem = item;
+    const isApproved = true;
+    this.openApproveRemarkDialog(isApproved);
+  }
+
+  onRejectBtnClick(item: DamageStockEntry) {
+    this.selectedItem = item;
+    const isApproved = false;
+    this.openApproveRemarkDialog(isApproved);
+  }
+
+  saveChanges(isApproved: boolean) {
+    if (isApproved) {
+      this.selectedItem.approvalLevel++;
+      this.selectedItem.approvedBy = this.authService.loggedInUser.userId;
+    } else {
+      this.selectedItem.approvalLevel--;
+    }
+    this.dataHandler.put<DamageStockEntry>(this.module.serviceEndPoint, this.selectedItem).subscribe((res) => {
+      this.snackBar.open(`Damaged stock entry ${isApproved ? 'Approved' : 'Rejected'} Successfully`);
+      const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selectedItem.id);
+      if (rowToRemove !== -1) {
+        this.dataSource.data.splice(rowToRemove, 1);
+        this.dataSource._updateChangeSubscription();
+      }
+    })
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  openEditDialog(rowToEdit?: DamageStockEntry) {
+    this.dialogEventHandler.openDialog(
+      DamageStockEntryEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
+  }
+
+  private affectedRowIndex(affectedRow?: DamageStockEntry) {
+    let indexToUpdate;
+    if (affectedRow) {
+      indexToUpdate = this.dataSource.data.findIndex((row: DamageStockEntry) => row.id === affectedRow.id);
+    }
+    return indexToUpdate;
+  }
+
 
 
 }

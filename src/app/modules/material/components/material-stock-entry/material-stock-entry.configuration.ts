@@ -205,14 +205,17 @@ export const MaterialStockEntryMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
+                    "id": "row-1",
                     "className": "flex-4",
                     "fieldGroup": [
                         {
+                            "id": "row-1",
                             "fieldGroupClassName": "display-flex",
                             "fieldGroup": [
                                 {
                                     "className": "flex-1",
                                     "type": "input",
+                                    "defaultValue":0,
                                     "key": "transportationCharge",
                                     "templateOptions": {
                                         "label": "Transportation Charge",
@@ -224,6 +227,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1",
                                     "type": "input",
                                     "key": "transportationPer",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "Transportation Percent",
                                         "required": true,
@@ -234,6 +238,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "loadingUnloadingCharge",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "Loading Unloading Charge",
                                         "required": true,
@@ -244,6 +249,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "loadingUnloadingPer",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "Loading Unloading Percent",
                                         "required": true,
@@ -253,12 +259,14 @@ export const MaterialStockEntryMetadata = {
                             ]
                         },
                         {
+                            "id": "row-2",
                             "fieldGroupClassName": "display-flex",
                             "fieldGroup": [
                                 {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "otherCharges",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "Other Charges",
                                         "required": true,
@@ -269,6 +277,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "otherChargesPer",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "Other Charges Percent",
                                         "required": true,
@@ -279,6 +288,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "gstPer",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "GST Percentage",
                                         "required": true,
@@ -289,6 +299,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small readonly",
                                     "type": "input",
                                     "key": "gstAmount",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "GST Amount",
                                         "readonly": true
@@ -298,6 +309,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "kfcPer",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "KFC Percentage",
                                         "required": true,
@@ -308,6 +320,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small readonly",
                                     "type": "input",
                                     "key": "kfcAmount",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "KFC Amount",
                                         "readonly": true
@@ -316,12 +329,14 @@ export const MaterialStockEntryMetadata = {
                             ]
                         },
                         {
+                            "id": "row-3",
                             "fieldGroupClassName": "display-flex",
                             "fieldGroup": [
                                 {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "sgst",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "SGST",
                                         "type": "number"
@@ -331,6 +346,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "cgst",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "CGST",
                                         "type": "number"
@@ -340,6 +356,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "igst",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "IGST",
                                         "type": "number"
@@ -349,6 +366,7 @@ export const MaterialStockEntryMetadata = {
                                     "className": "flex-1 field-size-small",
                                     "type": "input",
                                     "key": "kfc",
+                                    "defaultValue":0,
                                     "templateOptions": {
                                         "label": "KFC",
                                         "type": "number"
@@ -359,12 +377,14 @@ export const MaterialStockEntryMetadata = {
                     ]
                 },
                 {
+                    "id": "row-2",
                     "className": "flex-1",
                     "fieldGroup": [
                         {
                             "className": "field-size-small",
                             "type": "input",
-                            "key": "transportationCharge",
+                            "defaultValue":0,
+                            "key": "amountPaidAdvance",
                             "templateOptions": {
                                 "label": "Advance Recovery",
                                 "type": "number",
@@ -374,7 +394,8 @@ export const MaterialStockEntryMetadata = {
                         {
                             "className": "field-size-small",
                             "type": "input",
-                            "key": "transportationCharge",
+                            "defaultValue":0,
+                            "key": "billdiscount",
                             "templateOptions": {
                                 "label": "Discount",
                                 "type": "number",
@@ -384,7 +405,8 @@ export const MaterialStockEntryMetadata = {
                         {
                             "className": "field-size-small readonly",
                             "type": "input",
-                            "key": "transportationCharge",
+                            "defaultValue":0,
+                            "key": "netamount",
                             "templateOptions": {
                                 "label": "Net Amount",
                                 "type": "number",

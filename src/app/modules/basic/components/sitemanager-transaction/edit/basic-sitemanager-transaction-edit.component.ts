@@ -13,6 +13,7 @@ import { BasicDocumentType } from '../../document-type/definitions/basic-documen
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
 import { EmployeeRegistrationMetadata } from 'src/app/modules/hr/components/employee-registration/employee-registration.configuration';
 import { Employee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-sitemanager-transaction-edit',
@@ -34,7 +35,8 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
     private router: Router,
     private stateService: AppStateService,
     private snackBar: MatSnackBar,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private authService: AuthenticationService
   ) {
     this.editData = this.stateService.getState(BasicSitemanagerTransactionMetadata.moduleId);
     if (this.editData) {
@@ -92,8 +94,7 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
   }
 
   fetchSitemanager() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Employee[]>(`${EmployeeRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<Employee[]>(this.sitemanagerServiceUrl)
       .subscribe((res: Employee[]) => {
         if (res) {
           FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e: Employee) => (
@@ -104,6 +105,11 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
           ));
         }
       });
+  }
+
+  get sitemanagerServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${EmployeeRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`
   }
 
   ngOnDestroy() {

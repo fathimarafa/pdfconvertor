@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable } from 'rxjs';
@@ -20,6 +20,8 @@ import { MaterialIndentCreationMetadata } from '../../material-indent-creation/m
 import { MaterialIndent } from '../../material-indent-creation/definitions/material-indent-creation.definiton';
 import { MaterialBrandRegistration } from '../../material-brand-registration/definitions/material-brand.definition';
 import { MaterialBrandRegistrationMetadata } from '../../material-brand-registration/material-brand-registration.configuration';
+import { Router } from '@angular/router';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 
 @Component({
   selector: 'app-material-transfer-request-edit',
@@ -50,6 +52,8 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private transferFromProjectDivision: TransferFromProjectDivision,
     private transferToProjectDivision: TransferToProjectDivision,
+    private dialog: MatDialog,
+    private router: Router,
     private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
@@ -168,9 +172,20 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(this.modalForms.material.fields, this.modalForms.transferCharges.fields);
     this.loadDropdowns();
-    this.dataSource = new MatTableDataSource(this.editData.transferDetail || []);
+    this.loadItemDetails()
     if (this.isEdit) {
       this.calculateItemDetailsTableTotal();
+    }
+  }
+
+  loadItemDetails() {
+    if (this.isEdit) {
+      const endpoint = `${MaterialTransferRequestMetadata.serviceEndPoint}List/${this.editData.id}`;
+      this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+        this.dataSource = new MatTableDataSource(res)
+      });
+    } else {
+      this.dataSource = new MatTableDataSource([]);
     }
   }
 
@@ -184,16 +199,42 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     this.fetchIndent();
   }
 
-  onSaveBtnClick() {
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges();
+      }
+    });
+  }
+
+  get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+  }
+
+  onSaveBtnClick(nextLevel?: boolean) {
     if (this.modalForms.material.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.modalForms.material.model
+      if (this.isEditedFromApproval) {
+        this.openApproveDialog();
+      } else {
+        if (nextLevel) {
+          this.modalForms.material.model.approvedDate = new Date();
+          this.modalForms.material.model.approvedBy = this.authService.loggedInUser.userId;
+          this.modalForms.material.model.approvalLevel = 1;
         }
-        this.dialogRef.close(closeEvent);
-      });
+        this.saveChanges();
+      }
     }
+  }
+
+  saveChanges() {
+    this.httpRequest.subscribe((res) => {
+      const closeEvent: IDialogEvent = {
+        action: this.isEdit ? DialogActions.edit : DialogActions.add,
+        data: this.modalForms.material.model
+      }
+      this.dialogRef.close(closeEvent);
+    });
   }
 
   onCancelBtnClick() {

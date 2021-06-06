@@ -125,15 +125,6 @@ export const DamageStockEntryMetadata = {
                     }
                 }
             ]
-        },
-        {
-            "className": "checkbox-outline-none",
-            "type": "checkbox",
-            "key": "approvalStatus",
-            "defaultValue": 0,
-            "templateOptions": {
-                "label": "With Approve",
-            }
         }
     ]
 }

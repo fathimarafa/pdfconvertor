@@ -27,6 +27,10 @@ export const MaterialTransferRequestApprovalMetadata = {
         {
             "field": 'transferDate',
             "displayName": 'Transfer Date'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [
@@ -35,7 +39,7 @@ export const MaterialTransferRequestApprovalMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'materialId',
+            "field": 'materialName',
             "displayName": 'Material'
         },
         {

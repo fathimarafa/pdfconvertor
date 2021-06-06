@@ -27,6 +27,10 @@ export const MaterialReceivedApprovalMetadata = {
         {
             "field": 'receiveDate',
             "displayName": 'Received Date'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [
@@ -35,7 +39,7 @@ export const MaterialReceivedApprovalMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'materialId',
+            "field": 'materialName',
             "displayName": 'Material'
         },
         {

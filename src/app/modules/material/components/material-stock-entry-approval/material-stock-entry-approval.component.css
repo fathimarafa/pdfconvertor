@@ -15,3 +15,7 @@ th:first-child {
 .margin-right-30 {
     margin-right: 30px;
 }
+
+.main-table th:last-child {
+    width: 5%;
+}

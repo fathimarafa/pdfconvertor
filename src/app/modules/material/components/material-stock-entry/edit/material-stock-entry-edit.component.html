@@ -3,80 +3,107 @@
 
     <mat-dialog-content style="min-width: 90vw;" class="form-dialog mat-typography dialog-content">
 
-        <form [formGroup]="modalForms.stockentry.form">
-            <formly-form [model]="modalForms.stockentry.model" [fields]="modalForms.stockentry.fields" [options]="modalForms.stockentry.options" [form]="modalForms.stockentry.form"></formly-form>
-        </form>
+        <div class="section-title">Stock Entry</div>
 
-        <div style="display: flex;">
-            <div class="selection-table">
-                <table mat-table [dataSource]="dataSource">
-                    <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
-                        <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
-                        <td mat-cell *matCellDef="let element;let i =index">
-                            <ng-container *ngIf="firstColumn">
-                                <mat-radio-button *ngIf="!isDirectEntry" [checked]="element.isSelected">
-                                </mat-radio-button>
-                                <mat-checkbox *ngIf="isDirectEntry" [checked]="element.isSelected"></mat-checkbox>
-                            </ng-container>
-                            <ng-container *ngIf="!firstColumn">
-                                {{element[column.field]}}
-                            </ng-container>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
-                    <tr (click)="onRowSelection(row)" mat-row *matRowDef="let row; columns: dataColumns;"></tr>
-                </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-            </div>
-            <div class="item-details-table">
-                <table mat-table [dataSource]="itemDatasource">
-                    <ng-container [matColumnDef]="column.field" *ngFor="let column of itemTableColumns;let firstColumn = first">
-                        <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
-                        <td mat-cell *matCellDef="let element;let i =index">
-                            <ng-container *ngIf="firstColumn">
-                                {{i+1}}
-                            </ng-container>
-                            <ng-container *ngIf="!firstColumn">
-
-                                <ng-container *ngIf="column.field === 'materialId'">
-                                    {{ element[column.field] }}
-                                </ng-container>
-
-                                <ng-container *ngIf="column.field !== 'materialId'">
-                                    <mat-form-field [class.readonly]="column.field === 'total'">
-                                        <input (change)="onUserInput($event,element,column.field)" [readonly]="column.field === 'total'" [value]="element[column.field]" matInput type="number">
-                                    </mat-form-field>
-                                </ng-container>
-
-                            </ng-container>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="itemDataColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: itemDataColumns;"></tr>
-                </table>
-                <div class="info-text" *ngIf="!itemDatasource">
-                    Please select order to load data
-                </div>
-                <div class="info-text" *ngIf="itemDatasource && itemDatasource.data.length < 1 ">
-                    No data
-                </div>
-                <div *ngIf="itemDatasource && itemDatasource.data.length" class="total-input-box">
-                    <mat-form-field class="readonly">
-                        <mat-label>Total</mat-label>
-                        <input [value]="totalAmount" matInput type="text">
-                    </mat-form-field>
-                </div>
-            </div>
+        <div class="section">
+            <form id="stock-entry-form" [formGroup]="modalForms.stockentry.form">
+                <formly-form [model]="modalForms.stockentry.model" [fields]="modalForms.stockentry.fields" [options]="modalForms.stockentry.options" [form]="modalForms.stockentry.form"></formly-form>
+            </form>
         </div>
 
-        <form [formGroup]="modalForms.transferCharges.form">
-            <formly-form [model]="modalForms.transferCharges.model" [fields]="modalForms.transferCharges.fields" [options]="modalForms.transferCharges.options" [form]="modalForms.transferCharges.form"></formly-form>
-        </form>
+        <div class="section-title">Stock Entry Items </div>
+
+        <div class="section">
+            <mat-form-field class="field-size-normal">
+                <mat-label>Search</mat-label>
+                <input matInput type="text" (keyup)="doFilter($event.target.value)">
+                <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div style="display: flex;">
+                <div class="selection-table">
+                    <table mat-table [dataSource]="dataSource">
+                        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                            <td mat-cell *matCellDef="let element;let i =index">
+                                <ng-container *ngIf="firstColumn">
+                                    <mat-radio-button *ngIf="!isDirectEntry" [checked]="element.isSelected">
+                                    </mat-radio-button>
+                                    <mat-checkbox *ngIf="isDirectEntry" [checked]="element.isSelected"></mat-checkbox>
+                                </ng-container>
+                                <ng-container *ngIf="!firstColumn">
+                                    {{element[column.field]}}
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                        <tr (click)="onRowSelection(row)" mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+                <div class="item-details-table">
+                    <table mat-table [dataSource]="itemDatasource">
+                        <ng-container [matColumnDef]="column.field" *ngFor="let column of itemTableColumns;let firstColumn = first">
+                            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                            <td mat-cell *matCellDef="let element;let i =index">
+                                <ng-container *ngIf="firstColumn">
+                                    {{i+1}}
+                                </ng-container>
+                                <ng-container *ngIf="!firstColumn">
+
+                                    <ng-container *ngIf="column.field === 'materialId'">
+                                        {{ element[column.field] }}
+                                    </ng-container>
+
+                                    <ng-container *ngIf="column.field !== 'materialId'">
+                                        <mat-form-field [class.readonly]="column.field === 'total'">
+                                            <input (change)="onUserInput($event,element,column.field)" [readonly]="column.field === 'total'" [value]="element[column.field]" matInput type="number">
+                                        </mat-form-field>
+                                    </ng-container>
+
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="itemDataColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: itemDataColumns;"></tr>
+                    </table>
+                    <div class="info-text" *ngIf="!itemDatasource">
+                        Please select order to load data
+                    </div>
+                    <div class="info-text" *ngIf="itemDatasource && itemDatasource.data.length < 1 ">
+                        No data
+                    </div>
+                    <div *ngIf="itemDatasource && itemDatasource.data.length" class="total-input-box">
+                        <mat-form-field class="readonly">
+                            <mat-label>Total</mat-label>
+                            <input [value]="totalAmount" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="section-title">Charges</div>
+
+        <div class="section">
+
+            <form [formGroup]="modalForms.transferCharges.form">
+                <formly-form [model]="modalForms.transferCharges.model" [fields]="modalForms.transferCharges.fields" [options]="modalForms.transferCharges.options" [form]="modalForms.transferCharges.form">
+                </formly-form>
+            </form>
+
+        </div>
 
     </mat-dialog-content>
 
     <mat-dialog-actions class="form-dialog" align="end">
-        <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+        <button form="stock-entry-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+        <button *ngIf="!isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save margin-right-20">Next
+            Level</button>
         <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
     </mat-dialog-actions>
 </div>

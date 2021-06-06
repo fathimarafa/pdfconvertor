@@ -13,15 +13,15 @@ export const DamageStockEntryApprovalMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project'
         },
         {
-            "field": 'unitId',
+            "field": 'unitName',
             "displayName": 'Unit'
         },
         {
-            "field": 'materialId',
+            "field": 'materialName',
             "displayName": 'Material'
         },
         {

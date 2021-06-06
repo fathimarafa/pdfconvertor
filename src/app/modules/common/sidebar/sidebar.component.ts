@@ -25,7 +25,7 @@ export class SidebarComponent implements OnInit {
 
   fetchMenu() {
     const endpoint = `${SideNavbarMetadata.serviceEndPoint}/${this.authService.loggedInUser.userId}`;
-    this.dataHandler.get(SideNavbarMetadata.serviceEndPoint).subscribe((menuList: SidebarMenu[]) => {
+    this.dataHandler.get(endpoint).subscribe((menuList: SidebarMenu[]) => {
       this.sidebarNavBar = this.generateSidemenuTree(menuList);
     })
   }
@@ -49,7 +49,7 @@ export class SidebarComponent implements OnInit {
   generateSidemenuTree(menuList: SidebarMenu[]): SidebarMenu[] {
     let rootMenuMapping = {}; let rootLevelMapping = {};
     menuList.forEach((e: SidebarMenu) => {
-      if(SideNavigationMenu[e.menuId]){
+      if (SideNavigationMenu[e.menuId]) {
         e.navLink = SideNavigationMenu[e.menuId].route;
       }
       this.bindInitialSelection(e);
@@ -90,7 +90,7 @@ export class SidebarComponent implements OnInit {
   }
 
   bindInitialSelection(menu: SidebarMenu) {
-    if(menu.navLink){
+    if (menu.navLink) {
       const pathArray = this.router.url.split('/');
       const endPath = pathArray[pathArray.length - 1];
       const navLinkArr = menu.navLink.split('/');

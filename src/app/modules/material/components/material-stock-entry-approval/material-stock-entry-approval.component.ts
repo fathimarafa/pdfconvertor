@@ -11,6 +11,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialStockEntry } from '../material-stock-entry/definitions/material-stock-entry.definition';
 import { Router } from '@angular/router';
 import { SideNavigationMenu } from 'src/app/modules/common/sidebar/sidebar.configuration';
+import { MaterialStockEntryEditComponent } from '../material-stock-entry/edit/material-stock-entry-edit.component';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-material-stock-entry-approval',
@@ -24,7 +27,7 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
   dataSource;
   itemTableColumns;
   itemDatasource;
-  selection: MaterialStockEntry;
+  selectedItem: MaterialStockEntry;
   totalAmount: number = 0;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -34,7 +37,8 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private authService: AuthenticationService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.module = MaterialStockEntryApprovalMetadata;
     this.module.displayName = this.isDirectEntry ? 'Material / Direct Stock Entry Approval' : 'Material / Stock Entry Approval';
@@ -86,35 +90,45 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
 
   get serviceUrl() {
     let user = this.authService.loggedInUser;
-    return `BuildExeMaterial/api/PurchaseList/${user.companyId}/${user.branchId}/${user.userId}/${this.menuId}`;
+    return `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}/${user.userId}`;
+  }
+
+  openApproveRemarkDialog(isApproved: boolean): void {
+    if (!this.selectedItem) {
+      const message = 'WARNING : Please select an order';
+      this.snackBar.open(message, null, { panelClass: 'snackbar-error-message' });
+      return;
+    }
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges(isApproved);
+      }
+    });
   }
 
   onApproveBtnClick() {
     const isApproved = true;
-    this.saveChanges(isApproved)
+    this.openApproveRemarkDialog(isApproved);
   }
 
   onRejectBtnClick() {
     const isApproved = false;
-    this.saveChanges(isApproved)
+    this.openApproveRemarkDialog(isApproved);
   }
 
   saveChanges(isApproved: boolean) {
-    if (!this.selection) {
-      this.snackBar.open('WARNING :  Please select a stock entry');
-      return;
-    }
     if (isApproved) {
-      this.selection.approvalLevel++;
-      this.selection.approvedBy = this.authService.loggedInUser.userId;
-      this.selection.approvedDate = new Date();
+      this.selectedItem.approvalLevel++;
+      this.selectedItem.approvedBy = this.authService.loggedInUser.userId;
+      this.selectedItem.approvedDate = new Date();
     } else {
-      this.selection.approvalLevel--;
+      this.selectedItem.approvalLevel--;
     }
-    this.selection.purchaseDetail = this.itemDatasource.data;
-    this.dataHandler.put<MaterialStockEntry>(this.module.serviceEndPoint, [this.selection]).subscribe((res) => {
+    this.selectedItem.purchaseDetail = this.itemDatasource.data;
+    this.dataHandler.put<MaterialStockEntry>(this.module.serviceEndPoint, [this.selectedItem]).subscribe((res) => {
       this.snackBar.open(`Stock Entry ${isApproved ? 'Approved' : 'Rejected'} Successfully`);
-      const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selection.id);
+      const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selectedItem.id);
       if (rowToRemove !== -1) {
         this.dataSource.data.splice(rowToRemove, 1);
         this.dataSource._updateChangeSubscription();
@@ -129,7 +143,7 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
   }
 
   onRowSelection(selected: MaterialStockEntry) {
-    this.selection = selected;
+    this.selectedItem = selected;
     this.dataSource.data.forEach((row) => {
       row.id === selected.id ? row.isSelected = true : row.isSelected = false;
     });
@@ -142,14 +156,32 @@ export class MaterialStockEntryApprovalComponent implements OnInit {
     this.dataHandler.get(endpoint).subscribe((res: any[]) => {
       this.totalAmount = 0;
       res.forEach(e => {
-        const total = e.Quantity * e.Rate;
-        const tax = total * (e.Tax / 100);
-        const discount = total * (e.Tax / 100);
-        e.Total = total + tax - discount;
-        this.totalAmount = this.totalAmount + e.Total;
+        const total = e.quantity * e.rate;
+        const tax = total * (e.tax / 100);
+        const discount = total * (e.tax / 100);
+        e.total = total + tax - discount;
+        this.totalAmount = this.totalAmount + e.total;
       });
       this.itemDatasource = new MatTableDataSource(res);
     })
   }
+
+  openEditDialog(rowToEdit?: MaterialStockEntry) {
+    this.dialogEventHandler.openDialog(
+      MaterialStockEntryEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
+  }
+
+  private affectedRowIndex(affectedRow?: MaterialStockEntry) {
+    let indexToUpdate;
+    if (affectedRow) {
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialStockEntry) => row.id === affectedRow.id);
+    }
+    return indexToUpdate;
+  }
+
 
 }

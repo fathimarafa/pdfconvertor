@@ -31,6 +31,10 @@ export const MaterialStockEntryApprovalMetadata = {
         {
             "field": 'remark',
             "displayName": 'Remarks'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [
@@ -39,27 +43,27 @@ export const MaterialStockEntryApprovalMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'MaterialName',
+            "field": 'materialName',
             "displayName": 'Item'
         },
         {
-            "field": 'Quantity',
+            "field": 'quantity',
             "displayName": 'Quantity'
         },
         {
-            "field": 'Rate',
+            "field": 'rate',
             "displayName": 'Rate'
         },
         {
-            "field": 'Tax',
+            "field": 'tax',
             "displayName": 'Tax'
         },
         {
-            "field": 'Disount',
+            "field": 'disount',
             "displayName": 'Disount'
         },
         {
-            "field": 'Total',
+            "field": 'total',
             "displayName": 'Total'
         }
     ]

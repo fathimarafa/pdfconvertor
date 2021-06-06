@@ -6,3 +6,7 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+th:last-child {
+    width: 20%;
+}

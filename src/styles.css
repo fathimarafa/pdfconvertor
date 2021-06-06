@@ -352,6 +352,10 @@ mat-paginator button:disabled {
 
 /**/
 
+.field-size-normal .mat-form-field-infix {
+    width: 180px;
+}
+
 .field-size-small .mat-form-field-infix {
     width: 80px;
 }
@@ -605,3 +609,26 @@ mat-paginator button:disabled {
     font-size: 13px;
     text-align: center;
 }
+
+
+/**/
+
+.section {
+    border: 1px solid rgba(0, 0, 0, .12);
+    padding: 20px 10px;
+    border-radius: 10px;
+}
+
+.section-title {
+    position: relative;
+    top: 10px;
+    color: #3182ce;
+    font-size: 11px;
+    background-color: #fff;
+    padding: 0 10px;
+    left: 10px;
+    display: inline-block;
+}
+
+
+/**/

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { DamageStockEntryMetadata } from '../damage-stock-entry.configuration';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { DamageStockEntry } from '../definitions/damage-stock-entry.definition';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
@@ -10,6 +10,9 @@ import { Observable, Subscription } from 'rxjs';
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
+import { Router } from '@angular/router';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-damage-stock-entry-edit',
@@ -30,7 +33,10 @@ export class DamageStockEntryEditComponent implements OnInit {
     private dialogRef: MatDialogRef<DamageStockEntryEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: DamageStockEntry,
     private dataHandler: DataHandlerService,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private authService: AuthenticationService,
+    private dialog: MatDialog,
+    private router: Router
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -42,16 +48,41 @@ export class DamageStockEntryEditComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  onSaveBtnClick() {
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges();
+      }
+    });
+  }
+
+  get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+  }
+
+  onSaveBtnClick(nextLevel?: boolean) {
     if (this.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: res || this.model
-        };
-        this.dialogRef.close(closeEvent);
-      })
+      if (this.isEditedFromApproval) {
+        this.openApproveDialog();
+      } else {
+        if (nextLevel) {
+          this.model.approvedBy = this.authService.loggedInUser.userId;
+          this.model.approvalLevel = 1;
+        }
+        this.saveChanges();
+      }
     }
+  }
+
+  saveChanges() {
+    this.httpRequest.subscribe((res) => {
+      const closeEvent: IDialogEvent = {
+        action: this.isEdit ? DialogActions.edit : DialogActions.add,
+        data: res || this.model
+      };
+      this.dialogRef.close(closeEvent);
+    })
   }
 
   get httpRequest(): Observable<DamageStockEntry> {
