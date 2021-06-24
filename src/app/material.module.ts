@@ -22,6 +22,7 @@ import { NgModule } from '@angular/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const materialModules = [
     MatSliderModule,
@@ -43,7 +44,8 @@ const materialModules = [
     // FormlyMatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
-    MatRadioModule
+    MatRadioModule,
+    MatAutocompleteModule
 ]
 
 @NgModule({

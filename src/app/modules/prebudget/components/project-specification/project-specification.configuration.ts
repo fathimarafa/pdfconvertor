@@ -7,39 +7,142 @@ export const ProjectSpecificationMetadata = {
     "hasDelete": true,
     "useMultiStepForm": false,
     "serviceEndPoint": "BuildExeCRM/api/ProjectSpecification",
-    "tableColumns": [
-        {
-            "field": 'id',
-            "displayName": 'SNo'
-        },
-        {
-            "field": 'projectId',
-            "displayName": 'Project'
-        },
-        {
-            "field": 'taxArea',
-            "displayName": 'Tax Area'
-        },
-        {
-            "field": 'taxType',
-            "displayName": 'Tax Type'
-        },
-        {
-            "field": 'taxAmount',
-            "displayName": 'Tax Amount'
-        },
-        {
-            "field": 'action',
-            "displayName": 'Action'
-        }
-    ],
+    "tableColumns": {
+        "project-details": [
+            {
+                "field": 'id',
+                "displayName": 'SNo'
+            },
+            {
+                "field": 'projectId',
+                "displayName": 'Project'
+            },
+            {
+                "field": 'taxArea',
+                "displayName": 'Tax Area'
+            },
+            {
+                "field": 'taxType',
+                "displayName": 'Tax Type'
+            },
+            {
+                "field": 'taxAmount',
+                "displayName": 'Tax Amount'
+            },
+            {
+                "field": 'action',
+                "displayName": 'Action'
+            }
+        ],
+        "specification-details": [
+            {
+                "field": 'id',
+                "displayName": 'SNo'
+            },
+            {
+                "field": 'spec_Id',
+                "displayName": 'Spec ID'
+            },
+            {
+                "field": 'specNumber',
+                "displayName": 'Spec Number'
+            },
+            {
+                "field": 'specName',
+                "displayName": 'Spec Name'
+            },
+            {
+                "field": 'specDescription',
+                "displayName": 'Spec Description'
+            },
+            {
+                "field": 'workTypeName',
+                "displayName": 'workTypeName'
+            },
+            {
+                "field": 'specUnit',
+                "displayName": 'Spec Unit'
+            },
+            {
+                "field": 'ratePerUnit',
+                "displayName": 'Rate Per Unit'
+            }
+            // {
+            //     "field": 'select',
+            //     "displayName": ''
+            // }
+        ],
+        "project-specification-details": [
+            {
+                "field": 'id',
+                "displayName": 'SNo'
+            },
+            {
+                "field": 'spec_Id',
+                "displayName": 'Spec ID'
+            },
+            {
+                "field": 'specNumber',
+                "displayName": 'Spec Number'
+            },
+            {
+                "field": 'specName',
+                "displayName": 'Spec Name'
+            },
+            {
+                "field": 'specDescription',
+                "displayName": 'Spec Description'
+            },
+            {
+                "field": 'category',
+                "displayName": 'Category'
+            },
+            {
+                "field": 'specUnit',
+                "displayName": 'SpecUnits'
+            },  
+            {
+                "field": 'ratePerUnit',
+                "displayName": 'RatePerUnit'
+            },
+            {
+                "field": 'deptRatePerUnit',
+                "displayName": 'DeptRatePerUnit'
+            },
+            {
+                "field": 'quotedAmount',
+                "displayName": 'Quoted Amt'
+            },
+            {
+                "field": 'quantity',
+                "displayName": 'Quantity'
+            },
+            {
+                "field": 'tax',
+                "displayName": 'Tax'
+            },
+            {
+                "field": 'taxAmount',
+                "displayName": 'TaxAmount'
+            },
+            {
+                "field": 'specAmount',
+                "displayName": 'Spec Amount'
+            },
+            {
+                "field": 'deptAmount',
+                "displayName": 'Dept Amount'
+            }
+        ],
+    },
     "formFields": [
         {
-            "id":"spec",
-            "label": "Specification",
+            "id": "project-details",
+            "label": "Project Details",
+            "hasTable": false,
             "fields": [
                 {
-                    "id":"row-1",
+                    "id": "row-1",
                     "fieldGroupClassName": "display-flex",
                     "fieldGroup": [
                         {
@@ -54,74 +157,116 @@ export const ProjectSpecificationMetadata = {
                         },
                         {
                             "className": "flex-1",
-                            "key": "workTypeId",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Type of work",
-                                "options": [],
-                                "required": true
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id":"row-2",
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "key": "unitId",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Unit",
-                                "options": [],
-                                "required": true
-                            }
-                        },
-                        {
-                            "className": "flex-1",
                             "type": "input",
                             "key": "specNumber",
                             "templateOptions": {
-                                "label": "Spec Number",
+                                "label": "Estimation ID",
+                                "required": true
+                            }
+                        },
+                        {
+                            "className": "flex-1",
+                            "type": "datepicker",
+                            "key": "specNumber",
+                            "templateOptions": {
+                                "label": "Date",
+                                "required": true
+                            }
+                        },
+                        {
+                            "className": "flex-1",
+                            "key": "taxarea",
+                            "type": "select",
+                            "templateOptions": {
+                                "label": "Tax Area",
+                                "options": [
+                                    {
+                                        "label": "INTER",
+                                        "value": "INTER"
+                                    },
+                                    {
+                                        "label": "INTRA",
+                                        "value": "INTRA"
+                                    }
+                                ],
                                 "required": true
                             }
                         }
                     ]
                 },
                 {
-                    "id":"row-3",
+                    "id": "row-2",
                     "fieldGroupClassName": "display-flex",
                     "fieldGroup": [
                         {
-                            "className": "flex-1",
-                            "fieldGroup": [
-                                {
-                                    "type": "input",
-                                    "key": "sacCode",
-                                    "templateOptions": {
-                                        "label": "SAC Code",
-                                        "required": true
-                                    }
-                                },
-                                {
-                                    "type": "input",
-                                    "key": "specName",
-                                    "templateOptions": {
-                                        "label": "Short Name",
-                                        "required": true
-                                    }
-                                }
-                            ]
+                            "className": "flex-1 test",
+                            "key": "projectId",
+                            "type": "select",
+                            "templateOptions": {
+                                "label": "Project",
+                                "required": true,
+                                "options": []
+                            }
                         },
                         {
-                            "className": "flex-1",
-                            "type": "textarea",
-                            "key": "specDescription",
+                            "className": "flex-1 readonly",
+                            "key": "blockId",
+                            "type": "select",
                             "templateOptions": {
-                                "label": "Description",
+                                "label": "Select block",
                                 "required": true,
-                                "rows":6
+                                "disabled": true,
+                                "options": []
+                            },
+
+                        },
+                        {
+                            "className": "flex-1 readonly",
+                            "key": "floorId",
+                            "type": "select",
+                            "templateOptions": {
+                                "label": "Select floor",
+                                "required": true,
+                                "disabled": true,
+                                "options": []
+                            },
+
+                        },
+                        {
+                            "className": "flex-1 readonly",
+                            "key": "unitId",
+                            "type": "select",
+                            "templateOptions": {
+                                "label": "Select unit",
+                                "required": true,
+                                "disabled": true,
+                                "options": []
+                            },
+
+                        }
+                    ]
+                },
+                {
+                    "id": "row-3",
+                    "fieldGroupClassName": "display-flex",
+                    "fieldGroup": [
+                        {
+                            "className": "flex-1 readonly",
+                            "type": "input",
+                            "key": "projectName",
+                            "disabled": true,
+                            "templateOptions": {
+                                "label": "Project Name"
+                            }
+                        },
+                        {
+                            "className": "flex-3 readonly",
+                            "type": "textarea",
+                            "key": "projectDescription",
+                            "disabled": true,
+                            "templateOptions": {
+                                "rows": 1,
+                                "label": "Project Description"
                             }
                         }
                     ]
@@ -129,47 +274,38 @@ export const ProjectSpecificationMetadata = {
             ],
         },
         {
-            "id":"material",
-            "label": "Material",
+            "id": "specification-details",
+            "label": "Specification Details",
+            "hasTable": true,
             "fields": [
                 {
-                    "id":"row-1",
+                    "id": "row-1",
                     "fieldGroupClassName": "display-flex",
                     "fieldGroup": [
                         {
+                            "className": "flex-2",
+                            "type": "input",
+                            "key": "specNameOrNumber",
+                            "templateOptions": {
+                                "label": "Search By Spec Name/Number",
+                            }
+                        },
+                        {
                             "className": "flex-1",
-                            "key": "specItemId",
+                            "key": "workTypeId",
                             "type": "select",
                             "templateOptions": {
-                                "label": "Material",
+                                "label": "Search By Work Type",
                                 "options": []
                             }
                         },
                         {
                             "className": "flex-1",
-                            "type": "input",
-                            "key": "rateOfItem",
+                            "key": "categoryId",
+                            "type": "select",
                             "templateOptions": {
-                                "label": "Rate",
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "qtyRequired",
-                            "templateOptions": {
-                                "label": "Quantity",
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "rateOfConveyance",
-                            "templateOptions": {
-                                "label": "Conv. Rate",
-                                "type":"number"
+                                "label": "Category",
+                                "options": []
                             }
                         }
                     ]
@@ -177,11 +313,12 @@ export const ProjectSpecificationMetadata = {
             ],
         },
         {
-            "id":"labour",
-            "label": "Labour",
+            "id": "project-specification-details",
+            "label": "Project Specification Details",
+            "hasTable": true,
             "fields": [
                 {
-                    "id":"row-1",
+                    "id": "row-1",
                     "fieldGroupClassName": "display-flex",
                     "fieldGroup": [
                         {
@@ -199,7 +336,7 @@ export const ProjectSpecificationMetadata = {
                             "key": "rateOfItem",
                             "templateOptions": {
                                 "label": "Rate",
-                                "type":"number"
+                                "type": "number"
                             }
                         },
                         {
@@ -208,196 +345,88 @@ export const ProjectSpecificationMetadata = {
                             "key": "qtyRequired",
                             "templateOptions": {
                                 "label": "Quantity",
-                                "type":"number"
+                                "type": "number"
                             }
                         }
                     ]
                 }
-            ],
-        },
-        {
-            "id":"subcontr",
-            "label": "Sub Contractor",
-            "fields": [
-                {
-                    "id":"row-1",
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "key": "specItemId",
-                            "type": "select",
-                            "templateOptions": {
-                                "label": "Sub Contractor",
-                                "options": [
-                                    {
-                                        "label":"type1",
-                                        "value":1
-                                    },
-                                    {
-                                        "label":"type2",
-                                        "value":2
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "rateOfItem",
-                            "templateOptions": {
-                                "label": "Rate",
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "qtyRequired",
-                            "templateOptions": {
-                                "label": "Quantity",
-                                "type":"number"
-                            }
-                        }
-                    ]
-                }
-            ],
-        },
-        {
-            "id":"profit",
-            "label": "Profit",
-            "fields": [
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "key": "labourAdditionalCharge",
-                            "type": "input",
-                            "templateOptions": {
-                                "label": "Additional Charges for Labour(%)",
-                                "required": true,
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "key": "subcontractAdditionalCharge",
-                            "type": "input",
-                            "templateOptions": {
-                                "label": "Additional Charges for Sub Contract(%)",
-                                "required": true,
-                                "type":"number"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "key": "waterElectricityCharge",
-                            "type": "input",
-                            "templateOptions": {
-                                "label": "Surcharge for Water Electricity(%)",
-                                "required": true,
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "contractorProfit",
-                            "templateOptions": {
-                                "label": "Contractor Profit",
-                                "required": true,
-                                "type":"number"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "other_expense",
-                            "templateOptions": {
-                                "label": "Other Expenses",
-                                "required": true,
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "tax",
-                            "templateOptions": {
-                                "label": "GST(%)",
-                                "required": true,
-                                "type":"number"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "fieldGroupClassName": "display-flex",
-                    "fieldGroup": [
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "ratePerUnit",
-                            "templateOptions": {
-                                "label": "Rate Per Unit",
-                                "required": true,
-                                "type":"number"
-                            }
-                        },
-                        {
-                            "className": "flex-1",
-                            "type": "input",
-                            "key": "deptRatePerUnit",
-                            "templateOptions": {
-                                "label": "Department Rate",
-                                "required": true,
-                                "type":"number"
-                            }
-                        }
-                    ]
-                },
             ],
         }
     ],
-    "specificationDetailsTable": [
+    "projectFormfields": [
+        {
+            "id": "row-1",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1 test",
+                    "key": "projectId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Project",
+                        "required": true,
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-1 readonly",
+                    "key": "blockId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Select block",
+                        "required": true,
+                        "disabled": true,
+                        "options": []
+                    },
+
+                },
+                {
+                    "className": "flex-1 readonly",
+                    "key": "floorId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Select floor",
+                        "required": true,
+                        "disabled": true,
+                        "options": []
+                    },
+
+                },
+                {
+                    "className": "flex-1 readonly",
+                    "key": "unitId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Select unit",
+                        "required": true,
+                        "disabled": true,
+                        "options": []
+                    },
+
+                }
+            ]
+        }
+    ],
+    "projectTableColumns": [
         {
             "field": 'id',
             "displayName": 'SNo'
         },
         {
-            "field": 'specItemId',
-            "displayName": 'Material'
+            "field": 'specNumber',
+            "displayName": 'Specification Number'
         },
         {
-            "field": 'qtyRequired',
-            "displayName": 'Qty'
+            "field": 'specName',
+            "displayName": 'Specification Name'
         },
         {
-            "field": 'rateOfItem',
-            "displayName": 'Rate'
-        },
-        {
-            "field": 'rateOfConveyance',
-            "displayName": 'Conveyance'
-        },
-        {
-            "field": 'amount',
-            "displayName": 'Amount'
+            "field": 'specDescription',
+            "displayName": 'Specification Description'
         },
         {
             "field": 'action',
             "displayName": 'Action'
         }
-    ],
+    ]
 }

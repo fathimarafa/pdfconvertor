@@ -82,6 +82,7 @@ export class MaterialPurchaseReturnApprovalComponent implements OnInit {
     const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        this.selectedItem.approvalRemarks = result;
         this.saveChanges(isApproved);
       }
     });

@@ -7,7 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialSupplierPayment } from './definitions/material-supplier-payment.definition';
 import { MaterialSupplierPaymentEditComponent } from './edit/material-supplier-payment-edit.component';
 import { MaterialSupplierPaymentMetadata } from './/material-supplier-payment.configuration';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-supplier-payment',
@@ -24,7 +24,7 @@ export class MaterialSupplierPaymentComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = MaterialSupplierPaymentMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,12 +43,16 @@ export class MaterialSupplierPaymentComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialSupplierPayment[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialSupplierPayment[]>(this.serviceUrl)
       .subscribe((res: MaterialSupplierPayment[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: MaterialSupplierPayment) {
@@ -61,9 +65,8 @@ export class MaterialSupplierPaymentComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialSupplierPayment): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -84,15 +87,6 @@ export class MaterialSupplierPaymentComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'supplier payment',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

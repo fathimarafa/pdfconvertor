@@ -8,7 +8,7 @@ import { Journal } from './definitions/journal-voucher-entry.definition';
 import { JournalVoucherEntryMetadata } from './journal-voucher-entry.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-journal-voucher-entry',
@@ -27,7 +27,7 @@ export class JournalVoucherEntryComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = JournalVoucherEntryMetadata;
     this.tableColumns = this.module.tableColumns
@@ -46,12 +46,16 @@ export class JournalVoucherEntryComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Journal[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<Journal[]>(this.serviceUrl)
       .subscribe((res: Journal[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: Journal) {
@@ -62,9 +66,8 @@ export class JournalVoucherEntryComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: Journal): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -85,16 +88,6 @@ export class JournalVoucherEntryComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'journal voucher',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data,
-      autosize: true
-    }
-    this.pdfExportService.download(data);
   }
 
 }

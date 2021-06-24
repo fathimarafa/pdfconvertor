@@ -38,8 +38,6 @@ export class MaterialStockEntryEditComponent implements OnInit {
   tableColumns;
   dataSource;
 
-  subscribeProjectDivison: Subscription;
-
   itemTableColumns;
   itemDatasource;
   selection;
@@ -93,6 +91,27 @@ export class MaterialStockEntryEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(this.modalForms.stockentry.fields, this.modalForms.transferCharges.fields);
     this.loadDropdowns();
+    this.loadItemDetails();
+  }
+
+  loadItemDetails() {
+    if (this.isEdit) {
+      const endpoint = `${MaterialStockEntryMetadata.serviceEndPoint}List/${this.editData.id}`;
+      this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+        this.totalAmount = 0;
+        res.forEach(e => {
+          const total = e.quantity * e.rate;
+          const tax = total * (e.tax / 100);
+          const discount = total * (e.disount / 100);
+          e['total'] = total + tax - discount;
+          this.totalAmount = this.totalAmount + e['total'];
+        })
+        this.itemDatasource = new MatTableDataSource(res);
+        this.calculateNetAmount();
+      });
+    } else {
+      this.itemDatasource = new MatTableDataSource([]);
+    }
   }
 
   get dataColumns() {
@@ -250,6 +269,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
       }
     });
     this.itemDatasource = new MatTableDataSource(data);
+    this.modalForms.stockentry.model.purchaseOrderNo = selected.id;
   }
 
   fetchMaterial() {
@@ -271,6 +291,7 @@ export class MaterialStockEntryEditComponent implements OnInit {
     this.itemDatasource.data.forEach((row) => {
       this.totalAmount = this.totalAmount + row['total'];
     });
+    this.calculateNetAmount();
   }
 
   get materialServiceEndpoint() {
@@ -281,6 +302,11 @@ export class MaterialStockEntryEditComponent implements OnInit {
   fetchPurchaseOrder() {
     this.dataHandler.get<MaterialPurchaseOrder[]>(this.purchaseOrderServiceEndpoint)
       .subscribe((res: MaterialPurchaseOrder[]) => {
+        if (this.isEdit) {
+          res.forEach(row => {
+            row['isSelected'] = row.id === this.modalForms.stockentry.model.purchaseOrderNo;
+          })
+        }
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });

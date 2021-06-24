@@ -49,6 +49,12 @@
                         <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
                     </table>
                     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                    <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                        <mat-form-field class="readonly">
+                            <mat-label>Total</mat-label>
+                            <input [value]="totalAmount" matInput type="text">
+                        </mat-form-field>
+                    </div>
                 </div>
             </div>
         </div>

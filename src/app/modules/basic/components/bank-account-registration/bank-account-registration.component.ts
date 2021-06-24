@@ -9,6 +9,7 @@ import { BankAccountRegistrtaionMetadata } from './bank-account-registration.con
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-bank-account-registration',
@@ -27,7 +28,7 @@ export class BankAccountRegistrationComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = BankAccountRegistrtaionMetadata;
     this.tableColumns = this.module.tableColumns
@@ -46,12 +47,16 @@ export class BankAccountRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<BankAccount[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<BankAccount[]>(this.serviceUrl)
       .subscribe((res: BankAccount[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: BankAccount) {
@@ -62,9 +67,8 @@ export class BankAccountRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: BankAccount): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -85,15 +89,6 @@ export class BankAccountRegistrationComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'bank account',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

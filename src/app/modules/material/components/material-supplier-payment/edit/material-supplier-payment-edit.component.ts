@@ -12,6 +12,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { SupplierRegistration } from '../../supplier-registration/definitions/supplier-registration.definition';
 import { SupplierRegistrationMetadata } from '../../supplier-registration/supplier-registration.configuration';
 import { SelectionModel } from '@angular/cdk/collections';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-supplier-payment-edit',
@@ -31,12 +32,13 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
 
   selection = new SelectionModel<SupplierPaymentDetails>(true, []);
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   constructor(
     private dialogRef: MatDialogRef<MaterialSupplierPaymentEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: MaterialSupplierPayment,
-    private dataHandler: DataHandlerService
+    private dataHandler: DataHandlerService,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -72,10 +74,6 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
   loadDropdowns() {
     this.fetchSupplier();
   }
@@ -108,7 +106,7 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
       return this.dataHandler.put<MaterialSupplierPayment>(MaterialSupplierPaymentMetadata.serviceEndPoint, payload);
     } else {
       const dummyDefaultFields = {
-        voucherNumber: 44, voucherTypeId: 1, finantialYearId: 1, companyId: 1, branchId: 1, billWise: 1, isDeleted: 0, chequeClearenceID: 0, supplierReturn: 0, approvalStatus: 1, approvalLevel: 0, approvedBy: 5
+        voucherNumber: 44, voucherTypeId: 1, finantialYearId: 1, companyId: 1, branchId: 1, billWise: 1, isDeleted: 0, chequeClearenceID: 0, supplierReturn: 0, approvalStatus: 0, approvalLevel: 0, approvedBy: 5
       }
       const payload = {
         ...this.modalForms.payment.model,
@@ -131,8 +129,7 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
   }
 
   fetchSupplier() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<SupplierRegistration[]>(`${SupplierRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<SupplierRegistration[]>(this.supplierServiceUrl)
       .subscribe((res: SupplierRegistration[]) => {
         if (res) {
           this.supplierDropdown.templateOptions.options = res.map((e: SupplierRegistration) => (
@@ -148,6 +145,11 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
       });
   }
 
+  get supplierServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${SupplierRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   fetchPurchaseForPayment(supplierId: number) {
     //params: supplierid/Sitemanagerid/finanacialyearid
     if (supplierId) {
@@ -157,6 +159,7 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
         .subscribe((res: any[]) => {
           if (res) {
             this.dataSource = new MatTableDataSource(res);
+            this.dataSource.paginator = this.paginator;
           }
         });
     }

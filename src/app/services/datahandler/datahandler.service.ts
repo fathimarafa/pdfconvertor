@@ -34,7 +34,6 @@ export class DataHandlerService implements IDataHandlerService {
     post<T>(endPoint: string, formData): Observable<T> {
         const url = `${this.baseUrl}${endPoint}`;
         if (!this.isOverridingUserId(endPoint)) {
-            console.log('isOverridingUserId')
             if (Array.isArray(formData)) {
                 for (let i = 0; i < formData.length; i++) {
                     formData[i] = { ...formData[i], ...this.authService.loggedInUser };

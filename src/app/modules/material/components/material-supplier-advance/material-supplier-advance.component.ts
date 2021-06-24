@@ -7,7 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { MaterialSupplierAdvance } from './definitions//material-supplier-advance.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { MaterialSupplierAdvanceMetadata } from './material-supplier-advance.configuration';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-supplier-advance',
@@ -24,7 +24,7 @@ export class MaterialSupplierAdvanceComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = MaterialSupplierAdvanceMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,13 +43,16 @@ export class MaterialSupplierAdvanceComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<MaterialSupplierAdvance[]>(endPoint)
+    this.dataHandler.get<MaterialSupplierAdvance[]>(this.serviceUrl)
       .subscribe((res: MaterialSupplierAdvance[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: MaterialSupplierAdvance) {
@@ -63,9 +66,8 @@ export class MaterialSupplierAdvanceComponent implements OnInit {
 
 
   openDeleteDialog(rowToDelete: MaterialSupplierAdvance): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -86,15 +88,6 @@ export class MaterialSupplierAdvanceComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'supplier advance',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

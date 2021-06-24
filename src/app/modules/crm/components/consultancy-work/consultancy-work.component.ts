@@ -7,7 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { ConsultancyWorkMetadata } from './consultancy-work.configuration';
 import { ConsultancyWork } from './definitions/consultany-work.definition';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-consultancy-work',
@@ -24,7 +24,7 @@ export class ConsultancyWorkComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = ConsultancyWorkMetadata;
     this.tableColumns = this.module.tableColumns
@@ -61,9 +61,8 @@ export class ConsultancyWorkComponent implements OnInit {
 
 
   openDeleteDialog(rowToDelete: ConsultancyWork): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -84,15 +83,6 @@ export class ConsultancyWorkComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'consultancy-work',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

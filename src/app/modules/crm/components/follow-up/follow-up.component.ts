@@ -9,7 +9,7 @@ import { FollowUp } from './definitions/follow-up.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { ProjectEnquiry } from '../project-enquiry/definitions/project-enquiry.definition';
 import { ProjectEnquiryMetadata } from '../project-enquiry/project-enquiry.configuration';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-follow-up',
@@ -28,7 +28,7 @@ export class FollowUpComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = FollowUpMetadata;
     this.tableColumns = this.module.tableColumns
@@ -72,9 +72,8 @@ export class FollowUpComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: FollowUp): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.followupId}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.followupId}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.followupId
     }
     this.dialogEventHandler.openDialog(
@@ -104,15 +103,6 @@ export class FollowUpComponent implements OnInit {
   doFilter(value: string) {
     this.selectedEnquiry = value;
     this.dataSource.filter = value + ''; //.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'follow up',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

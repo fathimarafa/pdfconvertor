@@ -64,13 +64,4 @@ export class MaterialCategoryRegistrationEditComponent implements OnInit {
     }
   }
 
-  // fetchMaterialCategory() {
-  //   const dummyCompanyId = 1; const dummyBranchId = 0;
-  //   this.dataHandler.get<MaterialCategoryRegistration[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
-  //     .subscribe((res: MaterialCategoryRegistration[]) => {
-  //       // this.dataSource = new MatTableDataSource(res);
-  //       // this.dataSource.paginator = this.paginator;
-  //     });
-  // }
-
 }

@@ -1,0 +1,17 @@
+.total-rate-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+table {
+    table-layout: fixed;
+}
+
+th {
+    width: 150px;
+}
+
+th:first-child {
+    width: 80px;
+}

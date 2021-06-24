@@ -7,7 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { EnquiryStatusMetadata } from './enquiry-status.configuration';
 import { EnquiryStatus } from './definition/enquiry-status.definition';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-enquiry-status',
@@ -24,7 +24,7 @@ export class EnquiryStatusComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = EnquiryStatusMetadata;
     this.tableColumns = this.module.tableColumns
@@ -61,9 +61,8 @@ export class EnquiryStatusComponent implements OnInit {
 
 
   openDeleteDialog(rowToDelete: EnquiryStatus): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.enquiryStatusId}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.enquiryStatusId}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.enquiryStatusId
     }
     this.dialogEventHandler.openDialog(
@@ -84,15 +83,6 @@ export class EnquiryStatusComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'enquiry-status',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

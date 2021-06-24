@@ -166,9 +166,7 @@ export class DamageStockEntryEditComponent implements OnInit {
   }
 
   fetchMaterialSelectOptions() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<MaterialRegistration[]>(endPoint)
+    this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
           this.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -179,6 +177,11 @@ export class DamageStockEntryEditComponent implements OnInit {
           ));
         }
       });
+  }
+
+  get materialServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   ngOnDestroy() {

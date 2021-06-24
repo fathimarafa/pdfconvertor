@@ -13,6 +13,7 @@ export interface ProjectDivisionFields<T> {
   unitDropdown: FormlyFieldConfig;
   model: T;
   isEdit: boolean;
+  broadcastChanges?: boolean
 }
 
 @Injectable({
@@ -24,6 +25,7 @@ export class ProjectDivisionFieldsHandlerService {
   private fields: ProjectDivisionFields<any>;
   private projectDivision: number;
   private isBlockFloorLoaded: boolean;
+  private subject = new Subject<any>();
 
   constructor(
     private projectDivisionService: ProjectDivisionService,
@@ -36,6 +38,14 @@ export class ProjectDivisionFieldsHandlerService {
     if (this.fields.isEdit && this.fields.model.projectId) {
       this.fetchProjectDivison(this.fields.model.projectId);
     }
+  }
+
+  listenChange(): Observable<any> {
+    return this.subject.asObservable();
+  }
+
+  private emitChange(data: any) {
+    this.subject.next(data);
   }
 
   clear() {
@@ -54,6 +64,9 @@ export class ProjectDivisionFieldsHandlerService {
           }
         ));
         this.fields.projectDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+          if (this.fields.broadcastChanges) {
+            this.emitChange({ projectId: event.value });
+          }
           this.fetchProjectDivison(event.value);
         }
       }

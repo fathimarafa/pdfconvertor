@@ -9,6 +9,7 @@ import { BasicDocumentUploadMetadata } from './basic-document-upload.configurati
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-document-upload',
@@ -27,7 +28,7 @@ export class BasicDocumentUploadComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = BasicDocumentUploadMetadata;
     this.tableColumns = this.module.tableColumns
@@ -46,12 +47,16 @@ export class BasicDocumentUploadComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<BasicDocumentUpload[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<BasicDocumentUpload[]>(this.serviceUrl)
       .subscribe((res: BasicDocumentUpload[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: BasicDocumentUpload) {
@@ -62,9 +67,8 @@ export class BasicDocumentUploadComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: BasicDocumentUpload): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -85,15 +89,6 @@ export class BasicDocumentUploadComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'account heads',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

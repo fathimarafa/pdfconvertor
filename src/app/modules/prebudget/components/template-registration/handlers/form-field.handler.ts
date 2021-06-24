@@ -5,17 +5,20 @@ import { LabourWorkRateSettingMetadata } from '../../../../../modules/hr/compone
 import { LabourWorkRate } from '../../../../../modules/hr/components/labour-workrate-setting/definitions/labour-workrate-setting.definition';
 import { BasicWorkCategory } from '../../../../../modules/basic/components/work-category/definitions/basic-work-category.definition';
 import { BasicWorkCategoryMetadata } from '../../../../../modules/basic/components/work-category/basic-work-category.configuration';
-import { CrmWorkTypeMetadata } from '../../work-type/work-type.configuration';
+import { PrebudgetWorkTypeMetadata } from '../../work-type/work-type.configuration';
 import { PrebudgetWorkType } from '../../work-type/definitions/work-type.definition';
 import { TemplateDetailsId } from '../definitions/template-registration.definition';
+import { ILoggedInUser } from 'src/app/services/auth-service/iauthentication.service';
 
 export class FormfieldHandler {
 
     private static dataHandler;
     private static formField;
     private static templateDetailsFormField;
+    private static user: ILoggedInUser;
 
-    static loadDropdown(dataProviderService, parentForm, childForm) {
+    static loadDropdown(dataProviderService, parentForm, childForm, user: ILoggedInUser) {
+        this.user = user;
         this.dataHandler = dataProviderService;
         this.formField = parentForm;
         this.templateDetailsFormField = childForm;
@@ -47,8 +50,7 @@ export class FormfieldHandler {
     }
 
     private static loadMaterial() {
-        const dummyCompanyId = 1; const dummyBranchId = 0;
-        this.dataHandler.get(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        this.dataHandler.get(this.materialServiceUrl)
             .subscribe((res: MaterialRegistration[]) => {
                 if (res) {
                     this.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -61,9 +63,12 @@ export class FormfieldHandler {
             });
     }
 
+    private static get materialServiceUrl() {
+        return `${MaterialRegistrationMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
+    }
+
     private static loadLabour() {
-        const dummyCompanyId = 1; const dummyBranchId = 0;
-        this.dataHandler.get(`${LabourWorkRateSettingMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        this.dataHandler.get(this.labourServiceUrl)
             .subscribe((res: LabourWorkRate[]) => {
                 if (res) {
                     this.labourDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
@@ -76,9 +81,12 @@ export class FormfieldHandler {
             });
     }
 
+    private static get labourServiceUrl() {
+        return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
+    }
+
     private static loadWorkCategory() {
-        const dummyCompanyId = 1; const dummyBranchId = 0;
-        this.dataHandler.get(`${BasicWorkCategoryMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        this.dataHandler.get(this.workcategoryServiceUrl)
             .subscribe((res: BasicWorkCategory[]) => {
                 if (res) {
                     this.workCategoryDropdown.templateOptions.options = res.map((e: BasicWorkCategory) => (
@@ -91,9 +99,12 @@ export class FormfieldHandler {
             });
     }
 
+    private static get workcategoryServiceUrl() {
+        return `${BasicWorkCategoryMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
+    }
+
     private static loadWorkType() {
-        const dummyCompanyId = 1; const dummyBranchId = 0;
-        this.dataHandler.get(`${CrmWorkTypeMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        this.dataHandler.get(this.worktypeServiceUrl)
             .subscribe((res: PrebudgetWorkType[]) => {
                 if (res) {
                     this.workTypeDropdown.templateOptions.options = res.map((e: PrebudgetWorkType) => (
@@ -104,6 +115,10 @@ export class FormfieldHandler {
                     ));
                 }
             });
+    }
+
+    private static get worktypeServiceUrl() {
+        return `${PrebudgetWorkTypeMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
     }
 
     private static loadSubcontractor() {

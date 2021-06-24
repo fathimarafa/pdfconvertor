@@ -7,6 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { StageReceiptMetadata } from './stage-receipt.configuration';
 import { StageReceipt } from './definitions/stage-receipt.definition';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-stage-receipt',
@@ -22,7 +23,8 @@ export class StageReceiptComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService
   ) {
     this.module = StageReceiptMetadata;
     this.tableColumns = this.module.tableColumns
@@ -59,9 +61,8 @@ export class StageReceiptComponent implements OnInit {
 
 
   openDeleteDialog(rowToDelete: StageReceipt): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

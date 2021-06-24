@@ -7,6 +7,7 @@ import { DepartmentMetadata } from './department.configuration';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { Department } from './definitions/department.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-department',
@@ -22,7 +23,8 @@ export class DepartmentComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService
   ) {
     this.module = DepartmentMetadata;
     this.tableColumns = this.module.tableColumns
@@ -58,9 +60,8 @@ export class DepartmentComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: Department): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.departmentId}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.departmentId}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.departmentId
     }
     this.dialogEventHandler.openDialog(

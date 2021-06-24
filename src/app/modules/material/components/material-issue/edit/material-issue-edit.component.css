@@ -21,7 +21,7 @@
     padding: 10px;
 }
 
-::ng-deep .cdk-overlay-pane {
+.dialog-content {
     max-width: 90vw!important;
     width: 90vw;
 }

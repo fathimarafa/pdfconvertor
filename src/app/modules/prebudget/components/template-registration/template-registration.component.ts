@@ -8,6 +8,7 @@ import { Template } from './definitions/template-registration.definition';
 import { TemplateRegistrationMetadata } from './template-registration.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-template-registration',
@@ -26,7 +27,8 @@ export class TemplateRegistrationComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private authService: AuthenticationService
   ) {
     this.module = TemplateRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -45,12 +47,16 @@ export class TemplateRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Template[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<Template[]>(this.serviceUrl)
       .subscribe((res: Template[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: Template) {
@@ -61,9 +67,8 @@ export class TemplateRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: Template): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

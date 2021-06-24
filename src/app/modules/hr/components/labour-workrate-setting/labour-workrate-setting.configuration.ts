@@ -42,16 +42,16 @@ export const LabourWorkRateSettingMetadata = {
                 "required": true,
                 "options": [
                     {
-                        "label": "type 1",
-                        "value": "type 1"
+                        "label": "Labour",
+                        "value": 1
                     },
                     {
-                        "label": "type 2",
-                        "value": "type 2"
+                        "label": "Sub Contractor",
+                        "value": 2
                     },
                     {
-                        "label": "type 3",
-                        "value": "type 3"
+                        "label": "Foreman",
+                        "value": 3
                     }
                 ]
             }
@@ -70,20 +70,7 @@ export const LabourWorkRateSettingMetadata = {
             "templateOptions": {
                 "label": "Select unit",
                 "required": true,
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
-                    }
-                ]
+                "options": []
             }
         },
         {
@@ -91,6 +78,7 @@ export const LabourWorkRateSettingMetadata = {
             "key": "rate",
             "templateOptions": {
                 "label": "Rate",
+                "type": "number",
                 "required": true
             }
         }

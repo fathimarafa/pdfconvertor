@@ -17,6 +17,7 @@ import { UnitRegistrationMetadata } from '../../unit-registration/unit-registrat
 import { UnitRegistration } from '../../unit-registration/definitions/unit-registration.definition';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-registration-edit',
@@ -38,7 +39,8 @@ export class MaterialRegistrationEditComponent implements OnInit {
     private dialogRef: MatDialogRef<MaterialRegistrationEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: MaterialRegistration,
     private dataHandler: DataHandlerService,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -167,9 +169,7 @@ export class MaterialRegistrationEditComponent implements OnInit {
   }
 
   fetchMaterialCategory() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${MaterialCategoryRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<MaterialCategoryRegistration[]>(endPoint)
+    this.dataHandler.get<MaterialCategoryRegistration[]>(this.materialCategoryServiceUrl)
       .subscribe((res: MaterialCategoryRegistration[]) => {
         if (res) {
           FormfieldHandler.materialCategoryDropdown.templateOptions.options = res.map((e: MaterialCategoryRegistration) => (
@@ -182,10 +182,13 @@ export class MaterialRegistrationEditComponent implements OnInit {
       });
   }
 
+  get materialCategoryServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialCategoryRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   fetchMaterialBrand() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${MaterialBrandRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<MaterialBrandRegistration[]>(endPoint)
+    this.dataHandler.get<MaterialBrandRegistration[]>(this.materialBrandServiceUrl)
       .subscribe((res: MaterialBrandRegistration[]) => {
         if (res) {
           FormfieldHandler.materialBrandDropdown.templateOptions.options = res.map((e: MaterialBrandRegistration) => (
@@ -198,10 +201,13 @@ export class MaterialRegistrationEditComponent implements OnInit {
       });
   }
 
+  get materialBrandServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialBrandRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   fetchMaterialUnit() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${UnitRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<UnitRegistration[]>(endPoint)
+    this.dataHandler.get<UnitRegistration[]>(this.materialUnitServiceUrl)
       .subscribe((res: UnitRegistration[]) => {
         if (res) {
           FormfieldHandler.materialUnitDropdown.templateOptions.options = res.map((e: UnitRegistration) => (
@@ -212,6 +218,11 @@ export class MaterialRegistrationEditComponent implements OnInit {
           ));
         }
       });
+  }
+
+  get materialUnitServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${UnitRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   removeStock(rowIndex: number) {

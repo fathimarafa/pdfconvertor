@@ -49,6 +49,7 @@ export class SidebarComponent implements OnInit {
   generateSidemenuTree(menuList: SidebarMenu[]): SidebarMenu[] {
     let rootMenuMapping = {}; let rootLevelMapping = {};
     menuList.forEach((e: SidebarMenu) => {
+      console.log(`${e.menuId}: { menuId: ${e.menuId}, menuName: '${e.menuName}', route: '' },`)
       if (SideNavigationMenu[e.menuId]) {
         e.navLink = SideNavigationMenu[e.menuId].route;
       }

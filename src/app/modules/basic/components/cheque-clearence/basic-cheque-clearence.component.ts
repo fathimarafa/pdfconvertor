@@ -8,6 +8,7 @@ import { BasicChequeClearenceMetadata } from './basic-cheque-clearence.configura
 import { BasicChequeClearence } from './definitions/basic-cheque-clearence.definition';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-cheque-clearence',
@@ -35,7 +36,7 @@ export class BasicChequeClearenceComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private snackBar: MatSnackBar,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = BasicChequeClearenceMetadata;
     this.tableColumns = this.module.tableColumns
@@ -54,18 +55,21 @@ export class BasicChequeClearenceComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<BasicChequeClearence[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<BasicChequeClearence[]>(this.serviceUrl)
       .subscribe((res: BasicChequeClearence[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   openDeleteDialog(rowToDelete: BasicChequeClearence): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -97,15 +101,6 @@ export class BasicChequeClearenceComponent implements OnInit {
         this.dataSource._updateChangeSubscription();
         this.snackBar.open('Cheque Cleared Successfully');
       });
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'cheque clearence',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

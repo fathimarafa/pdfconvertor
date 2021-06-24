@@ -7,7 +7,7 @@ import { TeamEditComponent } from './edit/team-edit.component';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { Team } from './definitions/team.definitions';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-team',
@@ -24,7 +24,7 @@ export class TeamComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = TeamMetadata;
     this.tableColumns = this.module.tableColumns
@@ -60,9 +60,8 @@ export class TeamComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: Team): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -83,15 +82,6 @@ export class TeamComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'team',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

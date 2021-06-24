@@ -65,9 +65,8 @@ export class MaterialBrandRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialBrandRegistration): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

@@ -7,6 +7,7 @@ import { EmployeeRegistrationMetadata } from './employee-registration.configurat
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { Employee } from './definitions/employee.definiton';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-employee-registration',
@@ -22,7 +23,8 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService
   ) {
     this.module = EmployeeRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -41,12 +43,16 @@ export class EmployeeRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Employee[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<Employee[]>(this.serviceUrl)
       .subscribe((res: Employee[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: Employee) {

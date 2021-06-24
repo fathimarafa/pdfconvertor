@@ -2,6 +2,9 @@ export interface ProjectSpecification {
     id: number;
     specId: number;
     projectId: number;
+    unitId: number;
+    blockId: number;
+    floorId: number;
     category: number;
     quantityRequired: number;
     companyId: number;

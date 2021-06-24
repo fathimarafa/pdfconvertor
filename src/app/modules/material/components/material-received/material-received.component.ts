@@ -8,7 +8,7 @@ import { MaterialReceived } from './definitions/material-received.definition';
 import { MaterialRecieveMetadata } from './material-received.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-received',
@@ -27,7 +27,7 @@ export class MaterialReceivedComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = MaterialRecieveMetadata;
     this.tableColumns = this.module.tableColumns
@@ -46,12 +46,16 @@ export class MaterialReceivedComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialReceived[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialReceived[]>(this.serviceUrl)
       .subscribe((res: MaterialReceived[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: MaterialReceived) {
@@ -62,9 +66,8 @@ export class MaterialReceivedComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialReceived): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -85,15 +88,6 @@ export class MaterialReceivedComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'material received',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

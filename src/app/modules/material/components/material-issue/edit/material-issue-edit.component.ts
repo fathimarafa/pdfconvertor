@@ -12,6 +12,9 @@ import { FormfieldHandler, ModalFormFields } from '../handlers/form-field.handle
 import { MatPaginator } from '@angular/material/paginator';
 import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
+import { BasicWorkCategory } from 'src/app/modules/basic/components/work-category/definitions/basic-work-category.definition';
 
 @Component({
   selector: 'app-material-issue-edit',
@@ -25,13 +28,15 @@ export class MaterialIssueEditComponent implements OnInit {
   tableColumns;
   dataSource;
   enableStockEdit: boolean;
+  totalAmount = 0;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dialogRef: MatDialogRef<MaterialIssueEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: MaterialIssue,
     private dataHandler: DataHandlerService,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -77,16 +82,12 @@ export class MaterialIssueEditComponent implements OnInit {
       usage: this.modalForms.usage.fields
     }
     FormfieldHandler.initialize(formFields);
-    this.loadDropdowns();
     this.dataSource = new MatTableDataSource(this.editData.materialUsageDetails || []);
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   loadDropdowns() {
     this.fetchMaterial();
+    this.loadWorkCategory();
     this.bindProjectDivisionFields();
   }
 
@@ -136,6 +137,8 @@ export class MaterialIssueEditComponent implements OnInit {
     if (this.modalForms.usage.form.valid) {
       this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
       const dataRow: MaterialUsageDetails = Object.assign({}, this.modalForms.usage.model);
+      dataRow['total'] = dataRow.quantity * dataRow.rate;
+      this.totalAmount = this.totalAmount + dataRow['total'];
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
       this.modalForms.usage.form.reset();
@@ -143,9 +146,7 @@ export class MaterialIssueEditComponent implements OnInit {
   }
 
   fetchMaterial() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<MaterialRegistration[]>(endPoint)
+    this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
           FormfieldHandler.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -158,7 +159,13 @@ export class MaterialIssueEditComponent implements OnInit {
       });
   }
 
+  get materialServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   removeStock(rowIndex: number) {
+    this.totalAmount = this.totalAmount - this.dataSource.data[rowIndex]['total'];
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
   }
@@ -174,6 +181,25 @@ export class MaterialIssueEditComponent implements OnInit {
 
   onCancelStockUpdateBtnClick() {
 
+  }
+
+  private loadWorkCategory() {
+    this.dataHandler.get(this.workCategoryServiceEndpoint)
+      .subscribe((res: BasicWorkCategory[]) => {
+        if (res) {
+          FormfieldHandler.workCategoryDropdown.templateOptions.options = res.map((e: BasicWorkCategory) => (
+            {
+              label: e.workCategoryName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  get workCategoryServiceEndpoint() {
+    const user = this.authService.loggedInUser;
+    return `${BasicWorkCategoryMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   ngOnDestroy() {

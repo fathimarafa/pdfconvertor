@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormfieldHandler } from '../handlers/form-field.handler';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-specification-registration-edit',
@@ -37,7 +38,8 @@ export class SpecificationRegistrationEditComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private stateService: AppStateService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {
     this.editData = this.stateService.getState(SpecificationRegistrationMetadata.moduleId);
     if (this.editData) {
@@ -49,7 +51,7 @@ export class SpecificationRegistrationEditComponent implements OnInit {
     this.steps = SpecificationRegistrationMetadata.formFields;
     this.form = new FormArray(this.steps.map(() => new FormGroup({})));
     this.options = this.steps.map(() => <FormlyFormOptions>{});
-    FormfieldHandler.loadDropdowns(this.steps, this.dataHandler);
+    FormfieldHandler.loadDropdowns(this.steps, this.dataHandler, this.authService.loggedInUser);
   }
 
   defineTables() {

@@ -10,6 +10,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialQuotation } from '../material-quotation/definitions/material-quotation.definition';
 import { QuotationBaseRateFeedingMetadata } from '../quotation-base-rate-feeding/quotation-base-rate-feeding.configuration';
 import { QuotationBaseRateFeeding } from '../quotation-base-rate-feeding/definitions/quotation-base-rate-feeding.definition';
+import { MaterialQuotationEditComponent } from '../material-quotation/edit/material-quotation-edit.component';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-material-quotation-approval',
@@ -31,7 +34,8 @@ export class MaterialQuotationApprovalComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private authService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.module = MaterialQuotationApprovalMetadata;
     this.tableColumns = this.module.tableColumns
@@ -68,35 +72,49 @@ export class MaterialQuotationApprovalComponent implements OnInit {
       });
   }
 
-  onApproveBtnClick() {
+  openApproveRemarkDialog(isApproved: boolean): void {
     if (!this.selectedQuotation) {
-      this.snackBar.open('WARNING :  Please select a quotation');
+      const message = 'WARNING : Please select an order';
+      this.snackBar.open(message, null, { panelClass: 'snackbar-error-message' });
       return;
     }
-    // this.selectedQuotation.approvalLevel++;
-    // this.selectedQuotation.approvedBy = this.authService.loggedInUser.userId;
-    // this.selectedQuotation.approvedDate = new Date();
-    this.dataHandler.put<MaterialQuotation>(MaterialIndentCreationMetadata.serviceEndPoint, [this.selectedQuotation]).subscribe((res) => {
-      this.snackBar.open('Quotation Approved Successfully');
-      const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selectedQuotation.id);
-      if (rowToRemove !== -1) {
-        this.dataSource.data.splice(rowToRemove, 1);
-        this.dataSource._updateChangeSubscription();
-        this.itemDatasource.data = [];
-        this.itemDatasource._updateChangeSubscription();
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.saveChanges(isApproved);
       }
-    })
+    });
+  }
+
+  onApproveBtnClick() {
+    const isApproved = true;
+    this.openApproveRemarkDialog(isApproved);
   }
 
   onRejectBtnClick() {
-    if (!this.selectedQuotation) {
-      this.snackBar.open('WARNING :  Please select a quotation');
-      return;
-    }
+    const isApproved = false;
+    this.openApproveRemarkDialog(isApproved);
   }
 
-  doFilter(value: string) {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  saveChanges(isApproved: boolean) {
+    // if (isApproved) {
+    //   this.selectedQuotation.approvalLevel++;
+    //   this.selectedQuotation.approvedBy = this.authService.loggedInUser.userId;
+    //   this.selectedQuotation.approvedDate = new Date();
+    // } else {
+    //   this.selectedQuotation.approvalLevel--;
+    // }
+    // this.selectedQuotation.purchaseDetail = this.itemDatasource.data;
+    // this.dataHandler.put<MaterialStockEntry>(this.module.serviceEndPoint, [this.selectedItem]).subscribe((res) => {
+    //   this.snackBar.open(`Stock Entry ${isApproved ? 'Approved' : 'Rejected'} Successfully`);
+    //   const rowToRemove = this.dataSource.data.findIndex(e => e.id === this.selectedItem.id);
+    //   if (rowToRemove !== -1) {
+    //     this.dataSource.data.splice(rowToRemove, 1);
+    //     this.dataSource._updateChangeSubscription();
+    //     this.itemDatasource.data = [];
+    //     this.itemDatasource._updateChangeSubscription();
+    //   }
+    // })
   }
 
   onRowSelection(selected: MaterialQuotation) {
@@ -120,6 +138,27 @@ export class MaterialQuotationApprovalComponent implements OnInit {
   get baseRateServiceUrl() {
     const user = this.authService.loggedInUser;
     return `${QuotationBaseRateFeedingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  openEditDialog(rowToEdit?: MaterialQuotation) {
+    this.dialogEventHandler.openDialog(
+      MaterialQuotationEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
+  }
+
+  private affectedRowIndex(affectedRow?: MaterialQuotation) {
+    let indexToUpdate;
+    if (affectedRow) {
+      indexToUpdate = this.dataSource.data.findIndex((row: MaterialQuotation) => row.id === affectedRow.id);
+    }
+    return indexToUpdate;
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
 }

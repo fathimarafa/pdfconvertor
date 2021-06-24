@@ -5,12 +5,11 @@ import { ConfirmModalComponent } from '../../../common/confirm-modal/confirm-mod
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { PrebudgetWorkType } from './definitions/work-type.definition';
-import { CrmWorkTypeMetadata } from './work-type.configuration';
+import { PrebudgetWorkTypeMetadata } from './work-type.configuration';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { WorkTypeEditComponent } from './edit/work-type-edit.component';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'crm-work-type',
@@ -26,19 +25,17 @@ export class WorkTypeComponent implements OnInit {
   model: PrebudgetWorkType;
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[];
-  isEdit: boolean;
-  showAddEditForm: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private snackBar: MatSnackBar,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
-    this.module = CrmWorkTypeMetadata;
+    this.module = PrebudgetWorkTypeMetadata;
     this.tableColumns = this.module.tableColumns
     this.fields = this.module.formFields;
+    this.fetchData();
   }
 
   get dataColumns() {
@@ -49,35 +46,33 @@ export class WorkTypeComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.fetchData();
-  }
+  ngOnInit() { }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<PrebudgetWorkType[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<PrebudgetWorkType[]>(this.serviceUrl)
       .subscribe((res: PrebudgetWorkType[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  onAddEditBtnClick(rowToEdit?: PrebudgetWorkType) {
-    this.showAddEditForm = true;
-    this.isEdit = rowToEdit ? true : false;
-    this.model = Object.assign({}, rowToEdit)
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
-  onCancelBtnClick() {
-    this.isEdit = false;
-    this.showAddEditForm = false;
-    this.form.reset();
+  openDialog(rowToEdit?: PrebudgetWorkType) {
+    this.dialogEventHandler.openDialog(
+      WorkTypeEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
   }
 
   openDeleteDialog(rowToDelete: PrebudgetWorkType): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -98,34 +93,6 @@ export class WorkTypeComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onSaveBtnClick() {
-    if (this.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        if (this.isEdit) {
-          const rowToUpdate = this.dataSource.data.findIndex((row) => row.id === this.model.id);
-          this.dataSource.data[rowToUpdate] = this.model;
-        } else {
-          this.dataSource.data.push(res || this.model);
-        }
-        this.dataSource._updateChangeSubscription();
-        this.snackBar.open('Data Saved Successfully');
-        this.onCancelBtnClick();
-      });
-    }
-  }
-
-  get httpRequest(): Observable<PrebudgetWorkType> {
-    if (this.isEdit) {
-      return this.dataHandler.put<PrebudgetWorkType>(this.module.serviceEndPoint, this.model);
-    } else {
-      const dummyDefaultFields = {
-        companyId: 1, branchId: 1, userId: 0
-      }
-      const payloads = { ...dummyDefaultFields, ...this.model };
-      return this.dataHandler.post<PrebudgetWorkType>(this.module.serviceEndPoint, payloads);
-    }
   }
 
 }

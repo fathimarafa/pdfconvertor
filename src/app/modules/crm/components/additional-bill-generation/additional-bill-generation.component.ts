@@ -7,6 +7,7 @@ import { DataHandlerService } from '../../../../services/datahandler/datahandler
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { AdditionalBillGenerationMetadata } from './additional-bill-generation.configuration';
 import { AdditionBillGeneration } from './definitions/additional-bill-generation.definition';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-additional-bill-generation',
@@ -22,7 +23,8 @@ export class AdditionalBillGenerationComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService
   ) {
     this.module = AdditionalBillGenerationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -59,9 +61,8 @@ export class AdditionalBillGenerationComponent implements OnInit {
 
 
   openDeleteDialog(rowToDelete: AdditionBillGeneration): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

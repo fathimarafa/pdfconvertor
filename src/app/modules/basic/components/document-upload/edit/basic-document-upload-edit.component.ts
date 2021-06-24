@@ -14,6 +14,7 @@ import { DocumentGroup } from '../../document-group/definitions/document-group.d
 import { BasicDocumentType } from '../../document-type/definitions/basic-document-type.definition';
 import { BasicDocumentTypeMetadata } from '../../document-type/basic-document-type.configuration';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-document-upload-edit',
@@ -35,7 +36,8 @@ export class BasicDocumentUploadEditComponent implements OnInit {
     private router: Router,
     private stateService: AppStateService,
     private snackBar: MatSnackBar,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private authService: AuthenticationService
   ) {
     this.editData = this.stateService.getState(BasicDocumentUploadMetadata.moduleId);
     if (this.editData) {
@@ -98,8 +100,7 @@ export class BasicDocumentUploadEditComponent implements OnInit {
     if (this.documentTypes) {
       this.loadDocumentTypeDropdown();
     } else {
-      const dummyCompanyId = 1; const dummyBranchId = 0;
-      this.dataHandler.get<BasicDocumentType[]>(`${BasicDocumentTypeMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+      this.dataHandler.get<BasicDocumentType[]>(this.documentServiceUrl)
         .subscribe((res: BasicDocumentType[]) => {
           if (res) {
             this.documentTypes = res;
@@ -107,6 +108,11 @@ export class BasicDocumentUploadEditComponent implements OnInit {
           }
         });
     }
+  }
+
+  get documentServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${BasicDocumentTypeMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   loadDocumentTypeDropdown() {
@@ -120,8 +126,7 @@ export class BasicDocumentUploadEditComponent implements OnInit {
   }
 
   fetchDocumentGroup() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<DocumentGroup[]>(`${DocumentGroupMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<DocumentGroup[]>(this.documentGroupServiceUrl)
       .subscribe((res: DocumentGroup[]) => {
         if (res) {
           FormfieldHandler.documentGroupDropdown.templateOptions.options = res.map((e: DocumentGroup) => (
@@ -132,6 +137,11 @@ export class BasicDocumentUploadEditComponent implements OnInit {
           ));
         }
       });
+  }
+
+  get documentGroupServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${DocumentGroupMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   ngOnDestroy() {

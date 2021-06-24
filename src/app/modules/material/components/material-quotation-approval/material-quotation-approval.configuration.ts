@@ -31,6 +31,10 @@ export const MaterialQuotationApprovalMetadata = {
         {
             "field": 'projectId',
             "displayName": 'Project Id'
+        },
+        {
+            "field": 'action',
+            "displayName": ''
         }
     ],
     "itemDetailstableColumns": [

@@ -9,8 +9,8 @@ import { BasicWorkCategoryMetadata } from './basic-work-category.configuration';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { WorkCategoryEditComponent } from './edit/work-category-edit.component';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-work-category',
@@ -27,18 +27,19 @@ export class BasicWorkCategoryComponent implements OnInit {
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[];
   isEdit: boolean;
-  showAddEditForm:boolean;
+  showAddEditForm: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private snackBar: MatSnackBar,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = BasicWorkCategoryMetadata;
     this.tableColumns = this.module.tableColumns
     this.fields = this.module.formFields;
+    this.fetchData();
   }
 
   get dataColumns() {
@@ -49,35 +50,33 @@ export class BasicWorkCategoryComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.fetchData();
-  }
+  ngOnInit() { }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<BasicWorkCategory[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<BasicWorkCategory[]>(this.serviceUrl)
       .subscribe((res: BasicWorkCategory[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  onAddEditBtnClick(rowToEdit?: BasicWorkCategory) {
-    this.showAddEditForm = true;
-    this.isEdit = rowToEdit ? true : false;
-    this.model = Object.assign({}, rowToEdit)
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
-  onCancelBtnClick() {
-    this.isEdit = false;
-    this.showAddEditForm = false;
-    this.form.reset();
+  openDialog(rowToEdit?: BasicWorkCategory) {
+    this.dialogEventHandler.openDialog(
+      WorkCategoryEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
   }
 
   openDeleteDialog(rowToDelete: BasicWorkCategory): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -98,43 +97,6 @@ export class BasicWorkCategoryComponent implements OnInit {
 
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onSaveBtnClick() {
-    if (this.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        if (this.isEdit) {
-          const rowToUpdate = this.dataSource.data.findIndex((row) => row.id === this.model.id);
-          this.dataSource.data[rowToUpdate] = this.model;
-        } else {
-          this.dataSource.data.push(res || this.model);
-        }
-        this.dataSource._updateChangeSubscription();
-        this.snackBar.open('Data Saved Successfully');
-        this.onCancelBtnClick();
-      });
-    }
-  }
-
-  get httpRequest(): Observable<BasicWorkCategory> {
-    if (this.isEdit) {
-      return this.dataHandler.put<BasicWorkCategory>(this.module.serviceEndPoint, this.model);
-    } else {
-      const dummyDefaultFields = {
-        companyId: 1, branchId: 1, userId: 0
-      }
-      const payloads = { ...dummyDefaultFields, ...this.model };
-      return this.dataHandler.post<BasicWorkCategory>(this.module.serviceEndPoint, payloads);
-    }
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'work category',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

@@ -1,4 +1,4 @@
-export const CrmWorkTypeMetadata = {
+export const PrebudgetWorkTypeMetadata = {
     "moduleId": "prebudgetworktype",
     "moduleName": "Prebudget Work Type",
     "displayName": "Prebudget / Work Type",

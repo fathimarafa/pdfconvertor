@@ -1,4 +1,4 @@
-import { CrmWorkTypeMetadata } from '../../work-type/work-type.configuration';
+import { PrebudgetWorkTypeMetadata } from '../../work-type/work-type.configuration';
 import { PrebudgetWorkType } from '../../work-type/definitions/work-type.definition';
 import { DepartmentMetadata } from '../../../../hr/components/department/department.configuration';
 import { Department } from '../../../../hr/components/department/definitions/department.definition';
@@ -10,15 +10,18 @@ import { LabourWorkRateSettingMetadata } from '../../../../hr/components/labour-
 import { LabourWorkRate } from '../../../../hr/components/labour-workrate-setting/definitions/labour-workrate-setting.definition';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { StepType } from '../definitions/specification-registration.definition';
+import { ILoggedInUser } from 'src/app/services/auth-service/iauthentication.service';
 
 export class FormfieldHandler {
 
   private static steps: StepType[];
   private static dataproviderService: any;
+  private static user: any;
 
-  private static initialize(steps: StepType[], dataproviderService) {
+  private static initialize(steps: StepType[], dataproviderService, user: ILoggedInUser) {
     this.steps = steps;
     this.dataproviderService = dataproviderService;
+    this.user = user;
   }
 
   private static get departmentDropdown(): FormlyFieldConfig {
@@ -57,8 +60,8 @@ export class FormfieldHandler {
       .find((x: FormlyFieldConfig) => x.key === 'specItemId');
   }
 
-  static loadDropdowns(steps: StepType[], dataproviderService) {
-    this.initialize(steps, dataproviderService);
+  static loadDropdowns(steps: StepType[], dataproviderService, user: ILoggedInUser) {
+    this.initialize(steps, dataproviderService, user);
     this.loadDepartment();
     this.loadWorkType();
     this.loadUnt();
@@ -81,8 +84,7 @@ export class FormfieldHandler {
   }
 
   private static loadWorkType() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataproviderService.get(`${CrmWorkTypeMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataproviderService.get(this.worktypeServiceUrl)
       .subscribe((res: PrebudgetWorkType[]) => {
         if (res) {
           FormfieldHandler.workTypeDropdown.templateOptions.options = res.map((e: PrebudgetWorkType) => (
@@ -95,10 +97,13 @@ export class FormfieldHandler {
       });
   }
 
+  private static get worktypeServiceUrl() {
+    return `${PrebudgetWorkTypeMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
+  }
+
+
   private static loadUnt() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${UnitRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataproviderService.get(endPoint)
+    this.dataproviderService.get(this.unitServiceUrl)
       .subscribe((res: UnitRegistration[]) => {
         if (res) {
           FormfieldHandler.unitDropdown.templateOptions.options = res.map((e: UnitRegistration) => (
@@ -111,9 +116,13 @@ export class FormfieldHandler {
       });
   }
 
+  private static get unitServiceUrl() {
+    return `${UnitRegistrationMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
+  }
+
+
   private static loadMaterial() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataproviderService.get(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataproviderService.get(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
           FormfieldHandler.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -126,9 +135,12 @@ export class FormfieldHandler {
       });
   }
 
+  private static get materialServiceUrl() {
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
+  }
+
   private static loadLabour() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataproviderService.get(`${LabourWorkRateSettingMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataproviderService.get(this.labourServiceUrl)
       .subscribe((res: LabourWorkRate[]) => {
         if (res) {
           FormfieldHandler.labourDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
@@ -139,6 +151,10 @@ export class FormfieldHandler {
           ));
         }
       });
+  }
+
+  private static get labourServiceUrl() {
+    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
   }
 
   loadSubContractor() {

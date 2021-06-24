@@ -25,6 +25,7 @@ export interface MaterialPurchaseReturn {
     voucherTypeId: number;
     voucherNumber: number;
     isDeleted: number;
+    approvalRemarks: string;
     purchaseReturnDetail: PurchaseReturnDetail[]
 }
 

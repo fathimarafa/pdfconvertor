@@ -98,9 +98,9 @@ export const MaterialStockEntryMetadata = {
                 {
                     "className": "flex-1",
                     "type": "datepicker",
-                    "key": "indentedDate",
+                    "key": "purchaseDate",
                     "templateOptions": {
-                        "label": "Enter date",
+                        "label": "Purchase Date",
                         "required": true
                     }
                 }
@@ -138,11 +138,11 @@ export const MaterialStockEntryMetadata = {
                         "options": [
                             {
                                 "label": "Credit",
-                                "value": "1"
+                                "value": 1
                             },
                             {
                                 "label": "Cash",
-                                "value": "2"
+                                "value": 2
                             }
                         ]
                     }
@@ -168,7 +168,7 @@ export const MaterialStockEntryMetadata = {
                 {
                     "className": "flex-2",
                     "type": "textarea",
-                    "key": "remarks",
+                    "key": "remark",
                     "templateOptions": {
                         "label": "Remarks",
                         "rows": 1

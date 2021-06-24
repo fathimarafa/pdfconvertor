@@ -64,9 +64,8 @@ export class MaterialPurchaseReturnComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: MaterialPurchaseReturn): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

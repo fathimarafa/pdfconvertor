@@ -8,6 +8,7 @@ import { ProjectSpecification } from './definitions/project-specification.defini
 import { ProjectSpecificationMetadata } from './project-specification.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-project-specification',
@@ -25,10 +26,11 @@ export class ProjectSpecificationComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private authService: AuthenticationService
   ) {
     this.module = ProjectSpecificationMetadata;
-    this.tableColumns = this.module.tableColumns
+    this.tableColumns = this.module.projectTableColumns;
   }
 
   get dataColumns() {
@@ -44,11 +46,16 @@ export class ProjectSpecificationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<ProjectSpecification[]>(this.module.serviceEndPoint)
+    this.dataHandler.get<ProjectSpecification[]>(this.serviceUrl)
       .subscribe((res: ProjectSpecification[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+  
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: ProjectSpecification) {
@@ -59,9 +66,8 @@ export class ProjectSpecificationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: ProjectSpecification): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

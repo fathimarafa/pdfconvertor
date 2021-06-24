@@ -12,12 +12,6 @@ tr {
     width: 100px;
 }
 
-
-/* ::ng-deep .cdk-overlay-pane {
-    max-width: 90vw !important;
-    height: 94vh;
-} */
-
 .client-form-column {
     flex: 1;
     margin-right: 60px;

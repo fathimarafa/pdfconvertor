@@ -33,7 +33,7 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
   dataSource;
   hasOpeningStock: boolean;
   enableItemEdit: boolean;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  totalAmount = 0;
 
   constructor(
     private dialogRef: MatDialogRef<MaterialPurchaseReturnEditComponent>,
@@ -64,7 +64,7 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tableColumns = MaterialPurchaseReturnMetadata.purchaseReturnDetail.tableColumns;
+    this.listenNetAmountChange();
   }
 
   defineModalForms() {
@@ -88,7 +88,8 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
         fields: MaterialPurchaseReturnMetadata.transferCharges.formFields
       }
     }
-    FormfieldHandler.initialize(this.modalForms.purchaseReturn.fields);
+    FormfieldHandler.initialize(this.modalForms.purchaseReturn.fields, this.modalForms.transferCharges.fields);
+    this.tableColumns = MaterialPurchaseReturnMetadata.purchaseReturnDetail.tableColumns;
     this.loadDropdowns();
     this.loadItemDetails();
   }
@@ -97,15 +98,20 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
     if (this.isEdit) {
       const endpoint = `${MaterialPurchaseReturnMetadata.serviceEndPoint}List/${this.editData.id}`;
       this.dataHandler.get(endpoint).subscribe((res: any[]) => {
-        this.dataSource = new MatTableDataSource(res)
+        this.totalAmount = 0;
+        res.forEach(e => {
+          const total = e.quantity * e.rate;
+          const tax = total * (e.tax / 100);
+          const discount = total * (e.disount / 100);
+          e['total'] = total + tax - discount;
+          this.totalAmount = this.totalAmount + e['total'];
+        })
+        this.dataSource = new MatTableDataSource(res);
+        this.calculateNetAmount();
       });
     } else {
       this.dataSource = new MatTableDataSource([]);
     }
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   loadDropdowns() {
@@ -184,14 +190,20 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
   onAddItemBtnClick() {
     if (this.modalForms.purchaseReturnDetail.form.valid) {
       const dataRow: PurchaseReturnDetail = Object.assign({}, this.modalForms.purchaseReturnDetail.model);
-      dataRow['total'] = dataRow.quantity * dataRow.rate;
+      const total = dataRow.quantity * dataRow.rate;
+      const tax = total * (dataRow.tax / 100);
+      const discount = total * (dataRow.disount / 100);
+      dataRow['total'] = total + tax - discount;
+      this.totalAmount = this.totalAmount + dataRow['total'];
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
       this.modalForms.purchaseReturnDetail.form.reset();
+      this.calculateNetAmount();
     }
   }
 
   removeItem(rowIndex: number) {
+    this.totalAmount = this.totalAmount - this.dataSource.data[rowIndex]['total'];
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
   }
@@ -211,8 +223,7 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
   }
 
   fetchSuppliers() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<SupplierRegistration[]>(`${SupplierRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<SupplierRegistration[]>(this.supplierServiceUrl)
       .subscribe((res: SupplierRegistration[]) => {
         if (res) {
           FormfieldHandler.supplierDropdown.templateOptions.options = res.map((e: SupplierRegistration) => (
@@ -225,6 +236,11 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
       });
   }
 
+  get supplierServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${SupplierRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   get materialDropdown(): FormlyFieldConfig {
     return this.modalForms.purchaseReturnDetail.fields
       .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
@@ -232,8 +248,7 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
   }
 
   fetchMaterials() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<MaterialRegistration[]>(`${MaterialRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
           this.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
@@ -244,6 +259,46 @@ export class MaterialPurchaseReturnEditComponent implements OnInit {
           ));
         }
       });
+  }
+
+  get materialServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  private listenNetAmountChange() {
+    //transportation charge
+    FormfieldHandler.transportChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.transportationPer = (this.modalForms.transferCharges.model.transportationCharge / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.transportChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.transportationCharge = (this.totalAmount * this.modalForms.transferCharges.model.transportationPer) / 100
+      this.calculateNetAmount();
+    }
+    // loading charge
+    FormfieldHandler.loadingChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.loadingUnloadingPer = (this.modalForms.transferCharges.model.loadingUnloadingCharge / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.loadingChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.loadingUnloadingCharge = (this.totalAmount * this.modalForms.transferCharges.model.loadingUnloadingPer) / 100
+      this.calculateNetAmount();
+    }
+    //other charge
+    FormfieldHandler.otherChargeAmtInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.otherChargesPer = (this.modalForms.transferCharges.model.otherCharges / this.totalAmount) * 100;
+      this.calculateNetAmount();
+    }
+    FormfieldHandler.otherChargePerInputBox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.modalForms.transferCharges.model.otherCharges = (this.totalAmount * this.modalForms.transferCharges.model.otherChargesPer) / 100
+      this.calculateNetAmount();
+    }
+  }
+
+  private calculateNetAmount() {
+    this.modalForms.transferCharges.model.netamount = this.totalAmount + this.modalForms.transferCharges.model.transportationCharge + this.modalForms.transferCharges.model.loadingUnloadingCharge + this.modalForms.transferCharges.model.otherCharges;
+    this.modalForms.transferCharges.model = { ...this.modalForms.transferCharges.model };
   }
 
   ngOnDestroy() {

@@ -7,7 +7,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { UnitRegistration } from './definitions/unit-registration.definition';
 import { UnitRegistrationEditComponent } from './edit/unit-registration-edit.component';
 import { UnitRegistrationMetadata } from './unit-registration.configuration';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-unit-registration',
@@ -24,7 +24,7 @@ export class UnitRegistrationComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService : AuthenticationService
   ) {
     this.module = UnitRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,13 +43,16 @@ export class UnitRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<UnitRegistration[]>(endPoint)
+    this.dataHandler.get<UnitRegistration[]>(this.serviceUrl)
       .subscribe((res: UnitRegistration[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: UnitRegistration) {
@@ -62,9 +65,8 @@ export class UnitRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: UnitRegistration): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.unitId}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.unitId}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.unitId
     }
     this.dialogEventHandler.openDialog(
@@ -85,15 +87,6 @@ export class UnitRegistrationComponent implements OnInit {
   
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'material unit',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
   }
 
 }

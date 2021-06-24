@@ -33,6 +33,7 @@ import { MaterialModuleComponents } from './modules/material/material.component'
 import { PrebudgetModuleComponents } from './modules/prebudget/prebudget.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { FormApprovalDialogComponent } from './modules/common/form-approval-dialog/form-approval-dialog.component';
+import { MenuSearchShortcutComponent } from './modules/common/menu-search-shortcut/menu-search-shortcut.component';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -50,6 +51,7 @@ const appearance: MatFormFieldDefaultOptions = {
     ModuleDefaultFormComponent,
     ModuleDefaultFormMultistepComponent,
     FormApprovalDialogComponent,
+    MenuSearchShortcutComponent,
     ...CRMmoduleComponents,
     ...HRmoduleComponents,
     ...MaterialModuleComponents,

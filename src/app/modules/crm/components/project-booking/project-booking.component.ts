@@ -7,7 +7,7 @@ import { ProjectBookingEditComponent } from './edit/project-booking-edit.compone
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { ProjectBooking } from './defintions/project-booking.definition';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-project-booking',
@@ -24,7 +24,7 @@ export class ProjectBookingComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = ProjectBookingMetadata;
     this.tableColumns = this.module.tableColumns
@@ -60,9 +60,8 @@ export class ProjectBookingComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: ProjectBooking): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

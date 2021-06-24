@@ -8,6 +8,7 @@ import { Specification } from './definitions/specification-registration.definiti
 import { SpecificationRegistrationMetadata } from './specification-registration.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-specification-registration',
@@ -25,7 +26,8 @@ export class SpecificationRegistrationComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
-    private stateService: AppStateService
+    private stateService: AppStateService,
+    private authService: AuthenticationService
   ) {
     this.module = SpecificationRegistrationMetadata;
     this.tableColumns = this.module.tableColumns
@@ -44,12 +46,16 @@ export class SpecificationRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Specification[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<Specification[]>(this.serviceUrl)
       .subscribe((res: Specification[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+  
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: Specification) {
@@ -60,9 +66,8 @@ export class SpecificationRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: Specification): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

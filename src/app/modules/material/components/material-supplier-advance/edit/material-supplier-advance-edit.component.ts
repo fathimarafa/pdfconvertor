@@ -9,6 +9,7 @@ import { MaterialSupplierAdvanceMetadata } from '../material-supplier-advance.co
 import { Observable } from 'rxjs';
 import { SupplierRegistration } from '../../supplier-registration/definitions/supplier-registration.definition';
 import { SupplierRegistrationMetadata } from '../../supplier-registration/supplier-registration.configuration';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-material-supplier-advance-edit',
@@ -26,7 +27,8 @@ export class MaterialSupplierAdvanceEditComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<MaterialSupplierAdvanceEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: MaterialSupplierAdvance,
-    private dataHandler: DataHandlerService
+    private dataHandler: DataHandlerService,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -67,9 +69,13 @@ export class MaterialSupplierAdvanceEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  get supplierServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${MaterialSupplierAdvanceMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   fetchSuppliers() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<SupplierRegistration[]>(`${SupplierRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<SupplierRegistration[]>(this.supplierServiceUrl)
       .subscribe((res: SupplierRegistration[]) => {
         if (res) {
           this.supplierDropdown.templateOptions.options = res.map((e: SupplierRegistration) => (

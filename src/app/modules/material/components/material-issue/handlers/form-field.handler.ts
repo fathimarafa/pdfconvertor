@@ -47,6 +47,12 @@ export class FormfieldHandler {
             .find((x: FormlyFieldConfig) => x.id === 'row-2')
     }
 
+    static get workCategoryDropdown() {
+        return this.forms.issued
+            .find((x: FormlyFieldConfig) => x.id === 'row-4').fieldGroup
+            .find((x: FormlyFieldConfig) => x.key === 'workCategory');
+    }
+
     static get materialDropdown() {
         return this.forms.usage
             .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup

@@ -16,9 +16,10 @@ import { LabourWorkRateSettingMetadata } from 'src/app/modules/hr/components/lab
 import { LabourWorkRate } from 'src/app/modules/hr/components/labour-workrate-setting/definitions/labour-workrate-setting.definition';
 import { BasicWorkCategory } from 'src/app/modules/basic/components/work-category/definitions/basic-work-category.definition';
 import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
-import { CrmWorkTypeMetadata } from '../../work-type/work-type.configuration';
+import { PrebudgetWorkTypeMetadata } from '../../work-type/work-type.configuration';
 import { PrebudgetWorkType } from '../../work-type/definitions/work-type.definition';
 import { FormfieldHandler } from '../handlers/form-field.handler';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-template-registration-edit',
@@ -44,7 +45,8 @@ export class TemplateRegistrationEditComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthenticationService
   ) {
     this.editData = this.stateService.getState(TemplateRegistrationMetadata.moduleId);
     if (this.editData) {
@@ -53,7 +55,7 @@ export class TemplateRegistrationEditComponent implements OnInit {
     this.fields = TemplateRegistrationMetadata.formFields;
     this.model = this.editData || {};
     this.defineTables();
-    FormfieldHandler.loadDropdown(this.dataHandler, this.fields, this.templateDetailsForm);
+    FormfieldHandler.loadDropdown(this.dataHandler, this.fields, this.templateDetailsForm, this.authService.loggedInUser);
   }
 
   ngOnInit(): void { }

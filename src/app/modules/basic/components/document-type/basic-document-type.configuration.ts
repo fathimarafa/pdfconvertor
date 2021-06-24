@@ -27,29 +27,21 @@ export const BasicDocumentTypeMetadata = {
     ],
     "formFields": [
         {
-            "id":"row-1",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "documentGroupId",
-                    "templateOptions": {
-                        "label": "Document Group Name",
-                        "required": true,
-                        "options": []
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "documentTypeName",
-                    "templateOptions": {
-                        "label": "Document Type Name",
-                        "required": true
-                    }
-                }
-            ]
+            "type": "select",
+            "key": "documentGroupId",
+            "templateOptions": {
+                "label": "Document Group Name",
+                "required": true,
+                "options": []
+            }
+        },
+        {
+            "type": "input",
+            "key": "documentTypeName",
+            "templateOptions": {
+                "label": "Document Type Name",
+                "required": true
+            }
         }
     ]
 }

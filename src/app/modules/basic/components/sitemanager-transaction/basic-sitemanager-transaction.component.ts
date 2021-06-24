@@ -8,7 +8,7 @@ import { BasicSitemanagerTransaction } from './definitions/sitemanager-transacti
 import { BasicSitemanagerTransactionMetadata } from './basic-sitemanager-transaction.configuration';
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-sitemanager-transaction',
@@ -27,7 +27,7 @@ export class BasicSitemanagerTransactionComponent implements OnInit {
     private dialogEventHandler: DialogEventHandlerService,
     private router: Router,
     private stateService: AppStateService,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = BasicSitemanagerTransactionMetadata;
     this.tableColumns = this.module.tableColumns
@@ -46,12 +46,16 @@ export class BasicSitemanagerTransactionComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<BasicSitemanagerTransaction[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<BasicSitemanagerTransaction[]>(this.serviceUrl)
       .subscribe((res: BasicSitemanagerTransaction[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
   onAddEditBtnClick(rowToEdit?: BasicSitemanagerTransaction) {
@@ -62,9 +66,8 @@ export class BasicSitemanagerTransactionComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: BasicSitemanagerTransaction): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -86,16 +89,5 @@ export class BasicSitemanagerTransactionComponent implements OnInit {
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'sitemanager-transaction',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data,
-      autosize: true
-    }
-    this.pdfExportService.download(data);
-  }
-
 
 }

@@ -8,11 +8,8 @@ import { BasicDocumentType } from './definitions/basic-document-type.definition'
 import { BasicDocumentTypeMetadata } from './basic-document-type.configuration';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { DocumentGroupMetadata } from '../document-group/document-group.configuration';
-import { DocumentGroup } from '../document-group/definitions/document-group.definition';
-import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { DocumentTypeEditComponent } from './edit/document-type-edit.component';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-basic-document-type',
@@ -28,20 +25,17 @@ export class BasicDocumentTypeComponent implements OnInit {
   model: BasicDocumentType;
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[];
-  isEdit: boolean;
-  showAddEditForm: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private snackBar: MatSnackBar,
-    private pdfExportService: PdfExportService
+    private authService: AuthenticationService
   ) {
     this.module = BasicDocumentTypeMetadata;
     this.tableColumns = this.module.tableColumns
     this.fields = this.module.formFields;
-    this.loadDocumentGroupDropdown();
+    this.fetchData();
   }
 
   get dataColumns() {
@@ -52,35 +46,33 @@ export class BasicDocumentTypeComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.fetchData();
-  }
+  ngOnInit() { }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<BasicDocumentType[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<BasicDocumentType[]>(this.serviceUrl)
       .subscribe((res: BasicDocumentType[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
-  onAddEditBtnClick(rowToEdit?: BasicDocumentType) {
-    this.showAddEditForm = true;
-    this.isEdit = rowToEdit ? true : false;
-    this.model = Object.assign({}, rowToEdit)
+  get serviceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
-  onCancelBtnClick() {
-    this.isEdit = false;
-    this.showAddEditForm = false;
-    this.form.reset();
+  openDialog(rowToEdit?: BasicDocumentType) {
+    this.dialogEventHandler.openDialog(
+      DocumentTypeEditComponent,
+      this.dataSource,
+      rowToEdit,
+      this.affectedRowIndex(rowToEdit)
+    )
   }
 
   openDeleteDialog(rowToDelete: BasicDocumentType): void {
-    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${this.authService.loggedInUser.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
@@ -102,64 +94,5 @@ export class BasicDocumentTypeComponent implements OnInit {
   doFilter(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
-
-  onSaveBtnClick() {
-    if (this.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        if (this.isEdit) {
-          const rowToUpdate = this.dataSource.data.findIndex((row) => row.id === this.model.id);
-          this.dataSource.data[rowToUpdate] = this.model;
-        } else {
-          this.dataSource.data.push(res || this.model);
-        }
-        this.dataSource._updateChangeSubscription();
-        this.snackBar.open('Data Saved Successfully');
-        this.onCancelBtnClick();
-      });
-    }
-  }
-
-  get httpRequest(): Observable<BasicDocumentType> {
-    if (this.isEdit) {
-      return this.dataHandler.put<BasicDocumentType>(this.module.serviceEndPoint, this.model);
-    } else {
-      const dummyDefaultFields = {
-        companyId: 1, branchId: 1, userId: 0
-      }
-      const payloads = { ...dummyDefaultFields, ...this.model };
-      return this.dataHandler.post<BasicDocumentType>(this.module.serviceEndPoint, payloads);
-    }
-  }
-
-  loadDocumentGroupDropdown() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<DocumentGroup[]>(`${DocumentGroupMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
-      .subscribe((res: DocumentGroup[]) => {
-        if (res) {
-          this.documentGroupDropdown.templateOptions.options = res.map((e: DocumentGroup) => (
-            {
-              label: e.documentGroupName,
-              value: e.id
-            }
-          ));
-        }
-      });
-  }
-
-  get documentGroupDropdown(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'documentGroupId');
-  }
-
-  onDownloadBtnClick() {
-    const data: PdfExportSettings = {
-      title: 'document type',
-      tableColumns: this.tableColumns,
-      tableRows: this.dataSource.data
-    }
-    this.pdfExportService.download(data);
-  }
-
 
 }

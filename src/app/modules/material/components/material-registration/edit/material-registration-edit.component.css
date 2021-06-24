@@ -21,11 +21,6 @@
     padding: 10px;
 }
 
-::ng-deep .cdk-overlay-pane {
-    max-width: 90vw!important;
-    width: 90vw;
-}
-
 .inner-table-container {
     max-height: 30vh;
     overflow: auto;
