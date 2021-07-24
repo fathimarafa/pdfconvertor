@@ -1,0 +1,56 @@
+<div class="module-default">
+    <mat-card class="mat-flex-card">
+        <mat-card-header>
+            <mat-card-title>{{module ? module.displayName : ''}}</mat-card-title>
+            <mat-form-field appearance="legacy">
+                <mat-label>Search</mat-label>
+                <input matInput type="text" (keyup)="doFilter($event.target.value)">
+                <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div style="margin-left:auto">
+                <button (click)="onApproveBtnClick()" mat-button class="save margin-right-10">Approve
+                    Selected</button>
+                <button mat-button (click)="onRejectBtnClick()" class="cancel">Reject
+                    Selected</button>
+            </div>
+        </mat-card-header>
+        <mat-card-content>
+            <table mat-table [dataSource]="dataSource">
+                <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                    <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                    <td mat-cell *matCellDef="let element;let i =index">
+                        <ng-container *ngIf="firstColumn">
+                            {{this.paginator.pageIndex == 0 ? i + 1 : 1 + i + this.paginator.pageIndex * this.paginator.pageSize}}
+                        </ng-container>
+                        <ng-container *ngIf="!firstColumn">
+                            <ng-container *ngIf="column.field !== 'action'">
+                                {{element[column.field]}}
+                            </ng-container>
+                            <ng-container *ngIf=" column.field === 'action'">
+                                <mat-icon (click)="openEditDialog(element)">edit</mat-icon>
+                            </ng-container>
+                        </ng-container>
+                    </td>
+                </ng-container>
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+            </table>
+        </mat-card-content>
+        <mat-card-footer>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </mat-card-footer>
+    </mat-card>
+</div>

@@ -34,6 +34,7 @@ import { PrebudgetModuleComponents } from './modules/prebudget/prebudget.compone
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { FormApprovalDialogComponent } from './modules/common/form-approval-dialog/form-approval-dialog.component';
 import { MenuSearchShortcutComponent } from './modules/common/menu-search-shortcut/menu-search-shortcut.component';
+import { PaymentReceiptModuleComponents } from './modules/payment-receipt/payment-receipt.component';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline'
@@ -56,7 +57,8 @@ const appearance: MatFormFieldDefaultOptions = {
     ...HRmoduleComponents,
     ...MaterialModuleComponents,
     ...BasicModuleComponents,
-    ...PrebudgetModuleComponents
+    ...PrebudgetModuleComponents,
+    ...PaymentReceiptModuleComponents
   ],
   imports: [
     BrowserModule,

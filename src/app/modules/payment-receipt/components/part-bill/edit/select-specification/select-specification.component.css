@@ -1,0 +1,7 @@
+th {
+    width: 10%;
+}
+
+th:last-child {
+    width: 5%;
+}

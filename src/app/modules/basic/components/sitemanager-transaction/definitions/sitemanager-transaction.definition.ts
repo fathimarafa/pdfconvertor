@@ -23,6 +23,7 @@ export interface BasicSitemanagerTransaction {
     approvalStatus: number;
     approvalLevel: number;
     approvedBy: number;
+    approvedDate: Date;
     paymentModeId: number;
     paymentMode: string;
     paymentNo: string;

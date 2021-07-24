@@ -161,19 +161,20 @@ export class ProjectDivisionFieldsHandlerService {
     }
   }
 
-  setProjectDivisionFieldsDefaultValue() {
+  setProjectDivisionFieldsDefaultValue(modelRef?) {
+    const model = modelRef || this.fields.model; 
     switch (this.projectDivision) {
       case 1:
-        this.fields.model.blockId = 0;
-        this.fields.model.floorId = 0;
-        this.fields.model.unitId = 0;
+        model.blockId = 0;
+        model.floorId = 0;
+        model.unitId = 0;
         break;
       case 2:
-        this.fields.model.blockId = 0;
-        this.fields.model.floorId = 0;
+        model.blockId = 0;
+        model.floorId = 0;
         break;
       case 4:
-        this.fields.model.unitId = 0;
+        model.unitId = 0;
         break;
     }
   }

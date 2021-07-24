@@ -13,6 +13,7 @@ import { SupplierRegistration } from '../../supplier-registration/definitions/su
 import { SupplierRegistrationMetadata } from '../../supplier-registration/supplier-registration.configuration';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-material-supplier-payment-edit',
@@ -38,7 +39,8 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
     private dialogRef: MatDialogRef<MaterialSupplierPaymentEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: MaterialSupplierPayment,
     private dataHandler: DataHandlerService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private snackbar: MatSnackBar
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -153,13 +155,15 @@ export class MaterialSupplierPaymentEditComponent implements OnInit {
   fetchPurchaseForPayment(supplierId: number) {
     //params: supplierid/Sitemanagerid/finanacialyearid
     if (supplierId) {
-      const Sitemanagerid = 0; const finanacialyearid = 71;
+      const Sitemanagerid = 0; const finanacialyearid = 1;
       const endpoint = 'BuildExeMaterial/api/PurchaseForPayment';
-      this.dataHandler.get<any[]>(`${endpoint}/2/${Sitemanagerid}/${finanacialyearid}`)
+      this.dataHandler.get<any[]>(`${endpoint}/${supplierId}/${Sitemanagerid}/${finanacialyearid}`)
         .subscribe((res: any[]) => {
-          if (res) {
+          if (res && res.length) {
             this.dataSource = new MatTableDataSource(res);
             this.dataSource.paginator = this.paginator;
+          } else {
+            this.snackbar.open('No Purchase Order Found');
           }
         });
     }

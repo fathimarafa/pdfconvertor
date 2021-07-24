@@ -380,7 +380,7 @@ export const SpecificationRegistrationMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'specItemId',
+            "field": 'specItemName',
             "displayName": 'Material'
         },
         {

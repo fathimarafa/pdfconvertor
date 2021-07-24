@@ -17,11 +17,14 @@ export class FormfieldHandler {
   private static steps: StepType[];
   private static dataproviderService: any;
   private static user: any;
+  private static serviceRepo;
 
-  private static initialize(steps: StepType[], dataproviderService, user: ILoggedInUser) {
+  public static initialize(steps: StepType[], dataproviderService, user: ILoggedInUser, serviceRepo) {
     this.steps = steps;
     this.dataproviderService = dataproviderService;
     this.user = user;
+    this.serviceRepo = serviceRepo;
+    this.loadDropdowns();
   }
 
   private static get departmentDropdown(): FormlyFieldConfig {
@@ -60,13 +63,12 @@ export class FormfieldHandler {
       .find((x: FormlyFieldConfig) => x.key === 'specItemId');
   }
 
-  static loadDropdowns(steps: StepType[], dataproviderService, user: ILoggedInUser) {
-    this.initialize(steps, dataproviderService, user);
+  private static loadDropdowns() {
     this.loadDepartment();
     this.loadWorkType();
     this.loadUnt();
     this.loadMaterial();
-    this.loadLabour();
+    this.loadLabourWorkRate();
   }
 
   private static loadDepartment() {
@@ -125,6 +127,7 @@ export class FormfieldHandler {
     this.dataproviderService.get(this.materialServiceUrl)
       .subscribe((res: MaterialRegistration[]) => {
         if (res) {
+          this.serviceRepo['material'] = res;
           FormfieldHandler.materialDropdown.templateOptions.options = res.map((e: MaterialRegistration) => (
             {
               label: e.materialName,
@@ -139,11 +142,19 @@ export class FormfieldHandler {
     return `${MaterialRegistrationMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
   }
 
-  private static loadLabour() {
-    this.dataproviderService.get(this.labourServiceUrl)
+  private static loadLabourWorkRate() {
+    this.dataproviderService.get(this.labourWorkRateServiceUrl)
       .subscribe((res: LabourWorkRate[]) => {
         if (res) {
-          FormfieldHandler.labourDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+          this.serviceRepo['labour'] = res.filter(e => e.specItemTypeId === 1);
+          this.serviceRepo['subcontr'] = res.filter(e => e.specItemTypeId === 2);
+          FormfieldHandler.labourDropdown.templateOptions.options = this.serviceRepo['labour'].map((e: LabourWorkRate) => (
+            {
+              label: e.labourWorkName,
+              value: e.id
+            }
+          ));
+          FormfieldHandler.subContractorDropdown.templateOptions.options = this.serviceRepo['subcontr'].map((e: LabourWorkRate) => (
             {
               label: e.labourWorkName,
               value: e.id
@@ -153,12 +164,8 @@ export class FormfieldHandler {
       });
   }
 
-  private static get labourServiceUrl() {
+  private static get labourWorkRateServiceUrl() {
     return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${this.user.companyId}/${this.user.branchId}`;
-  }
-
-  loadSubContractor() {
-    //todo
   }
 
 }

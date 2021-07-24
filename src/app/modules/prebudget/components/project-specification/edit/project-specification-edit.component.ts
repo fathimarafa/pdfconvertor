@@ -4,7 +4,7 @@ import { FormlyFormOptions } from '@ngx-formly/core';
 import { ProjectSpecificationMetadata } from '../project-specification.configuration'
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { Observable } from 'rxjs';
-import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { AppEventType, AppStateService } from 'src/app/services/app-state-service/app-state.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -19,6 +19,11 @@ import { FormfieldHandler } from '../handlers/form-field.handler';
 import { DepartmentMetadata } from 'src/app/modules/hr/components/department/department.configuration';
 import { Department } from 'src/app/modules/hr/components/department/definitions/department.definition';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
+import { QuotedamountAlertModalComponent } from '../edit/quotedamount-alert-modal/quotedamount-alert-modal.component';
+import { SpecificationRegistrationEditComponent } from '../../specification-registration/edit/specification-registration-edit.component';
+
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-project-specification-edit',
@@ -40,6 +45,10 @@ export class ProjectSpecificationEditComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
 
+  dialogEventSubscription;
+
+  excelImport;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
@@ -49,11 +58,13 @@ export class ProjectSpecificationEditComponent implements OnInit {
     private snackBar: MatSnackBar,
     private authService: AuthenticationService,
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private dialog: MatDialog
   ) {
     this.editData = this.stateService.getState(ProjectSpecificationMetadata.moduleId);
     if (this.editData) {
       this.isEdit = true;
     }
+    this.defineExcelColumns();
   }
 
   ngOnInit(): void {
@@ -140,7 +151,7 @@ export class ProjectSpecificationEditComponent implements OnInit {
   }
 
   onCancelBtnClick() {
-    this.router.navigateByUrl('/home/specification');
+    this.router.navigateByUrl('/home/projectspecification');
   }
 
   get httpRequest(): Observable<ProjectSpecification> {
@@ -158,12 +169,25 @@ export class ProjectSpecificationEditComponent implements OnInit {
   //   this.tabTableDef['specification-details'].dataSource._updateChangeSubscription();
   // }
 
+  isSourceExcel = true;
   onLoadSpecBtnClick(isSourceExcel: boolean) {
-    isSourceExcel ? this.openExcelConfigPopup() : this.fetchSpecList();
+    this.isSourceExcel = isSourceExcel;
+    this.isSourceExcel ? this.openExcelConfigPopup() : this.fetchSpecList();
   }
 
   openExcelConfigPopup() {
+    if (!this.excelImport) {
+      this.defineExcelColumns();
+    }
+  }
 
+  defineExcelColumns() {
+    this.excelImport = {
+      column: Array(5).fill(0).map((x, i) => i + 1),
+      mapping: ['SpecNumber', 'SpecName', 'SpecDescription', 'Quantity'].map(e => {
+        return { name: e, column: null }
+      })
+    }
   }
 
   isAllSelected() {
@@ -185,7 +209,11 @@ export class ProjectSpecificationEditComponent implements OnInit {
   onCheckboxChange(event, row) {
     event ? this.selection.toggle(row) : null;
     if (event.checked) {
-
+      row.quantity = 1;
+      row.quotedRatePerUnit = row.ratePerUnit;
+      row.specAmount = row.ratePerUnit * row.quantity;
+      row.deptAmount = row.deptRatePerUnit * row.quantity;
+      row.quotedAmount = row.quotedRatePerUnit * row.quantity;
       this.projectSpecDatatable.data.push(row);
     } else {
       const index = this.projectSpecDatatable.data.findIndex(e => e.id === row.id);
@@ -200,12 +228,81 @@ export class ProjectSpecificationEditComponent implements OnInit {
     return this.tabTableDef['project-specification-details'].dataSource;
   }
 
+  onQuantityChange(row) {
+    row.specAmount = row.ratePerUnit * row.quantity;
+    row.deptAmount = row.deptRatePerUnit * row.quantity;
+    this.calculateQuotedAmount(row);
+  }
+
+  onQuotedAmountChange(row) {
+    if (row.quotedRatePerUnit < row.ratePerUnit) {
+      const profit = row.contractorProfitAmt + row.other_expense;
+      const discount = row.ratePerUnit - row.quotedRatePerUnit;
+      if (discount > profit) {
+        const dialogReference = this.dialog.open(QuotedamountAlertModalComponent, { data: row });
+        dialogReference.afterClosed().subscribe((isConfirmed) => {
+          if (isConfirmed) {
+            this.stateService.setState(SpecificationRegistrationMetadata.moduleId, row);
+            const dialogRef = this.dialog.open(SpecificationRegistrationEditComponent);
+            this.listenSpecEntryDialogClose(dialogRef);
+          } else {
+            row.quotedRatePerUnit = row.ratePerUnit;
+          }
+          this.calculateQuotedAmount(row);
+        });
+      } else {
+        this.calculateQuotedAmount(row);
+      }
+    } else {
+      this.calculateQuotedAmount(row);
+    }
+  }
+
+
+  private listenSpecEntryDialogClose(dialogRef) {
+    this.dialogEventSubscription = this.stateService.listenChange(AppEventType.specRegDialogClose).subscribe(() => {
+      dialogRef.close();
+      this.dialogEventSubscription.unsubscribe();
+    })
+  }
+
+  calculateQuotedAmount(row) {
+    row.quotedAmount = row.quotedRatePerUnit * row.quantity;
+    this.specDatatable._updateChangeSubscription();
+  }
+
+  onFileChange(event: any) {
+    /* wire up file reader */
+    const target: DataTransfer = <DataTransfer>(event.target);
+    if (target.files.length !== 1) {
+      throw new Error('Cannot use multiple files');
+    }
+    const reader: FileReader = new FileReader();
+    reader.readAsBinaryString(target.files[0]);
+    reader.onload = (e: any) => {
+      /* create workbook */
+      const binarystr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+
+      /* selected the first sheet */
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      /* save data */
+      const data = XLSX.utils.sheet_to_json(ws); // to get 2d array pass 2nd parameter as object {header: 1}
+      console.log(data); // Data will be logged in array format containing objects
+    };
+ }
+
   ngOnDestroy() {
     this.form.reset();
     if (this.isEdit) {
       this.stateService.clear(ProjectSpecificationMetadata.moduleId);
     }
     this.projectDivisionFieldsHandler.clear();
+    if (this.dialogEventSubscription) {
+      this.dialogEventSubscription.unsubscribe();
+    }
   }
 
 }

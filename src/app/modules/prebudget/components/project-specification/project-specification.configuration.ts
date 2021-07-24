@@ -100,7 +100,7 @@ export const ProjectSpecificationMetadata = {
             {
                 "field": 'specUnit',
                 "displayName": 'SpecUnits'
-            },  
+            },
             {
                 "field": 'ratePerUnit',
                 "displayName": 'RatePerUnit'
@@ -110,8 +110,8 @@ export const ProjectSpecificationMetadata = {
                 "displayName": 'DeptRatePerUnit'
             },
             {
-                "field": 'quotedAmount',
-                "displayName": 'Quoted Amt'
+                "field": 'quotedRatePerUnit',
+                "displayName": 'QuotedRatePerUnit'
             },
             {
                 "field": 'quantity',
@@ -132,6 +132,10 @@ export const ProjectSpecificationMetadata = {
             {
                 "field": 'deptAmount',
                 "displayName": 'Dept Amount'
+            },
+            {
+                "field": 'quotedAmount',
+                "displayName": 'Quoted Amount'
             }
         ],
     },

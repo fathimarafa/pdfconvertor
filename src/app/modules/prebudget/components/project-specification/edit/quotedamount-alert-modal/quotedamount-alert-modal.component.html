@@ -1,0 +1,19 @@
+<div mat-dialog-content>
+
+    <div class="warning-msg">WARNING : Quoted rate less than profit</div>
+
+    <table mat-table [dataSource]="dataSource">
+        <ng-container [matColumnDef]="column" *ngFor="let column of dataColumns ">
+            <th style="display: none;" mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>
+        </ng-container>
+        <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+    </table>
+
+</div>
+<div class="form-dialog" mat-dialog-actions>
+    <div class="justify-center">
+        <button class="save" (click)="onConfirmBtnClick()" mat-button>Continue</button>
+        <button class="cancel" mat-button mat-dialog-close>Cancel</button>
+    </div>
+</div>

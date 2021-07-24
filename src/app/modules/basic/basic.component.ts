@@ -16,6 +16,7 @@ import { BasicDocumentUploadEditComponent } from './components/document-upload/e
 import { BasicChequeClearenceComponent } from './components/cheque-clearence/basic-cheque-clearence.component';
 import { WorkCategoryEditComponent } from "./components/work-category/edit/work-category-edit.component";
 import { DocumentTypeEditComponent } from "./components/document-type/edit/document-type-edit.component";
+import { JournalVoucherEntryApprovalComponent } from './components/journal-voucher-entry-approval/journal-voucher-entry-approval.component';
 
 export const BasicModuleComponents = [
     AccountHeadRegistrationComponent,
@@ -35,5 +36,6 @@ export const BasicModuleComponents = [
     BasicSitemanagerTransactionComponent,
     BasicSitemanagerTransactionEditComponent,
     BasicFinancialYearRegistrationComponent,
-    BasicChequeClearenceComponent
+    BasicChequeClearenceComponent,
+    JournalVoucherEntryApprovalComponent
 ]

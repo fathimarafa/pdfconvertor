@@ -19,6 +19,7 @@ export class FormApprovalDialogComponent implements OnInit {
   ngOnInit(): void { }
 
   onConfirmBtnClick() {
+    if (!this.comment) return;
     this.dialogRef.close(this.comment);
   }
 

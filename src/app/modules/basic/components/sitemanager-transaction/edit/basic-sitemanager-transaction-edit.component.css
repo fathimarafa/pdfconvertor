@@ -1,6 +1,7 @@
 .container-body {
     height: calc(100% - 40px);
     padding: 20px;
+    background-color: #fff;
 }
 
 ::ng-deep .mat-form-field-infix {
@@ -8,7 +9,7 @@
 }
 
 .body-content {
-    height: calc(100% - 200px);
+    height: calc(100% - 100px);
     padding: 40px 20px 0 0;
     overflow: auto;
 }
@@ -30,4 +31,16 @@
     color: #3182ce;
     font-size: 14px;
     font-weight: 500;
+}
+
+button {
+    min-width: 80px;
+    color: #fff !important;
+    font-size: 0.84rem;
+    letter-spacing: 0.6px;
+    font-weight: 400;
+}
+
+button+button {
+    margin-left: 12px;
 }

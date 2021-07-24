@@ -5,7 +5,7 @@ import { SpecificationRegistrationMetadata } from '../specification-registration
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { Observable } from 'rxjs';
 import { Specification, SpecificationDetail, SpecificationDetailsTabId, StepType } from '../definitions/specification-registration.definition';
-import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
+import { AppEventType, AppStateService } from 'src/app/services/app-state-service/app-state.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormfieldHandler } from '../handlers/form-field.handler';
@@ -32,6 +32,7 @@ export class SpecificationRegistrationEditComponent implements OnInit {
   tableColumns;
   dataSource;
   tabsWithTable = ['material', 'labour', 'subcontr'];
+  serviceRepo = {};
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
@@ -51,38 +52,42 @@ export class SpecificationRegistrationEditComponent implements OnInit {
     this.steps = SpecificationRegistrationMetadata.formFields;
     this.form = new FormArray(this.steps.map(() => new FormGroup({})));
     this.options = this.steps.map(() => <FormlyFormOptions>{});
-    FormfieldHandler.loadDropdowns(this.steps, this.dataHandler, this.authService.loggedInUser);
+    FormfieldHandler.initialize(this.steps, this.dataHandler, this.authService.loggedInUser, this.serviceRepo);
   }
 
   defineTables() {
     this.tabsWithTable.forEach((tab: string) => {
       this.tabTableDef[tab] = {
-        dataSource: new MatTableDataSource(this.getTableRows(tab)),
+        dataSource: new MatTableDataSource([]),
         tableColumns: this.getColumns(tab)
       }
       this.tabTableDef[tab]['dataColumns'] = this.tabTableDef[tab].tableColumns.map(e => e.field);
     });
+    if (this.isEdit) {
+      this.getSpecificationDetails();
+    }
   }
 
-  private getTableRows(tab: string): SpecificationDetail[] {
-    let tableRows: SpecificationDetail[] = [];
-    if (this.isEdit) {
-      switch (tab) {
-        case SpecificationDetailsTabId.labour:
-          tableRows = this.model.specificationDetails.filter(e => e.specItemTypeId === 1);
-          break;
-        case SpecificationDetailsTabId.subcontr:
-          tableRows = this.model.specificationDetails.filter(e => e.specItemTypeId === 2);
-          break;
-        case SpecificationDetailsTabId.material:
-          tableRows = this.model.specificationDetails.filter(e => e.specItemTypeId === 3);
-          break;
+  getSpecificationDetails() {
+    this.dataHandler.get(`BuildExeCRM/api/SpecificationList/${this.editData.id}`).subscribe((res: any) => {
+      res.forEach((item) => {
+        item['amount'] = item.qtyRequired * item.rateOfItem;;
+        switch (item.specItemTypeId) {
+          case 1:
+            this.tabTableDef[SpecificationDetailsTabId.labour].dataSource.data.push(item);
+            break;
+          case 2:
+            this.tabTableDef[SpecificationDetailsTabId.subcontr].dataSource.data.push(item);
+            break;
+          case 3:
+            this.tabTableDef[SpecificationDetailsTabId.material].dataSource.data.push(item);
+            break;
+        }
+      });
+      for (let tab in this.tabTableDef) {
+        this.tabTableDef[tab].dataSource._updateChangeSubscription();
       }
-    }
-    tableRows.forEach((row: SpecificationDetail) => {
-      row['amount'] = row.qtyRequired * row.rateOfItem;
     })
-    return tableRows;
   }
 
   getColumns(tab: string) {
@@ -131,7 +136,15 @@ export class SpecificationRegistrationEditComponent implements OnInit {
   }
 
   onCancelBtnClick() {
-    this.router.navigateByUrl('/home/specification');
+    if (this.isProjectSpecEntry) {
+      this.stateService.emitChange(AppEventType.specRegDialogClose, null);
+    } else {
+      this.router.navigateByUrl('/home/specification');
+    }
+  }
+
+  private get isProjectSpecEntry(): boolean {
+    return window.location.href.includes('addprojectspecification')
   }
 
   get httpRequest(): Observable<Specification> {
@@ -150,20 +163,7 @@ export class SpecificationRegistrationEditComponent implements OnInit {
   private getSpecificaitonDetailsFromTable(): SpecificationDetail[] {
     let specificationData: SpecificationDetail[] = [];
     for (let tab in this.tabTableDef) {
-      this.tabTableDef[tab].dataSource.data.forEach((e: SpecificationDetail) => {
-        switch (tab) {
-          case SpecificationDetailsTabId.labour:
-            e.specItemTypeId = 1;
-            break;
-          case SpecificationDetailsTabId.subcontr:
-            e.specItemTypeId = 2;
-            break;
-          case SpecificationDetailsTabId.material:
-            e.specItemTypeId = 3;
-            break;
-        }
-        specificationData.push(e);
-      });
+      specificationData = specificationData.concat(this.tabTableDef[tab].dataSource.data);
     }
     return specificationData;
   }
@@ -201,8 +201,32 @@ export class SpecificationRegistrationEditComponent implements OnInit {
     if (Object.values(form.value).includes(null)) return;
     const data = Object.assign({}, form.value);
     data['amount'] = data.qtyRequired * data.rateOfItem;
+    let item;
+    switch (tabId) {
+      case SpecificationDetailsTabId.material:
+        item = this.serviceRepo[SpecificationDetailsTabId.material].find(e => e.id === data.specItemId);
+        data.specItemName = item.materialName;
+        data.specItemTypeId = 3;
+        break;
+      case SpecificationDetailsTabId.labour:
+        item = this.serviceRepo[SpecificationDetailsTabId.labour].find(e => e.id === data.specItemId);
+        data.specItemName = item.labourWorkName;
+        data.specItemTypeId = 1;
+        break;
+      case SpecificationDetailsTabId.subcontr:
+        item = this.serviceRepo[SpecificationDetailsTabId.subcontr].find(e => e.id === data.specItemId);
+        data.specItemName = item.labourWorkName;
+        data.specItemTypeId = 2;
+        break;
+    }
     this.tabTableDef[tabId].dataSource.data.push(Object.assign({}, data));
     this.tabTableDef[tabId].dataSource._updateChangeSubscription();
+    form.reset();
+  }
+
+  onCancelUpdateBtnClick(form) {
+    form.reset();
+    this.enableRowEdit = false;
   }
 
   ngOnDestroy() {

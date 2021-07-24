@@ -1,0 +1,9 @@
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+table th:first-child,
+table th:last-child,
+table th:nth-last-child(2) {
+    width: 6%;
+}

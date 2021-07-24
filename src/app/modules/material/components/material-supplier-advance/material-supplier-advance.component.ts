@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmModalComponent } from '../../../common/confirm-modal/confirm-modal.component';
 import { MaterialSupplierAdvanceEditComponent } from './edit//material-supplier-advance-edit.component';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
-import { MaterialSupplierAdvance } from './definitions//material-supplier-advance.definition';
+import { MaterialSupplierAdvance } from './definitions/material-supplier-advance.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { MaterialSupplierAdvanceMetadata } from './material-supplier-advance.configuration';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';

@@ -244,12 +244,12 @@ th:first-child {
     /* color: #fff; */
 }
 
-.form-dialog button.save {
+.save {
     background-color: #3182ce;
     color: #ffffff;
 }
 
-.form-dialog button.cancel {
+.cancel {
     background-color: #a0aec0;
     color: #ffffff;
 }
@@ -654,4 +654,16 @@ mat-paginator button:disabled {
     overflow: auto;
     padding-bottom: 10px;
     margin-bottom: 10px;
+}
+
+.table-overflow-container table {
+    table-layout: fixed;
+}
+
+.table-overflow-container th {
+    width: 150px;
+}
+
+.table-overflow-container th:first-child {
+    width: 80px;
 }

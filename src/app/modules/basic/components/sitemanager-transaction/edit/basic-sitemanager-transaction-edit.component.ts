@@ -14,6 +14,8 @@ import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from 'src/
 import { EmployeeRegistrationMetadata } from 'src/app/modules/hr/components/employee-registration/employee-registration.configuration';
 import { IEmployee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { BankAccount } from '../../bank-account-registration/definitions/bank-account-registration.definition';
+import { BankAccountRegistrtaionMetadata } from '../../bank-account-registration/bank-account-registration.configuration';
 
 @Component({
   selector: 'app-basic-sitemanager-transaction-edit',
@@ -51,6 +53,7 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
   loadDropdowns() {
     this.fetchSitemanager();
     this.bindProjectDivisionFields();
+    this.fetchBank();
   }
 
   ngOnInit(): void { }
@@ -82,14 +85,19 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
 
   get httpRequest(): Observable<BasicSitemanagerTransaction> {
     this.model.withClear = this.model.withClear ? 0 : 1;
+    this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+    if (this.model.paymentMode === 'CASH') {
+      this.model.paymentModeId = 0;
+      this.model.paymentNo = '';
+    }
     if (this.isEdit) {
       return this.dataHandler.put<BasicSitemanagerTransaction>(BasicSitemanagerTransactionMetadata.serviceEndPoint, this.model);
     } else {
-      const dummyDefaultFields = {
-        companyId: 1, branchId: 1, financialyearId: 0, userId: 0
-      }
-      const payloads = { ...dummyDefaultFields, ...this.model };
-      return this.dataHandler.post<BasicSitemanagerTransaction>(BasicSitemanagerTransactionMetadata.serviceEndPoint, payloads);
+      // const dummyDefaultFields = {
+      //   companyId: 1, branchId: 1, financialyearId: 0, userId: 0
+      // }
+      // const payloads = { ...dummyDefaultFields, ...this.model };
+      return this.dataHandler.post<BasicSitemanagerTransaction>(BasicSitemanagerTransactionMetadata.serviceEndPoint, this.model);
     }
   }
 
@@ -112,8 +120,28 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
     return `${EmployeeRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`
   }
 
+  private fetchBank() {
+    this.dataHandler.get<BankAccount[]>(this.bankServiceUrl)
+      .subscribe((res: BankAccount[]) => {
+        if (res) {
+          FormfieldHandler.bankDropdown.templateOptions.options = res.map((e: BankAccount) => (
+            {
+              label: e.bankName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  private get bankServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${BankAccountRegistrtaionMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
   ngOnDestroy() {
     this.form.reset();
+    this.projectDivisionFieldsHandler.clear();
     if (this.isEdit) {
       this.stateService.clear(BasicSitemanagerTransactionMetadata.moduleId);
     }

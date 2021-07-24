@@ -11,6 +11,7 @@ import { RateComparisonComponent } from "./components/rate-comparison/rate-compa
 import { ManualBoqComponent } from './components/manual-boq/manual-boq.component';
 import { ManualBoqEditComponent } from './components/manual-boq/edit/manual-boq-edit.component';
 import { ManualBoqApprovalComponent } from "./components/manual-boq-approval/manual-boq-approval.component";
+import { QuotedamountAlertModalComponent } from "./components/project-specification/edit/quotedamount-alert-modal/quotedamount-alert-modal.component";
 
 export const PrebudgetModuleComponents = [
     WorkTypeComponent,
@@ -21,6 +22,7 @@ export const PrebudgetModuleComponents = [
     TemplateRegistrationEditComponent,
     ProjectSpecificationComponent,
     ProjectSpecificationEditComponent,
+    QuotedamountAlertModalComponent,
     RateEvaluationComponent,
     RateComparisonComponent,
     ManualBoqComponent,

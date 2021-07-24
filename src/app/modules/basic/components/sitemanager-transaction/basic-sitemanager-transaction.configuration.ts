@@ -1,7 +1,7 @@
 export const BasicSitemanagerTransactionMetadata = {
-    "moduleId": "BasicSitemanagerTransaction",
-    "moduleName": "Basic Sitemanager Transaction",
-    "displayName": "Basic / Sitemanager Transaction",
+    "moduleId": "sitemanagertransaction",
+    "moduleName": "Sitemanager Transaction",
+    "displayName": "Payment And Receipt / Sitemanager Transaction",
     "hasAddNew": true,
     "hasEdit": true,
     "hasDelete": true,
@@ -48,6 +48,35 @@ export const BasicSitemanagerTransactionMetadata = {
             "fieldGroup": [
                 {
                     "className": "flex-1",
+                    "key": "transactionType",
+                    "type": "radio",
+                    "templateOptions": {
+                        "label": "Transaction Type",
+                        "required": true,
+                        "options": [
+                            {
+                                "label": "Money to Site Manager",
+                                "value": 1
+                            },
+                            {
+                                "label": "Money return from Site Manager",
+                                "value": 2
+                            },
+                            {
+                                "label": "Site Manager's site expense",
+                                "value": 3
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "row-2",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
                     "key": "employeeId",
                     "type": "select",
                     "templateOptions": {
@@ -90,7 +119,7 @@ export const BasicSitemanagerTransactionMetadata = {
                         "required": true,
                         "disabled": true,
                         "options": []
-                    } 
+                    }
                 },
                 {
                     "className": "flex-1 readonly",
@@ -121,29 +150,6 @@ export const BasicSitemanagerTransactionMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-2",
-                    "key": "transactionType",
-                    "type": "select",
-                    "templateOptions": {
-                        "label": "Transaction Type",
-                        "required": true,
-                        "options": [
-                            {
-                                "label": "Money to Site Manager",
-                                "value": 1
-                            },
-                            {
-                                "label": "Money return from Site Manager",
-                                "value": 2
-                            },
-                            {
-                                "label": "Site Manager's site expense",
-                                "value": 3
-                            }
-                        ]
-                    }
-                },
-                {
                     "className": "flex-1",
                     "key": "amount",
                     "type": "input",
@@ -155,7 +161,7 @@ export const BasicSitemanagerTransactionMetadata = {
                 },
                 {
                     "className": "flex-1",
-                    "key": "paymentModeId",
+                    "key": "paymentMode",
                     "type": "select",
                     "templateOptions": {
                         "label": "Payment Mode",
@@ -163,11 +169,11 @@ export const BasicSitemanagerTransactionMetadata = {
                         "options": [
                             {
                                 "label": "Cash",
-                                "value": 0
+                                "value": "CASH"
                             },
                             {
                                 "label": "Bank",
-                                "value": 3
+                                "value": "BANK"
                             },
                         ]
                     }
@@ -180,7 +186,7 @@ export const BasicSitemanagerTransactionMetadata = {
                     "templateOptions": {
                         "label": "With Clear"
                     }
-                }
+                },
             ]
         },
         {
@@ -188,8 +194,39 @@ export const BasicSitemanagerTransactionMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
+                    "className": "flex-1",
+                    "key": "paymentModeId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Bank",
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "key": "paymentNo",
+                    "type": "input",
+                    "templateOptions": {
+                        "label": "Cheque/DD No"
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "key": "paymentDate",
+                    "type": "datepicker",
+                    "templateOptions": {
+                        "label": "Cheque Date"
+                    }
+                },
+            ]
+        },
+        {
+            "id": "row-6",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
                     "className": "flex-2",
-                    "key": "description",
+                    "key": "narration",
                     "type": "textarea",
                     "templateOptions": {
                         "label": "Description",

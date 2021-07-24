@@ -42,6 +42,8 @@ import { MaterialReceivedApprovalComponent } from './components/material-receive
 import { MaterialTransferRequestApprovalComponent } from './components/material-transfer-request-approval/material-transfer-request-approval.component';
 import { MaterialPurchaseReturnApprovalComponent } from './components/material-purchase-return-approval/material-purchase-return-approval.component';
 import { DamageStockEntryApprovalComponent } from './components/damage-stock-entry-approval/damage-stock-entry-approval.component';
+import { MaterialSupplierAdvanceApprovalComponent } from './components/material-supplier-advance-approval/material-supplier-advance-approval.component';
+import { MaterialSupplierPaymentApprovalComponent } from './components/material-supplier-payment-approval/material-supplier-payment-approval.component';
 
 export const MaterialModuleComponents = [
     SupplierRegistrationComponent,
@@ -68,6 +70,7 @@ export const MaterialModuleComponents = [
     MaterialQuotationApprovalComponent,
     MaterialSupplierAdvanceComponent,
     MaterialSupplierAdvanceEditComponent,
+    MaterialSupplierAdvanceApprovalComponent,
     MaterialSupplierPaymentComponent,
     MaterialSupplierPaymentEditComponent,
     MaterialTransferRequestComponent,
@@ -87,5 +90,6 @@ export const MaterialModuleComponents = [
     QuotationBaseRateFeedingEditComponent,
     MaterialStockEntryComponent,
     MaterialStockEntryEditComponent,
-    MaterialStockEntryApprovalComponent
+    MaterialStockEntryApprovalComponent,
+    MaterialSupplierPaymentApprovalComponent
 ]

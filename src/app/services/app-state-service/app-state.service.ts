@@ -1,4 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+
+export enum AppEventType {
+  specRegDialogClose = 'specRegDialogClose'
+}
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +11,7 @@ import { Injectable } from '@angular/core';
 export class AppStateService {
 
   private state: { [key: string]: any } = {};
+  private subject: { [key: string]: any } = {};
 
   constructor() { }
 
@@ -21,5 +27,15 @@ export class AppStateService {
     delete this.state[moduleId];
   }
 
+  listenChange(eventType: AppEventType): Observable<any> {
+    if (!this.subject[eventType]) {
+      this.subject[eventType] = new Subject<any>();
+    }
+    return this.subject[eventType].asObservable();
+  }
+
+  emitChange(eventType: AppEventType, data: any) {
+    this.subject[eventType].next(data);
+  }
 
 }

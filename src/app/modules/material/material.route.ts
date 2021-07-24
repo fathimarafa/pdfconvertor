@@ -26,6 +26,8 @@ import { MaterialReceivedApprovalComponent } from './components/material-receive
 import { MaterialTransferRequestApprovalComponent } from './components/material-transfer-request-approval/material-transfer-request-approval.component';
 import { MaterialPurchaseReturnApprovalComponent } from './components/material-purchase-return-approval/material-purchase-return-approval.component';
 import { DamageStockEntryApprovalComponent } from './components/damage-stock-entry-approval/damage-stock-entry-approval.component';
+import { MaterialSupplierAdvanceApprovalComponent } from './components/material-supplier-advance-approval/material-supplier-advance-approval.component';
+import { MaterialSupplierPaymentApprovalComponent } from './components/material-supplier-payment-approval/material-supplier-payment-approval.component';
 
 export const MaterialModuleRoutes = [
     { path: 'unitregistration', component: UnitRegistrationComponent },
@@ -43,6 +45,7 @@ export const MaterialModuleRoutes = [
     { path: 'materialquotation', component: MaterialQuotationComponent },
     { path: 'materialquotationapproval', component: MaterialQuotationApprovalComponent },
     { path: 'materialsupplieradvance', component: MaterialSupplierAdvanceComponent },
+    { path: 'materialsupplieradvanceapproval', component: MaterialSupplierAdvanceApprovalComponent },
     { path: 'materialsupplierpayment', component: MaterialSupplierPaymentComponent },
     { path: 'materialtransferrequest', component: MaterialTransferRequestComponent },
     { path: 'materialtransferrequestapproval', component: MaterialTransferRequestApprovalComponent },
@@ -58,5 +61,6 @@ export const MaterialModuleRoutes = [
     { path: 'materialstockentry', component: MaterialStockEntryComponent },
     { path: 'materialstockentryapproval', component: MaterialStockEntryApprovalComponent },
     { path: 'materialdirectstockentry', component: MaterialStockEntryComponent },
-    { path: 'materialdirectstockentryapproval', component: MaterialStockEntryApprovalComponent }
+    { path: 'materialdirectstockentryapproval', component: MaterialStockEntryApprovalComponent },
+    { path: 'materialsupplierpaymentapproval', component: MaterialSupplierPaymentApprovalComponent },
 ]

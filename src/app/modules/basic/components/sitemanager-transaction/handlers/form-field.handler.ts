@@ -34,14 +34,14 @@ export class FormfieldHandler {
 
     static get sitemanagerDropdown() {
         return this.forms
-            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'employeeId');
     }
 
-    // static get documentTypeDropdown() {
-    //     return this.forms
-    //         .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-    //         .find((x: FormlyFieldConfig) => x.key === 'documentTypeId');
-    // }
+    static get bankDropdown() {
+        return this.forms
+            .find((x: FormlyFieldConfig) => x.id === 'row-5').fieldGroup
+            .find((x: FormlyFieldConfig) => x.key === 'paymentModeId');
+    }
 
 }

@@ -1,0 +1,29 @@
+button {
+    min-width: 80px;
+    color: #fff !important;
+    font-size: 0.84rem;
+    letter-spacing: 0.6px;
+    font-weight: 400;
+}
+
+button+button {
+    margin-left: 12px;
+}
+
+.stepper-container {
+    max-height: 50vh;
+    overflow: auto;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .stepper-container {
+        padding: 20px 4px;
+    }
+}
+
+table th:first-child,
+table th:last-child {
+    width: 6%;
+}

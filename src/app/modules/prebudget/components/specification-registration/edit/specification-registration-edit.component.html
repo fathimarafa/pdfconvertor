@@ -23,7 +23,7 @@
                                 </ng-container>
                                 <ng-container *ngIf="enableRowEdit">
                                     <button style="margin-right: 20px;float: right;" (click)="onUpdateDetailBtnClick()" mat-button class="save">Update</button>
-                                    <button style="float: right;" (click)="onCancelUpdateBtnClick()" mat-button class="cancel">Cancel</button>
+                                    <button style="float: right;" (click)="onCancelUpdateBtnClick(form.at(index))" mat-button class="cancel">Cancel</button>
                                 </ng-container>
                             </div>
 
@@ -32,7 +32,7 @@
                                     <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
                                     <td mat-cell *matCellDef="let element;let i =index">
                                         <ng-container *ngIf="firstColumn">
-                                            {{index + 1}}
+                                            {{i + 1}}
                                         </ng-container>
                                         <ng-container *ngIf="!firstColumn">
                                             <ng-container *ngIf="column.field !== 'action'">
@@ -40,7 +40,8 @@
                                             </ng-container>
                                             <ng-container *ngIf=" column.field === 'action'">
                                                 <mat-icon (click)="onRowEditBtnClick(element,step.id)">edit</mat-icon>
-                                                <mat-icon (click)="onRowDeleteBtnClick(i,step.id)">delete_outline</mat-icon>
+                                                <mat-icon (click)="onRowDeleteBtnClick(i,step.id)">delete_outline
+                                                </mat-icon>
                                             </ng-container>
                                         </ng-container>
                                     </td>

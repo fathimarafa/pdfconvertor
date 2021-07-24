@@ -8,6 +8,7 @@ import { BasicDocumentTypeComponent } from "./components/document-type/basic-doc
 import { BasicDocumentUploadComponent } from "./components/document-upload/basic-document-upload.component";
 import { BasicDocumentUploadEditComponent } from "./components/document-upload/edit/basic-document-upload-edit.component";
 import { BasicFinancialYearRegistrationComponent } from "./components/financial-year/basic-financial-year-registration.component";
+import { JournalVoucherEntryApprovalComponent } from "./components/journal-voucher-entry-approval/journal-voucher-entry-approval.component";
 import { JournalVoucherEntryEditComponent } from "./components/journal-voucher-entry/edit/journal-voucher-entry-edit.component";
 import { JournalVoucherEntryComponent } from "./components/journal-voucher-entry/journal-voucher-entry.component";
 import { BasicSitemanagerTransactionComponent } from "./components/sitemanager-transaction/basic-sitemanager-transaction.component";
@@ -29,5 +30,6 @@ export const BasicModuleRoutes = [
     { path: 'sitemanagertransaction', component: BasicSitemanagerTransactionComponent },
     { path: 'addsitemanagertransaction', component: BasicSitemanagerTransactionEditComponent },
     { path: 'financialyear', component: BasicFinancialYearRegistrationComponent },
-    { path: 'chequeclearence', component: BasicChequeClearenceComponent }
+    { path: 'chequeclearence', component: BasicChequeClearenceComponent },
+    { path: 'journalapproval', component: JournalVoucherEntryApprovalComponent }
 ] 
