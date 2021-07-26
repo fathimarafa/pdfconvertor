@@ -1,0 +1,14 @@
+.search-list-container {
+    max-height: 30vh;
+    overflow: auto;
+    min-width: 30vw;
+}
+
+.search-list-item {
+    color: #424952;
+    font-size: 13.4px;
+    border-bottom: 1px solid #edf2f7;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding: 10px;
+}
