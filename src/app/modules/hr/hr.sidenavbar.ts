@@ -22,8 +22,20 @@ export const HrSideNavbar = {
             subItem: []
         },
         {
+            displayName: 'Employee Registration',
+            navLink: '/employeeregistration',
+            showSubItem: false,
+            subItem: []
+        },
+        {
             displayName: 'Foreman Work Order',
             navLink: '/foremanworkorder',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Holiday Settings',
+            navLink: '/holidaySetting',
             showSubItem: false,
             subItem: []
         },
@@ -43,6 +55,18 @@ export const HrSideNavbar = {
         {
             displayName: 'Labour Work Rate Setting',
             navLink: '/labourworkratesetting',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Add Labour to Project',
+            navLink: '/addlabourtoproject',
+            showSubItem: false,
+            subItem: []
+        },
+        {
+            displayName: 'Attendance Entry',
+            navLink: '/attendanceentry',
             showSubItem: false,
             subItem: []
         }

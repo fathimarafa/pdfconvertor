@@ -69,6 +69,7 @@ const appearance: MatFormFieldDefaultOptions = {
     FormlyMaterialModule,
     MaterialModule,
     FormlyMatDatepickerModule,
+    FormsModule
   ],
   providers: [
     {

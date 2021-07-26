@@ -1,10 +1,10 @@
 <h2 mat-dialog-title class="form-dialog header-color">{{ isEdit ? 'Edit': 'Add'}} Employee</h2>
 <mat-dialog-content class="form-dialog mat-typography dialog-content">
-    <form [formGroup]="form">
+    <form [formGroup]="form" id="regn-form">
         <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
-    <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <button (click)="onSaveBtnClick()" form="regn-form" mat-button class="save">Save</button>
     <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
 </mat-dialog-actions>

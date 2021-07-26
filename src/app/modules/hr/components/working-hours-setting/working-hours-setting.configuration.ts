@@ -6,23 +6,27 @@ export const WorkingHoursSettingMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "WorkingHoursSetting",
+    "serviceEndPoint": "BuildExeHR/api/WorkingHours",
     "tableColumns": [
         {
-            "field": 'employeeDesignationId',
-            "displayName": 'S.No'
+            "field": 'id',
+            "displayName": 'Id'
         },
         {
-            "field": 'employeeCategoryId',
+            "field": 'designationid',
             "displayName": 'Designation'
         },
         {
-            "field": 'employeeDesignationName',
+            "field": 'time_in',
             "displayName": 'Time In'
         },
         {
-            "field": 'description',
+            "field": 'time_out',
             "displayName": 'Time Out'
+        },
+        {
+            "field": 'relaxation',
+            "displayName": 'Relaxation'
         },
         {
             "field": 'action',
@@ -35,42 +39,16 @@ export const WorkingHoursSettingMetadata = {
             "type": "select",
             "templateOptions": {
                 "label": "Select Category",
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
-                    }
-                ],
+                "options": [],
                 "required": true
             }
         },
         {
-            "type": "input",
+            "type": "select",
             "key": "designation_id",
             "templateOptions": {
                 "label": "Select Designation",
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
-                    }
-                ],
+                "options": [],
                 "required": true
             }
         },

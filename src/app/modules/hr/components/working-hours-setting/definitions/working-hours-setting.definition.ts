@@ -8,5 +8,5 @@ export interface WorkingHoursSetting {
     financial_year_id: number;
     relaxation: number;
     employeeCategoryId: number;
-    workingHours: Date;
+    workingHours: number;
 }

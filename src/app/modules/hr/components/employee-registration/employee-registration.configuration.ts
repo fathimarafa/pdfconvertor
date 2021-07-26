@@ -7,6 +7,10 @@ export const EmployeeRegistrationMetadata = {
     "hasDelete": true,
     "useMultiStepForm": false,
     "serviceEndPoint": "BuildExeHR/api/Employee",
+    "dropdownEndpoints": {
+        "employeeCategory": "BuildExeHR/api/EmployeeCategory",
+        "employeeDesignation": "BuildExeHR/api/EmployeeDesignation"
+    },
     "tableColumns": [
         {
             "field": 'employeeId',
@@ -39,6 +43,7 @@ export const EmployeeRegistrationMetadata = {
     ],
     "formFields": [
         {
+            "id": "employeerrow1",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -48,20 +53,7 @@ export const EmployeeRegistrationMetadata = {
                     "templateOptions": {
                         "label": "Select category",
                         "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ]
+                        "options": []
                     }
                 },
                 {
@@ -71,20 +63,7 @@ export const EmployeeRegistrationMetadata = {
                     "templateOptions": {
                         "label": "Select designation",
                         "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ]
+                        "options": []
                     }
                 },
                 {
@@ -94,20 +73,10 @@ export const EmployeeRegistrationMetadata = {
                     "templateOptions": {
                         "label": "Select labour group",
                         "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ]
+                        "options": []
+                    },
+                    "expressionProperties": {
+                        "templateOptions.disabled": "![1,2,3,4].includes(model.employeeCategoryId)",
                     }
                 },
                 {
@@ -117,20 +86,10 @@ export const EmployeeRegistrationMetadata = {
                     "templateOptions": {
                         "label": "Select labour head",
                         "required": true,
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ]
+                        "options": []
+                    },
+                    "expressionProperties": {
+                        "templateOptions.disabled": "!(model.employeeCategoryId == `1`)",
                     }
                 }
             ]
@@ -141,7 +100,7 @@ export const EmployeeRegistrationMetadata = {
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "employeeId",
+                    "key": "id",
                     "templateOptions": {
                         "label": "EmployeeID",
                         "required": true
@@ -158,24 +117,10 @@ export const EmployeeRegistrationMetadata = {
                 },
                 {
                     "className": "flex-1",
-                    "key": "employeeTypeId",
-                    "type": "select",
+                    "key": "employeeCode",
+                    "type": "input",
                     "templateOptions": {
-                        "label": "Select employee type",
-                        "options": [
-                            {
-                                "label": "type 1",
-                                "value": "type 1"
-                            },
-                            {
-                                "label": "type 2",
-                                "value": "type 2"
-                            },
-                            {
-                                "label": "type 3",
-                                "value": "type 3"
-                            }
-                        ]
+                        "label": "Employee Code",
                     }
                 },
                 {
@@ -214,7 +159,7 @@ export const EmployeeRegistrationMetadata = {
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "emaailId",
+                    "key": "emailId",
                     "templateOptions": {
                         "label": "Email ID",
                         "required": true
@@ -268,12 +213,16 @@ export const EmployeeRegistrationMetadata = {
                                             "label": "Select salary type",
                                             "options": [
                                                 {
-                                                    "label": "type 1",
-                                                    "value": "type 1"
+                                                    "label": "Daily",
+                                                    "value": 1
                                                 },
                                                 {
-                                                    "label": "type 2",
-                                                    "value": "type 2"
+                                                    "label": "Monthly",
+                                                    "value": 2
+                                                },
+                                                {
+                                                    "label": "Contract",
+                                                    "value": 3
                                                 }
                                             ],
                                             "required": true
@@ -284,6 +233,7 @@ export const EmployeeRegistrationMetadata = {
                                         "type": "input",
                                         "key": "salaryAmount",
                                         "templateOptions": {
+                                            "type": 'number',
                                             "label": "Salary",
                                             "required": true
                                         }
@@ -298,6 +248,7 @@ export const EmployeeRegistrationMetadata = {
                                         "type": "input",
                                         "key": "overtime",
                                         "templateOptions": {
+                                            "type": 'number',
                                             "label": "Overtime Amount",
                                             "required": true
                                         }
@@ -346,7 +297,7 @@ export const EmployeeRegistrationMetadata = {
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "bankName",
+                    "key": "bank",
                     "templateOptions": {
                         "label": "Bank",
                         "required": true
@@ -355,7 +306,7 @@ export const EmployeeRegistrationMetadata = {
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "branchName",
+                    "key": "branch",
                     "templateOptions": {
                         "label": "Branch",
                         "required": true
@@ -364,7 +315,7 @@ export const EmployeeRegistrationMetadata = {
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "acoountNumber",
+                    "key": "accno",
                     "templateOptions": {
                         "label": "Account number",
                         "required": true
@@ -372,8 +323,8 @@ export const EmployeeRegistrationMetadata = {
                 },
                 {
                     "className": "flex-1 datepicker-width",
-                    "type": "datepicker",
-                    "key": "ifsccode",
+                    "type": "input",
+                    "key": "ifsc",
                     "templateOptions": {
                         "label": "IFSC Code",
                         "required": true

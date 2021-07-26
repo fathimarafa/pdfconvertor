@@ -7,6 +7,9 @@ import { DataHandlerService } from '../../../../../services/datahandler/datahand
 import { WorkingHoursSetting } from '../definitions/working-hours-setting.definition';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable } from 'rxjs';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { EmployeeRegistrationMetadata } from '../../employee-registration/employee-registration.configuration';
+import { IEmployeeCategory, IEmployeeDesignation } from '../../employee-registration/definitions/employee.definiton';
 
 @Component({
   selector: 'app-working-hours-setting-edit',
@@ -24,20 +27,74 @@ export class WorkingHoursSettingEditComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<WorkingHoursSettingEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: WorkingHoursSetting,
-    private dataHandler: DataHandlerService
+    private dataHandler: DataHandlerService,
+    private authService: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
     this.fields = WorkingHoursSettingMetadata.formFields;
     this.model = this.editData;
+    this.bindFormSelectOptions();
   }
 
+  bindFormSelectOptions(){
+    this.fetchCategorySelectOptions();
+    this.employeeCategory.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      this.fetchDesignationSelectOptions();
+    }
+  }
+
+  get employeeCategory(): FormlyFieldConfig {
+    return this.fields
+      .find((x: FormlyFieldConfig) => x.key === 'employeeCategoryId');
+  }
+
+  get employeeDesignation(): FormlyFieldConfig {
+    return this.fields
+      .find((x: FormlyFieldConfig) => x.key === 'designation_id');
+  }
+
+  fetchCategorySelectOptions(){
+    const endPoint = `${EmployeeRegistrationMetadata.dropdownEndpoints.employeeCategory}`;
+    this.dataHandler.get<IEmployeeCategory[]>(endPoint)
+      .subscribe((res: IEmployeeCategory[]) => {
+        if (res) {
+          this.employeeCategory.templateOptions.options = res.map((e: IEmployeeCategory) => (
+            {
+              label: e.employeeCategoryName,
+              value: e.employeeCategoryId
+            }
+          ));
+        }
+      });
+  }
+
+
+  fetchDesignationSelectOptions() {
+    const companyId = this.authService.loggedInUser.companyId
+    const branchId = this.authService.loggedInUser.branchId;
+    const categoryId = this.model.employeeCategoryId;
+
+    const endPoint = `${EmployeeRegistrationMetadata.dropdownEndpoints.employeeDesignation}/${companyId}/${branchId}/${categoryId}`;
+    this.dataHandler.get<IEmployeeDesignation[]>(endPoint)
+      .subscribe((res: IEmployeeDesignation[]) => {
+        if (res) {
+          this.employeeDesignation.templateOptions.options = res.map((e: IEmployeeDesignation) => (
+            {
+              label: e.employeeDesignationName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
   ngOnInit(): void { }
 
   onSaveBtnClick() {
     if (this.form.valid) {
       this.model.workingHoursSettingId = this.model.workingHoursSettingId || Math.round(Math.random() * 100);
+      this.model.relaxation = Number(this.model.relaxation);
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
@@ -50,6 +107,10 @@ export class WorkingHoursSettingEditComponent implements OnInit {
 
   onCancelBtnClick() {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.form.reset();
   }
 
   get httpRequest(): Observable<WorkingHoursSetting> {

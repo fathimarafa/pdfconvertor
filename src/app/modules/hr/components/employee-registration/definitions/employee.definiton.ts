@@ -1,5 +1,5 @@
-export interface Employee {
-    employeeId: number;
+export interface IEmployee {
+    id: number;
     employeeCategoryId: number;
     employeeDesignationId: number;
     employeeLabourGroupId: number;
@@ -19,6 +19,28 @@ export interface Employee {
     labourHead: string;
     status: string;
     emailId: string;
-    employeeTypeId: string;
+    employeeCode: string;
     overtime: number;
+}
+
+export interface IEmployeeCategory {
+    employeeCategoryId: number,
+    employeeCategoryName: string
+}
+
+export interface IEmployeeDesignation {
+    id: number,
+    employeeDesignationName: string,
+    description: string,
+    departmentId: number,
+    employeeCategoryId: number,
+    companyId: number,
+    branchId: number,
+    marketing: number,
+    userId: number
+}
+
+export interface IDropdown {
+    label: string,
+    value: number
 }

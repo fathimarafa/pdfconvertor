@@ -7,7 +7,11 @@ import { EmployeeRegistrationMetadata } from './employee-registration.configurat
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { IEmployee } from './definitions/employee.definiton';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+<<<<<<< HEAD
+import { AuthenticationService } from "../../../../services/auth-service/authentication.service";
+=======
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+>>>>>>> 3c2074fd4aa77d3d85b4b4e4901828bd2d29dff8
 
 @Component({
   selector: 'app-employee-registration',
@@ -43,19 +47,29 @@ export class EmployeeRegistrationComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<IEmployee[]>(this.serviceUrl)
+<<<<<<< HEAD
+    const companyId = this.authService.loggedInUser.companyId, branchId = this.authService.loggedInUser.branchId;
+    this.dataHandler.get<IEmployee[]>(`${this.module.serviceEndPoint}/${companyId}/${branchId}`)
       .subscribe((res: IEmployee[]) => {
+=======
+    this.dataHandler.get<Employee[]>(this.serviceUrl)
+      .subscribe((res: Employee[]) => {
+>>>>>>> 3c2074fd4aa77d3d85b4b4e4901828bd2d29dff8
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
 
+<<<<<<< HEAD
+  openDialog(rowToEdit?: IEmployee) {
+=======
   get serviceUrl() {
     const user = this.authService.loggedInUser;
     return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
-  openDialog(rowToEdit?: IEmployee) {
+  openDialog(rowToEdit?: Employee) {
+>>>>>>> 3c2074fd4aa77d3d85b4b4e4901828bd2d29dff8
     this.dialogEventHandler.openDialog(
       EmployeeRegistrationEditComponent,
       this.dataSource,

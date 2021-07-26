@@ -35,6 +35,10 @@ export class AttendanceEntryComponent implements OnInit {
       return [];
     }
   }
+  
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
 
   ngOnInit() {
     this.fetchData();
@@ -59,8 +63,8 @@ export class AttendanceEntryComponent implements OnInit {
 
   openDeleteDialog(rowToDelete: AttendanceEntry): void {
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.attendanceId}`,
-      deleteUid: rowToDelete.attendanceId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.Id}`,
+      deleteUid: rowToDelete.Id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -73,7 +77,7 @@ export class AttendanceEntryComponent implements OnInit {
   private affectedRowIndex(affectedRow?: AttendanceEntry) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: AttendanceEntry) => row.attendanceId === affectedRow.attendanceId);
+      indexToUpdate = this.dataSource.data.findIndex((row: AttendanceEntry) => row.Id === affectedRow.Id);
     }
     return indexToUpdate;
   }

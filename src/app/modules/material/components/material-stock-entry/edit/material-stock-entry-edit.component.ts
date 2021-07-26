@@ -21,7 +21,7 @@ import { MaterialRegistrationMetadata } from '../../material-registration/materi
 import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
 import { BasicWorkCategory } from 'src/app/modules/basic/components/work-category/definitions/basic-work-category.definition';
-import { Employee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
+import { IEmployee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
 import { EmployeeRegistrationMetadata } from 'src/app/modules/hr/components/employee-registration/employee-registration.configuration';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 
@@ -337,10 +337,10 @@ export class MaterialStockEntryEditComponent implements OnInit {
   }
 
   fetchSitemanager() {
-    this.dataHandler.get<Employee[]>(this.sitemanagerServiceUrl)
-      .subscribe((res: Employee[]) => {
+    this.dataHandler.get<IEmployee[]>(this.sitemanagerServiceUrl)
+      .subscribe((res: IEmployee[]) => {
         if (res) {
-          FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e: Employee) => (
+          FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e: IEmployee) => (
             {
               label: e.fullName,
               value: e['id']

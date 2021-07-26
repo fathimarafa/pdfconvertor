@@ -10,7 +10,6 @@ import { LeaveSettingComponent } from './components/leave-setting/leave-setting.
 import { SalaryHeadCreationComponent } from './components/salary-head-creation/salary-head-creation.component';
 import { WorkingHoursSettingComponent } from './components/working-hours-setting/working-hours-setting.component';
 
-
 export const HRmoduleRoutes = [
     { path: 'employeedesignation', component: EmployeeDesignationRegistrationComponent },
     { path: 'workinghourssetting', component: WorkingHoursSettingComponent },
@@ -20,5 +19,7 @@ export const HRmoduleRoutes = [
     { path: 'holidaySetting', component: HolidaySettingComponent },
     { path: 'salaryHeadCreation', component: SalaryHeadCreationComponent },
     { path: 'leaveSetting', component: LeaveSettingComponent },
-    { path: 'department', component: DepartmentComponent }
+    { path: 'department', component: DepartmentComponent },
+    { path: 'addlabourtoproject', component: AddLabourToProjectComponent },
+    { path: 'attendanceentry', component: AttendanceEntryComponent }
 ]

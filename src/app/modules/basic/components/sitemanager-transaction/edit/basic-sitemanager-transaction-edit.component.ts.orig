@@ -12,8 +12,12 @@ import { FormfieldHandler } from '../handlers/form-field.handler';
 import { BasicDocumentType } from '../../document-type/definitions/basic-document-type.definition';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
 import { EmployeeRegistrationMetadata } from 'src/app/modules/hr/components/employee-registration/employee-registration.configuration';
+<<<<<<< HEAD
 import { IEmployee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
+=======
+import { Employee } from 'src/app/modules/hr/components/employee-registration/definitions/employee.definiton';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+>>>>>>> 3c2074fd4aa77d3d85b4b4e4901828bd2d29dff8
 
 @Component({
   selector: 'app-basic-sitemanager-transaction-edit',
@@ -94,8 +98,14 @@ export class BasicSitemanagerTransactionEditComponent implements OnInit {
   }
 
   fetchSitemanager() {
-    this.dataHandler.get<IEmployee[]>(this.sitemanagerServiceUrl)
+<<<<<<< HEAD
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    this.dataHandler.get<IEmployee[]>(`${EmployeeRegistrationMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
       .subscribe((res: IEmployee[]) => {
+=======
+    this.dataHandler.get<Employee[]>(this.sitemanagerServiceUrl)
+      .subscribe((res: Employee[]) => {
+>>>>>>> 3c2074fd4aa77d3d85b4b4e4901828bd2d29dff8
         if (res) {
           FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e: IEmployee) => (
             {
