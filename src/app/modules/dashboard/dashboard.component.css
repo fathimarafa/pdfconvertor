@@ -1,0 +1,12 @@
+
+
+mat-expansion-panel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .modified-mc-content {
+    overflow-y: scroll;
+
+  }
+

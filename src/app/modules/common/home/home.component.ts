@@ -6,15 +6,11 @@ import { MenuSearchShortcutComponent } from '../menu-search-shortcut/menu-search
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-
   keydownCallback;
-  constructor(
-    private router: Router,
-    private dialog: MatDialog
-  ) { }
+  constructor(private router: Router, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.listenMenuSearchEvent();
@@ -30,7 +26,7 @@ export class HomeComponent implements OnInit {
         event.preventDefault();
         this.dialog.open(MenuSearchShortcutComponent);
       }
-    }
+    };
     document.addEventListener('keydown', this.keydownCallback, false);
   }
 
@@ -38,4 +34,7 @@ export class HomeComponent implements OnInit {
     document.removeEventListener('keydown', this.keydownCallback);
   }
 
+  onClickBrandLogo(): void {
+    this.router.navigateByUrl('/home/dashboard');
+  }
 }

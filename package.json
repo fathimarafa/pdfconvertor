@@ -24,6 +24,8 @@
     "@ngx-formly/core": "^5.0.0",
     "@ngx-formly/material": "^5.0.0",
     "@ngx-formly/schematics": "^5.9.3",
+    "angular-calendar": "^0.28.26",
+    "date-fns": "^2.16.1",
     "pdfmake": "^0.1.71",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

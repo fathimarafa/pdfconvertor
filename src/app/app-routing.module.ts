@@ -7,6 +7,7 @@ import { MaterialModuleRoutes } from './modules/material/material.route';
 import { BasicModuleRoutes } from './modules/basic/basic.route';
 import { CRMmoduleRoutes } from './modules/crm/crm.route';
 import { PrebudgetModuleRoutes } from './modules/prebudget/prebudget.route';
+import { DashboardRoutes } from './modules/dashboard/dashboard.route';
 import { PaymentReceiptModuleRoutes } from './modules/payment-receipt/payment-receipt.route';
 
 const routes: Routes = [
@@ -22,14 +23,15 @@ const routes: Routes = [
       ...MaterialModuleRoutes,
       ...HRmoduleRoutes,
       ...PrebudgetModuleRoutes,
-      ...PaymentReceiptModuleRoutes
-    ]
+      ...DashboardRoutes,
+      ...PaymentReceiptModuleRoutes,
+    ],
   },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

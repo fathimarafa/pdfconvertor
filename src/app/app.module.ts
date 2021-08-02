@@ -9,7 +9,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 import { HttpClientModule } from '@angular/common/http';
 import { ServerCommunicationService } from './services/server-communication/server.communication.service';
-import { MatFormFieldDefaultOptions, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import {
+  MatFormFieldDefaultOptions,
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+} from '@angular/material/form-field';
 import { SidebarComponent } from './modules/common/sidebar/sidebar.component';
 import { ConfirmModalComponent } from './modules/common/confirm-modal/confirm-modal.component';
 import { CustomValidationMessages } from './handlers/form-validation-handler/validation.handler';
@@ -36,9 +39,11 @@ import { FormApprovalDialogComponent } from './modules/common/form-approval-dial
 import { MenuSearchShortcutComponent } from './modules/common/menu-search-shortcut/menu-search-shortcut.component';
 import { PaymentReceiptModuleComponents } from './modules/payment-receipt/payment-receipt.component';
 import { EmployeeService } from './services/employee-service/employee.service';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 const appearance: MatFormFieldDefaultOptions = {
-  appearance: 'outline'
+  appearance: 'outline',
 };
 
 @NgModule({
@@ -59,7 +64,7 @@ const appearance: MatFormFieldDefaultOptions = {
     ...MaterialModuleComponents,
     ...BasicModuleComponents,
     ...PrebudgetModuleComponents,
-    ...PaymentReceiptModuleComponents
+    ...PaymentReceiptModuleComponents,
   ],
   imports: [
     BrowserModule,
@@ -72,19 +77,23 @@ const appearance: MatFormFieldDefaultOptions = {
     FormlyMaterialModule,
     MaterialModule,
     FormlyMatDatepickerModule,
-    FormsModule
+    FormsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
   ],
   providers: [
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: appearance
+      useValue: appearance,
     },
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
       useValue: {
         duration: 2500,
-        panelClass: ['snackbar-default']
-      }
+        panelClass: ['snackbar-default'],
+      },
     },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     ServerCommunicationService,
@@ -92,8 +101,8 @@ const appearance: MatFormFieldDefaultOptions = {
     DataHandlerService,
     DialogEventHandlerService,
     AuthenticationService,
-    EmployeeService
+    EmployeeService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,21 +1,26 @@
 <mat-toolbar class="app-toolbar">
-    <div class="left">
-        <button mat-icon-button aria-label="menu icon" (click)="sidenav.toggle()">
-            <mat-icon class="btn-toggle md-18">menu</mat-icon>
-        </button>
-        <img class="logo" src="../../../../assets/dconstruct.svg" alt="">
-    </div>
-    <div>
-        <button (click)="onLogoutBtnClick()" mat-button class="btn-logout">Logout <mat-icon>power_settings_new
-            </mat-icon>
-        </button>
-    </div>
+  <div class="left">
+    <button mat-icon-button aria-label="menu icon" (click)="sidenav.toggle()">
+      <mat-icon class="btn-toggle md-18">menu</mat-icon>
+    </button>
+    <img
+      (click)="onClickBrandLogo()"
+      class="logo"
+      src="../../../../assets/dconstruct.svg"
+      alt=""
+    />
+  </div>
+  <div>
+    <button (click)="onLogoutBtnClick()" mat-button class="btn-logout">
+      Logout <mat-icon>power_settings_new </mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 <mat-sidenav-container>
-    <mat-sidenav mode="side" opened #sidenav>
-        <app-sidebar></app-sidebar>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
+  <mat-sidenav mode="side" opened #sidenav>
+    <app-sidebar></app-sidebar>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>

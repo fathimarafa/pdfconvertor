@@ -4,7 +4,7 @@ import { DepartmentComponent } from './components/department/department.componen
 import { EmployeeDesignationRegistrationComponent } from './components/employee-designation-registration/employee-designation-registration.component';
 import { EmployeeRegistrationComponent } from './components/employee-registration/employee-registration.component';
 import { ForemanWorkOrderComponent } from './components/foreman-work-order/foreman-work-order.component';
-// import { HolidaySettingComponent } from './components/holiday-setting/holiday-setting.component';
+import { HolidaySettingComponent } from './components/holiday-setting/holiday-setting.component';
 import { LabourWorkrateSettingComponent } from './components/labour-workrate-setting/labour-workrate-setting.component';
 import { LeaveSettingComponent } from './components/leave-setting/leave-setting.component';
 import { SalaryHeadCreationComponent } from './components/salary-head-creation/salary-head-creation.component';
@@ -18,6 +18,8 @@ import { LabourWorkrateSettingEditComponent } from './components/labour-workrate
 import { LeaveSettingEditComponent } from './components/leave-setting/edit/leave-setting-edit.component';
 import { SalaryHeadCreationEditComponent } from './components/salary-head-creation/edit/salary-head-creation-edit.component';
 import { WorkingHoursSettingEditComponent } from './components/working-hours-setting/edit/working-hours-setting-edit.component';
+import { LoanOrAdvancePaymentComponent } from './components/loan-or-advance-payment/loan-or-advance-payment.component';
+import { LoanOrAdvancePaymentEditComponent } from './components/loan-or-advance-payment/edit/loan-or-advance-payment-edit.component';
 import { ContractorPaymentComponent } from './components/contractor-payment/contractor-payment.component';
 import { ContractorPaymentEditComponent } from './components/contractor-payment/edit/contractor-payment-edit.component';
 import { ContractorWorkOrderComponent } from './components/contractor-work-order/contractor-work-order.component';
@@ -36,9 +38,6 @@ import { SubcontractorlabourgroupattendanceComponent } from './components/subcon
 import { SubcontractorlabourgroupattendanceEditComponent } from './components/subcontractor-labour-groupattendancesetting/edit/subcontractor-labour-groupattendancesetting-edit.component';
 import { SubcontractorlabourgroupComponent } from './components/subcontractor-labour-groupsetting/subcontractor-labour-groupsetting.component';
 import { SubcontractorlabourgroupEditComponent } from './components/subcontractor-labour-groupsetting/edit/subcontractor-labour-groupsetting-edit.component';
-
-
-
 import { SubcontractorbillPaymentComponent } from './components/subcontractorbillpayment/subcontractorbillpayment.component';
 import { SubcontractorbillpaymentEditComponent } from './components/subcontractorbillpayment/edit/subcontractorbillpayment-edit.component';
 import { SubcontractorattendanceApprovalComponent } from './components/subcontractor-labourgroupattendance-approval/subcontractor-labourgroupattendance-approval.component';
@@ -53,52 +52,55 @@ import { WorkOrderApprovalComponent } from './components/work-order-approval/wor
 import { AdditionalBillComponent } from './components/subcontractor-work-bill/edit/additional-bill/additional-bill.component';
 
 export const HRmoduleComponents = [
-    EmployeeDesignationRegistrationComponent,
-    EmployeeDesignationRegistrationEditComponent,
-    WorkingHoursSettingComponent,
-    WorkingHoursSettingEditComponent,
-    LabourWorkrateSettingComponent,
-    LabourWorkrateSettingEditComponent,
-    EmployeeRegistrationComponent,
-    EmployeeRegistrationEditComponent,
-    ForemanWorkOrderComponent,
-    ForemanWorkOrderEditComponent,
-    SalaryHeadCreationComponent,
-    SalaryHeadCreationEditComponent,
-    LeaveSettingComponent,
-    LeaveSettingEditComponent,
-    DepartmentComponent,
-    DepartmentEditComponent,
-    AttendanceEntryComponent,
-    AttendanceEntryEditComponent,
-    ContractorPaymentComponent,
-    ContractorPaymentEditComponent,
-    ContractorWorkOrderComponent,
-    ContractorWorkOrderEditComponent,
-    ForemanPaymentComponent,
-    ForemanPaymentEditComponent,
-    ForemanWorkBillComponent,
-    ForemanWorkBillEditComponent,
-    GroupLabourWagePaymentComponent,
-    GroupLabourWagePaymentEditComponent,
-    LabourWagePaymentComponent,
-    LabourWagePaymentEditComponent,
-    SubcontractorIndentComponent,
-    SubcontractorIndentEditComponent,
-    SubcontractorlabourgroupattendanceComponent,
-    SubcontractorlabourgroupattendanceEditComponent,
-    SubcontractorlabourgroupComponent,
-    SubcontractorlabourgroupEditComponent,
-    SubcontractorWorkBillComponent,
-    SubcontractorWorkBillEditComponent,
-    AdditionalBillComponent,
-    SubcontractorWorkOrderComponent,
-    SubcontractorWorkOrderEditComponent,
-    SelectIndentComponent,
-    SubcontractorbillPaymentComponent,
-    SubcontractorbillpaymentEditComponent,
-    SubcontractorattendanceApprovalComponent,
-    SubcontractorWorkBillApprovalComponent,
-    SubContractorIndentApprovalnewComponent,
-    WorkOrderApprovalComponent
-]
+  EmployeeDesignationRegistrationComponent,
+  EmployeeDesignationRegistrationEditComponent,
+  WorkingHoursSettingComponent,
+  WorkingHoursSettingEditComponent,
+  LabourWorkrateSettingComponent,
+  LabourWorkrateSettingEditComponent,
+  EmployeeRegistrationComponent,
+  EmployeeRegistrationEditComponent,
+  ForemanWorkOrderComponent,
+  ForemanWorkOrderEditComponent,
+  SalaryHeadCreationComponent,
+  SalaryHeadCreationEditComponent,
+  LeaveSettingComponent,
+  LeaveSettingEditComponent,
+  DepartmentComponent,
+  DepartmentEditComponent,
+  AttendanceEntryComponent,
+  AttendanceEntryEditComponent,
+  ContractorPaymentComponent,
+  ContractorPaymentEditComponent,
+  ContractorWorkOrderComponent,
+  ContractorWorkOrderEditComponent,
+  ForemanPaymentComponent,
+  ForemanPaymentEditComponent,
+  ForemanWorkBillComponent,
+  ForemanWorkBillEditComponent,
+  GroupLabourWagePaymentComponent,
+  GroupLabourWagePaymentEditComponent,
+  LabourWagePaymentComponent,
+  LabourWagePaymentEditComponent,
+  SubcontractorIndentComponent,
+  SubcontractorIndentEditComponent,
+  SubcontractorlabourgroupattendanceComponent,
+  SubcontractorlabourgroupattendanceEditComponent,
+  SubcontractorlabourgroupComponent,
+  SubcontractorlabourgroupEditComponent,
+  SubcontractorWorkBillComponent,
+  SubcontractorWorkBillEditComponent,
+  AdditionalBillComponent,
+  SubcontractorWorkOrderComponent,
+  SubcontractorWorkOrderEditComponent,
+  SelectIndentComponent,
+  SubcontractorbillPaymentComponent,
+  SubcontractorbillpaymentEditComponent,
+  SubcontractorattendanceApprovalComponent,
+  SubcontractorWorkBillApprovalComponent,
+  SubContractorIndentApprovalnewComponent,
+  WorkOrderApprovalComponent,
+  HolidaySettingComponent,
+  LoanOrAdvancePaymentComponent,
+  LoanOrAdvancePaymentEditComponent,
+];

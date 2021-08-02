@@ -47,6 +47,7 @@ import { FormLevelSettingComponent } from './components/form-level-setting/form-
 import { FormLevelSettingEditComponent } from './components/form-level-setting/edit/form-level-setting-edit.component';
 import { ModuleSettingsComponent } from './components/module-settings/module-settings.component';
 import { UserPrevilegeComponent } from './components/user-previlege/user-previlege.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 export const CRMmoduleComponents = [
     ApproveLevelComponent,
@@ -97,5 +98,6 @@ export const CRMmoduleComponents = [
     FormLevelSettingComponent,
     FormLevelSettingEditComponent,
     ModuleSettingsComponent,
-    UserPrevilegeComponent
+    UserPrevilegeComponent,
+    DashboardComponent
 ]

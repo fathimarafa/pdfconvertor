@@ -23,6 +23,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const materialModules = [
     MatSliderModule,
@@ -45,7 +47,9 @@ const materialModules = [
     MatNativeDateModule,
     MatSnackBarModule,
     MatRadioModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatExpansionModule,
+    MatGridListModule
 ]
 
 @NgModule({

@@ -1,0 +1,36 @@
+<h2 mat-dialog-title class="form-dialog header-color">
+  {{ isEdit ? "Edit" : "Add" }} Loan/Advance Payment
+</h2>
+<mat-dialog-content class="form-dialog mat-typography dialog-content">
+  <form id="form" [formGroup]="form">
+    <formly-form
+      [model]="model"
+      [fields]="fields"
+      [options]="options"
+      [form]="form"
+    ></formly-form>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="form-dialog" align="end">
+  <button form="form" (click)="onSaveBtnClick()" mat-button class="save">
+    Save
+  </button>
+  <button
+    *ngIf="!isEdit"
+    form="form"
+    (click)="onSaveBtnClick(true)"
+    mat-button
+    class="save"
+  >
+    Next Level
+  </button>
+  <button
+    mat-button
+    (click)="onCancelBtnClick()"
+    cdkFocusInitial
+    class="cancel"
+  >
+    Cancel
+  </button>
+</mat-dialog-actions>
