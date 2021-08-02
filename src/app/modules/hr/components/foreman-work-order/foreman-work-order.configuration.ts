@@ -1,28 +1,44 @@
 export const ForemanWorkOrderMetadata = {
     "moduleId": "foremanworkorder",
-    "moduleName": "Foreman WorkOrder",
-    "displayName": "Build/ HR / Foreman Work Order",
+    "moduleName": "ForemanWorkOrder",
+    "displayName": "HR / Foreman Work Order",
     "hasAddNew": true,
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "ForemanWorkorder",
+    "serviceEndPoint": "BuildExeHR/api/ForemanWorkOrder",
     "tableColumns": [
         {
-            "field": 'companyId',
-            "displayName": 'S.No'
+            "field": 'id',
+            "displayName": 'SNo'
         },
         {
-            "field": 'companyName',
-            "displayName": 'Name'
+            "field": 'projectId',
+            "displayName": 'Project Id'
         },
         {
-            "field": 'mobileNumber',
-            "displayName": 'Mobile'
+            "field": 'dateOrdered',
+            "displayName": 'Assigning Date'
         },
         {
-            "field": 'emailId',
-            "displayName": 'Email'
+            "field": 'foremanId',
+            "displayName": 'Foreman Name'
+        },
+        {
+            "field": 'userId',
+            "displayName": 'Work Order No'
+        },
+        {
+            "field": 'workTypeId',
+            "displayName": 'Work Type'
+        },
+        {
+            "field": 'description',
+            "displayName": 'Description'
+        },
+        {
+            "field": 'workStatus',
+            "displayName": 'Status'
         },
         {
             "field": 'action',
@@ -31,145 +47,168 @@ export const ForemanWorkOrderMetadata = {
     ],
     "formFields": [
         {
-            "type": "datepicker",
-            "key": "dateOrdered",
-            "templateOptions": {
-                "label": "Assigning Date",
-                "required": true
-            }
-        },
-        {
-            "key": "projectId",
-            "type": "select",
-            "templateOptions": {
-                "label": "Select Project",
-                "required": true,
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
+            "id": "row-1",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+              
+                {
+                    "className": "flex-1",
+                    "type": "datepicker",
+                    "key": "dateOrdered",
+                    "templateOptions": {
+                        "label": "Assigning Date",
+                        "required": true
                     }
-                ]
-            }
-        },
-        {
-            "key": "unitId",
-            "type": "select",
-            "templateOptions": {
-                "label": "Select Unit",
-                "required": true,
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "projectId",
+                    "templateOptions": {
+                        "label": "Project Id",
+                        "options": [],
+                        "required": true
                     }
-                ]
-            }
+                }
+            ]
         },
         {
-            "key": "foremanId",
-            "type": "select",
-            "templateOptions": {
-                "label": "Select Foreman Name",
-                "required": true,
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
+            "id": "row-2",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "blockId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Select block",
+                        "required": true,
+                        "options": []
                     }
-                ]
-            }
-        },
-        {
-            "type": "input",
-            "key": "workOrderNo",
-            "templateOptions": {
-                "label": "Work Order No.",
-                "required": true
-            }
-        },
-        {
-            "key": "workTypeId",
-            "type": "select",
-            "templateOptions": {
-                "label": "Select Work Type",
-                "required": true,
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
+                },
+                {
+                    "className": "flex-1",
+                    "key": "floorId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Select floor",
+                        "required": true,
+                        "options": []
                     }
-                ]
-            }
+                }
+            ]
         },
         {
-            "type": "textarea",
-            "key": "description",
-            "templateOptions": {
-                "label": "Description",
-                "required": true,
-                "rows": 10
-            }
+            "id": "row-3",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "unitId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Select unit",
+                        "required": true,
+                        "options": []
+                    },
+
+                }
+            ]
         },
         {
-            "key": "workStatus",
-            "type": "select",
-            "templateOptions": {
-                "label": "Select Status",
-                "required": true,
-                "options": [
-                    {
-                        "label": "type 1",
-                        "value": "type 1"
-                    },
-                    {
-                        "label": "type 2",
-                        "value": "type 2"
-                    },
-                    {
-                        "label": "type 3",
-                        "value": "type 3"
+            "id": "row-4",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "foremanId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Foreman Name",
+                        "required": true,
+                        "options": []
                     }
+
+                }
+            ]
+            
+        },
+        {
+            "id": "row-5",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "input",
+                    "key": "workName",
+                    "templateOptions": {
+                        "label": "Work Order No",
+                        "required": true
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "workTypeId",
+                    "templateOptions": {
+                        "label": "Work Type",
+                        "options": [],
+                        "required": true
+                    }
+                },
+               
+               
+            ]
+        },
+        {
+            "id": "row-6",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-2",
+                    "key": "description",
+                    "type": "textarea",
+                    "templateOptions": {
+                        "label": "Description",
+                        "required": true,
+                        "rows": 6
+                    }
+                }
                 ]
-            }
-        }
+            },
+            {
+                "id": "row-7",
+                "fieldGroupClassName": "display-flex",
+                "fieldGroup": [
+                    {
+                        "className": "flex-1",
+                        "type": "select",
+                        "key": "workStatus",
+                        "templateOptions": {
+                            "label": "Status",
+                            "options": [
+                                { "label": 'Pending', "value": 1 },
+                                    { "label": 'Tender Submitted', "value": 2 },
+                                    { "label": 'Tender Opened', "value": 3 },
+                                    { "label": 'Negotiated', "value": 4 },
+                                    { "label": 'Work Order', "value": 5 },
+                                    { "label": 'Active', "value": 6 },
+                                    { "label": 'Silent', "value": 7 },
+                                    { "label": 'Rejected', "value": 8 },
+                                    { "label": 'Completed', "value": 9 },
+                                    { "label": 'Enquiry', "value": 10 }
+                            ],
+                            "required": true
+                        }
+                    },
+                    ]
+                }
+        
     ],
-    "childForm": {
+    "foremanWorkOrderDetails": {
         "tableColumns": [
             {
-                "field": 'companyId',
+                "field": 'foremanWorkOrderDetailsId',
                 "displayName": 'SNo'
             },
             {
@@ -180,10 +219,12 @@ export const ForemanWorkOrderMetadata = {
                 "field": 'workRate',
                 "displayName": 'Work Rate'
             },
+            
             {
                 "field": 'otRate',
-                "displayName": 'OT Rate'
+                "displayName": 'OT Rate(Hrs)'
             },
+          
             {
                 "field": 'action',
                 "displayName": 'Action'
@@ -191,28 +232,17 @@ export const ForemanWorkOrderMetadata = {
         ],
         "formFields": [
             {
+                "id": "row-1",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
+                   
                     {
                         "className": "flex-1",
                         "type": "select",
                         "key": "workName",
                         "templateOptions": {
-                            "label": "Select work",
-                            "options": [
-                                {
-                                    "label": "type 1",
-                                    "value": "type 1"
-                                },
-                                {
-                                    "label": "type 2",
-                                    "value": "type 2"
-                                },
-                                {
-                                    "label": "type 3",
-                                    "value": "type 3"
-                                }
-                            ],
+                            "label": "Work Name",
+                            "options": [],
                             "required": true
                         }
                     },
@@ -222,7 +252,8 @@ export const ForemanWorkOrderMetadata = {
                         "key": "workRate",
                         "templateOptions": {
                             "label": "Wage",
-                            "required": true
+                            "required": true,
+                            
                         }
                     },
                     {
@@ -230,12 +261,16 @@ export const ForemanWorkOrderMetadata = {
                         "type": "input",
                         "key": "otRate",
                         "templateOptions": {
-                            "label": "OT Rate(Hrs)",
-                            "required": true
+                            "label": "OT Rate",
+                            "required": true,
+                            "type":"number"
                         }
-                    }
+                    
+                    },
                 ]
-            }
+            },
+           
         ]
     }
+
 }

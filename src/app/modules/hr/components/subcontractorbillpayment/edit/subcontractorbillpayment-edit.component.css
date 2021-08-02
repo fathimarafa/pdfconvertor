@@ -1,0 +1,48 @@
+.form-child {
+    max-height: 65vh;
+    overflow: auto;
+    min-height: 65vh;
+
+}
+
+.form-title {
+    color: #3182ce;
+    position: relative;
+    top: 11px;
+    display: inline-block;
+    background-color: #fff;
+    padding: 0 10px;
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+.form-container {
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+::ng-deep .cdk-overlay-pane {
+    max-width: 60vw!important;
+    width: 90vw;
+}
+
+.inner-table-container {
+    max-height: 30vh;
+    overflow: auto;
+    width: 100%;
+}
+
+.add-block {
+    float: right;
+    margin-bottom: 20px;
+}
+
+.add-stock-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+::ng-deep .mat-paginator-icon {
+    color: rgba(0, 0, 0, 0.54);
+}

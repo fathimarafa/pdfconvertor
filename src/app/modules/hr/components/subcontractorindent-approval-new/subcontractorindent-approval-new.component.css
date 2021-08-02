@@ -1,0 +1,17 @@
+.btn-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+tr {
+    cursor: pointer;
+}
+
+th:first-child {
+    width: 10%;
+}
+
+.margin-right-30 {
+    margin-right: 30px;
+}

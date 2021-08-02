@@ -4,15 +4,9 @@ import { ForemanWorkOrderComponent } from './foreman-work-order.component';
 import { ForemanWorkOrderEditComponent } from './edit/foreman-work-order-edit.component';
 
 @NgModule({
-  declarations: [
-    ForemanWorkOrderComponent,
-    ForemanWorkOrderEditComponent
-  ],
+  declarations: [ForemanWorkOrderComponent, ForemanWorkOrderEditComponent],
   imports: [
     CommonModule
-  ],
-  entryComponents: [
-    ForemanWorkOrderEditComponent
   ]
 })
 export class ForemanWorkOrderModule { }

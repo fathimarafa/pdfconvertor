@@ -1,11 +1,24 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ForemanWorkOrderMetadata } from '../foreman-work-order.configuration';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
-import { ForemanWorkOrder } from '../definitions/foreman-work-order.definition';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { ForemanWorkOrder, ForemanWorkOrderDetails } from '../definitions/foreman-work-order.definition';
+import { ForemanWorkOrderMetadata } from '../foreman-work-order.configuration';
+import { MatTableDataSource } from '@angular/material/table';
+import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
+import { FormfieldHandler, ModalFormFields } from '../handlers/form-field.handler';
+import { MatPaginator } from '@angular/material/paginator';
+import { EmployeeRegistrationMetadata } from '../../employee-registration/employee-registration.configuration';
+import { IEmployee } from '../../employee-registration/definitions/employee.definiton';
+import { LabourWorkRateSettingMetadata } from '../../labour-workrate-setting/labour-workrate-setting.configuration';
+import { LabourWorkRate } from '../../labour-workrate-setting/definitions/labour-workrate-setting.definition';
+import { PrebudgetWorkType } from 'src/app/modules/prebudget/components/work-type/definitions/work-type.definition';
+import { PrebudgetWorkTypeMetadata } from 'src/app/modules/prebudget/components/work-type/work-type.configuration';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EmployeeService } from 'src/app/services/employee-service/employee.service';
 
 @Component({
   selector: 'app-foreman-work-order-edit',
@@ -14,55 +27,92 @@ import { Observable } from 'rxjs';
 })
 export class ForemanWorkOrderEditComponent implements OnInit {
 
-  // form = new FormGroup({});
-  // model: ForemanWorkOrder;
-  // options: FormlyFormOptions = {};
-  // fields: FormlyFieldConfig[];
+  modalForms;
   isEdit: boolean;
-
-  modalForm = {
-    main: {
-      form: new FormGroup({}),
-      model: {} as ForemanWorkOrder,
-      options: {},
-      fields: ForemanWorkOrderMetadata.formFields
-    },
-    child: {
-      form: new FormGroup({}),
-      model: {},
-      options: {},
-      fields: ForemanWorkOrderMetadata.childForm.formFields
-    }
-  }
-
   tableColumns;
   dataSource;
+  subscribeProjectDivison: Subscription;
+  enableStockEdit: boolean;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
 
   constructor(
     private dialogRef: MatDialogRef<ForemanWorkOrderEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: ForemanWorkOrder,
-    private dataHandler: DataHandlerService
+    private dataHandler: DataHandlerService,
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
+    private authService: AuthenticationService,
+    private snackBar: MatSnackBar,
+    private employeeService: EmployeeService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
-    // this.fields = ForemanWorkOrderMetadata.childForm.formFields;
-    this.modalForm.main.model = this.editData;
+    this.defineModalForms();
+    this.loadDropdowns();
   }
 
+  bindProjectDivisionFields() {
+    const projectControllerFields: ProjectDivisionFields<ForemanWorkOrder> = {
+      projectDropdown: FormfieldHandler.projectDropdown,
+      blockDropdown: FormfieldHandler.blockDropdown,
+      floorDropdown: FormfieldHandler.floorDropdown,
+      unitDropdown: FormfieldHandler.unitDropdown,
+      model: this.modalForms.issued.model,
+      isEdit: this.isEdit
+    };
+    this.projectDivisionFieldsHandler.initialize(projectControllerFields);
+  }
+
+
   ngOnInit(): void {
-    this.tableColumns = ForemanWorkOrderMetadata.childForm.tableColumns;
+    this.tableColumns = ForemanWorkOrderMetadata.foremanWorkOrderDetails.tableColumns;
+  }
+
+  defineModalForms() {
+    this.modalForms = {
+      issued: {
+        form: new FormGroup({}),
+        model: this.editData,
+        options: {},
+        fields: ForemanWorkOrderMetadata.formFields
+      },
+      usage: {
+        form: new FormGroup({}),
+        model: {},
+        options: {},
+        fields: ForemanWorkOrderMetadata.foremanWorkOrderDetails.formFields
+      }
+    }
+    const formFields: ModalFormFields = {
+      issued: this.modalForms.issued.fields,
+      usage: this.modalForms.usage.fields
+    }
+    FormfieldHandler.initialize(formFields);
+    this.loadDropdowns();
+    this.dataSource = new MatTableDataSource(this.editData.foremanWorkOrderDetails || []);
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  loadDropdowns() {
+    this.fetchWorkCategorySelectOptions();
+    this.fetchWorkNameSelectOptions();
+    this.fetchForemanSelectOptions();
+    this.bindProjectDivisionFields();
   }
 
   onSaveBtnClick() {
-    if (this.modalForm.main.form.valid) {
+    if (this.modalForms.issued.form.valid) {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.modalForm.main.model
+          data: this.modalForms.issued.model
         }
         this.dialogRef.close(closeEvent);
-      })
+      });
     }
   }
 
@@ -71,11 +121,14 @@ export class ForemanWorkOrderEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<ForemanWorkOrder> {
+    let payload = {
+      ...this.modalForms.issued.model,
+      materialUsageDetails: this.dataSource.data,
+    }
     if (this.isEdit) {
-      const endPoint = `${ForemanWorkOrderMetadata.serviceEndPoint}/${this.modalForm.main.model.foremanWorkorderId}`;
-      return this.dataHandler.put<ForemanWorkOrder>(endPoint, this.modalForm.main.model);
+      return this.dataHandler.put<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, [payload]);
     } else {
-      return this.dataHandler.post<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, this.modalForm.main.model);
+      return this.dataHandler.post<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, [payload]);
     }
   }
 
@@ -85,6 +138,103 @@ export class ForemanWorkOrderEditComponent implements OnInit {
     } else {
       return [];
     }
+  }
+
+  private fetchForemanSelectOptions() {
+    this.employeeService.getForeman().subscribe((res) => {
+      if (res) {
+        FormfieldHandler.foremanDropdown.templateOptions.options = res.map((e) => (
+          {
+            label: e.fullName,
+            value: e.id
+          }
+        ));
+      }
+    });
+  }
+
+  fetchWorkCategorySelectOptions() {
+    this.dataHandler.get<PrebudgetWorkType[]>(this.workcategorySerivceUrl)
+      .subscribe((res: PrebudgetWorkType[]) => {
+        if (res) {
+          FormfieldHandler.categoryDropdown.templateOptions.options = res.map((e: PrebudgetWorkType) => (
+            {
+              label: e.workTypeName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  private get workcategorySerivceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${PrebudgetWorkTypeMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  onAddStockBtnClick() {
+    if (this.isValid) {
+      const data: any = Object.assign({}, this.modalForms.usage.model);
+      this.dataSource.data.push(data);
+      this.dataSource._updateChangeSubscription();
+      this.modalForms.usage.form.reset();
+    }
+  }
+
+  get isValid() {
+    if (!this.modalForms.usage.model['workName']) {
+      this.snackBar.open('Warning : Please select WorkName', null, { panelClass: 'snackbar-error-message' });
+      return false;
+    }
+    if (!this.modalForms.usage.model['workRate']) {
+      this.snackBar.open('Warning : Please input Workrate', null, { panelClass: 'snackbar-error-message' });
+      return false;
+    }
+    return true;
+  }
+
+
+  fetchWorkNameSelectOptions() {
+    this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl)
+      .subscribe((res: LabourWorkRate[]) => {
+        if (res) {
+          FormfieldHandler.nameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+            {
+              label: e.labourWorkName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  private get labourWorkrateSerivceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+  removeStock(rowIndex: number) {
+    this.dataSource.data.splice(rowIndex, 1)
+    this.dataSource._updateChangeSubscription();
+  }
+
+  editStock(rowToEdit: ForemanWorkOrderDetails) {
+    this.enableStockEdit = true;
+    this.modalForms.usage.model = rowToEdit;
+  }
+
+  onUpdateStockBtnClick() {
+
+  }
+
+  onCancelStockUpdateBtnClick() {
+
+  }
+
+  ngOnDestroy() {
+    this.modalForms.issued.form.reset();
+    this.modalForms.usage.form.reset();
+    this.projectDivisionFieldsHandler.clear();
   }
 
 }

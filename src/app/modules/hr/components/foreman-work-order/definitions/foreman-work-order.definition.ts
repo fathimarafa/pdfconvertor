@@ -1,25 +1,29 @@
 export interface ForemanWorkOrder {
-    foremanWorkorderId: number;
-    workOrderNo: number;
+    id: number;
+    workName: String;
     dateOrdered: Date;
+    foremanId: number;
     workTypeId: number;
-    description: String;
     projectId: number;
     unitId: number;
     blockId: number;
     floorId: number;
+    description: String;
     companyId: number;
     branchId: number;
-    foremanId: number;
     workStatus: number;
-    paymentStatus: number;
-    financailYearId: number;
-    labourWorkRateId: number;
-    work: ForemanWork[]
-}
+    userId: number;
 
-export interface ForemanWork {
-    workName: String;
-    workRate: number;
-    otRate: number
+    foremanWorkOrderDetails: ForemanWorkOrderDetails[]
 }
+export interface   ForemanWorkOrderDetails{
+                foremanWorkOrderDetailsId: number;
+                foremanWorkOrderId: number;
+                    labourWorkId: number;
+                    workRate: number;
+                    otRate: number;
+                }
+               
+
+
+

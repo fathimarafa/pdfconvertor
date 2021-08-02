@@ -1,13 +1,29 @@
 import { AddLabourToProjectComponent } from './components/add-labour-to-project/add-labour-to-project.component';
 import { AttendanceEntryComponent } from './components/attendance-entry/attendance-entry.component';
+import { ContractorPaymentComponent } from './components/contractor-payment/contractor-payment.component';
+import { ContractorWorkOrderComponent } from './components/contractor-work-order/contractor-work-order.component';
 import { DepartmentComponent } from './components/department/department.component';
 import { EmployeeDesignationRegistrationComponent } from './components/employee-designation-registration/employee-designation-registration.component';
 import { EmployeeRegistrationComponent } from './components/employee-registration/employee-registration.component';
+import { ForemanPaymentComponent } from './components/foreman-payment/foreman-payment.component';
+import { ForemanWorkBillComponent } from './components/foreman-work-bill/foreman-work-bill.component';
 import { ForemanWorkOrderComponent } from './components/foreman-work-order/foreman-work-order.component';
+import { GroupLabourWagePaymentComponent } from './components/group-labour-wage-payment/group-labour-wage-payment.component';
 import { HolidaySettingComponent } from './components/holiday-setting/holiday-setting.component';
+import { LabourWagePaymentComponent } from './components/labour-wage-payment/labour-wage-payment.component';
 import { LabourWorkrateSettingComponent } from './components/labour-workrate-setting/labour-workrate-setting.component';
 import { LeaveSettingComponent } from './components/leave-setting/leave-setting.component';
 import { SalaryHeadCreationComponent } from './components/salary-head-creation/salary-head-creation.component';
+import { SubcontractorIndentComponent } from './components/subcontractor-indent/subcontractor-indent.component';
+import { SubcontractorlabourgroupattendanceComponent } from './components/subcontractor-labour-groupattendancesetting/subcontractor-labour-groupattendancesetting.component';
+import { SubcontractorlabourgroupComponent } from './components/subcontractor-labour-groupsetting/subcontractor-labour-groupsetting.component';
+import { SubcontractorattendanceApprovalComponent } from './components/subcontractor-labourgroupattendance-approval/subcontractor-labourgroupattendance-approval.component';
+import { SubcontractorWorkBillApprovalComponent } from './components/subcontractor-work-bill-approval/subcontractor-work-bill-approval.component';
+import { SubcontractorWorkBillComponent } from './components/subcontractor-work-bill/subcontractor-work-bill.component';
+import { SubcontractorWorkOrderComponent } from './components/subcontractor-work-order/subcontractor-work-order.component';
+import { SubcontractorbillPaymentComponent } from './components/subcontractorbillpayment/subcontractorbillpayment.component';
+import { SubContractorIndentApprovalnewComponent } from './components/subcontractorindent-approval-new/subcontractorindent-approval-new.component';
+import { WorkOrderApprovalComponent } from './components/work-order-approval/work-order-approval.component';
 import { WorkingHoursSettingComponent } from './components/working-hours-setting/working-hours-setting.component';
 
 export const HRmoduleRoutes = [
@@ -21,5 +37,22 @@ export const HRmoduleRoutes = [
     { path: 'leaveSetting', component: LeaveSettingComponent },
     { path: 'department', component: DepartmentComponent },
     { path: 'addlabourtoproject', component: AddLabourToProjectComponent },
-    { path: 'attendanceentry', component: AttendanceEntryComponent }
+    { path: 'attendanceentry', component: AttendanceEntryComponent },
+    { path: 'contractorpayment', component: ContractorPaymentComponent },
+    { path: 'contractorworkorder', component: ContractorWorkOrderComponent },
+    { path: 'foremanpayment', component: ForemanPaymentComponent },
+    { path: 'foremanworkbill', component: ForemanWorkBillComponent },
+    { path: 'grouplabourwagepayment', component: GroupLabourWagePaymentComponent },
+    { path: 'labourwagepayment', component: LabourWagePaymentComponent },
+    { path: 'subcontractorindent', component: SubcontractorIndentComponent },
+    { path: 'subcontractorgroupattendance', component: SubcontractorlabourgroupattendanceComponent },
+    { path: 'subcontractorlabourgroup', component: SubcontractorlabourgroupComponent },
+    { path: 'subcontractorworkorder', component: SubcontractorWorkOrderComponent },
+    { path: 'subcontractorworkbill', component: SubcontractorWorkBillComponent },
+    { path: 'subcontractorlabourgroupsetting', component: SubcontractorlabourgroupComponent },
+    { path: 'subcontractorbillpayment', component: SubcontractorbillPaymentComponent },
+    { path: 'subcontractorlabourgroupattendanceapproval', component: SubcontractorattendanceApprovalComponent },
+    { path: 'subcontractorindentapprovalnew', component: SubContractorIndentApprovalnewComponent },
+    { path: 'suncontractorworkorderapproval', component: WorkOrderApprovalComponent },
+    { path: 'subcontractorworkbillapproval', component: SubcontractorWorkBillApprovalComponent }
 ]

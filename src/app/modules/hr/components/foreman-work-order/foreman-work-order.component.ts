@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmModalComponent } from '../../../common/confirm-modal/confirm-modal.component';
-import { ForemanWorkOrderEditComponent } from './edit/foreman-work-order-edit.component';
-import { ForemanWorkOrderMetadata } from './foreman-work-order.configuration';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
-import { ForemanWorkOrder } from './definitions/foreman-work-order.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
+import { ForemanWorkOrder } from './definitions//foreman-work-order.definition';
+import { ForemanWorkOrderEditComponent } from './edit//foreman-work-order-edit.component';
+import { ForemanWorkOrderMetadata } from './foreman-work-order.configuration';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-foreman-work-order',
@@ -22,7 +23,8 @@ export class ForemanWorkOrderComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private pdfExportService: PdfExportService
   ) {
     this.module = ForemanWorkOrderMetadata;
     this.tableColumns = this.module.tableColumns
@@ -41,7 +43,8 @@ export class ForemanWorkOrderComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get<ForemanWorkOrder[]>(this.module.serviceEndPoint)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    this.dataHandler.get<ForemanWorkOrder[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
       .subscribe((res: ForemanWorkOrder[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -58,9 +61,10 @@ export class ForemanWorkOrderComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: ForemanWorkOrder): void {
+    const dummyUserId = 1;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.companyId}`,
-      deleteUid: rowToDelete.companyId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${dummyUserId}`,
+      deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -73,9 +77,22 @@ export class ForemanWorkOrderComponent implements OnInit {
   private affectedRowIndex(affectedRow?: ForemanWorkOrder) {
     let indexToUpdate;
     if (affectedRow) {
-      indexToUpdate = this.dataSource.data.findIndex((row: ForemanWorkOrder) => row.companyId === affectedRow.companyId);
+      indexToUpdate = this.dataSource.data.findIndex((row: ForemanWorkOrder) => row.id === affectedRow.id);
     }
     return indexToUpdate;
+  }
+
+  doFilter(value: string) {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
+  }
+
+  onDownloadBtnClick() {
+    const data: PdfExportSettings = {
+      title: 'Foreman Work Order',
+      tableColumns: this.tableColumns,
+      tableRows: this.dataSource.data
+    }
+    this.pdfExportService.download(data);
   }
 
 }
