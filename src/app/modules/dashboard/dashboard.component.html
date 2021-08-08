@@ -1,175 +1,178 @@
 <div class="module-default">
-  <mat-card class="mat-flex-card">
-    <mat-card-header>
-      <mat-card-title>Dashboard</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-grid-list cols="2" rowHeight="3:1">
-        <mat-grid-tile>
-          <mat-expansion-panel class="modified-mc-content">
-            <mat-expansion-panel-header>
-              <mat-panel-title> Pending Approvals </mat-panel-title>
-              <mat-panel-description>
-                {{ pendingApprovalsLength }} approval(s) pending
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <table
-              class="table-compnay"
-              mat-table
-              [dataSource]="pendingApprovals"
+  <header class="dashboard-header">
+    <span>Dashboard</span>
+  </header>
+  <div class="dashboard-content">
+    <div class="card">
+      <div class="card-header">
+        <div class="main">
+          <mat-icon>check_circle_outline</mat-icon>
+          <span>Pending Approvals</span>
+        </div> 
+        <div class="sub">{{ pendingApprovalsLength }} approval(s) pending</div>
+      </div>
+      <div class="card-body">
+          <table 
+          class="table-compnay"
+          mat-table
+          [dataSource]="pendingApprovals"
+          >
+            <ng-container
+              [matColumnDef]="column.field"
+              *ngFor="let column of tableColumns; let firstColumn = first"
             >
-              <ng-container
-                [matColumnDef]="column.field"
-                *ngFor="let column of tableColumns; let firstColumn = first"
-              >
-                <th mat-header-cell *matHeaderCellDef>
-                  {{ column.displayName }}
-                </th>
-                <td mat-cell *matCellDef="let element; let i = index">
-                  <ng-container>
-                    <ng-container *ngIf="column.field !== 'action'">
-                      {{ element[column.field] }}
-                    </ng-container>
-                    <ng-container *ngIf="column.field === 'action'">
-                      <mat-icon (click)="onclickApprove(element)"
-                        >remove_red_eye</mat-icon
-                      >
-                    </ng-container>
-                  </ng-container>
-                </td>
+            <th mat-header-cell *matHeaderCellDef>
+              {{ column.displayName }}
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <ng-container>
+                <ng-container *ngIf="column.field !== 'action'">
+                  {{ element[column.field] }}
+                </ng-container>
+                <ng-container *ngIf="column.field === 'action'">
+                  <mat-icon (click)="onclickApprove(element)" 
+                    >remove_red_eye</mat-icon
+                  >
+                </ng-container>
               </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="dataColumns; sticky: true"
-              ></tr>
-              <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
-            </table>
-          </mat-expansion-panel>
-        </mat-grid-tile>
+            </td>
+            </ng-container>
+            <tr
+              mat-header-row
+              *matHeaderRowDef="dataColumns; sticky: true"
+            ></tr>
+            <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
+          </table>
+      </div>
+      <div class="card-footer"></div>
+    </div>
 
-        <mat-grid-tile>
-          <mat-expansion-panel class="modified-mc-content">
-            <mat-expansion-panel-header>
-              <mat-panel-title> Reminders </mat-panel-title>
-              <mat-panel-description>
-                {{ pendingRemindersLength }} reminder(s) pending
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <table
-              class="table-compnay"
-              mat-table
-              [dataSource]="pendingReminders"
-            >
-              <ng-container
-                [matColumnDef]="column.field"
-                *ngFor="let column of tableColumns; let firstColumn = first"
-              >
-                <th mat-header-cell *matHeaderCellDef>
-                  {{ column.displayName }}
-                </th>
-                <td mat-cell *matCellDef="let element; let i = index">
-                  <ng-container>
-                    <ng-container *ngIf="column.field !== 'action'">
-                      {{ element[column.field] }}
-                    </ng-container>
-                    <ng-container *ngIf="column.field === 'action'">
-                      <mat-icon (click)="onclickApprove(element)"
-                        >remove_red_eye</mat-icon
-                      >
-                    </ng-container>
-                  </ng-container>
-                </td>
+    <div class="card">
+      <div class="card-header">
+        <div class="main">
+          <mat-icon>notifications_none</mat-icon>
+          <span>Reminders</span>
+        </div>
+        <div class="sub">{{ pendingRemindersLength }} reminder(s) pending</div>
+      </div>
+      <div class="card-body">
+        <table
+        class="table-compnay"
+        mat-table
+        [dataSource]="pendingReminders"
+      >
+        <ng-container
+          [matColumnDef]="column.field"
+          *ngFor="let column of tableColumns; let firstColumn = first"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            {{ column.displayName }}
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <ng-container>
+              <ng-container *ngIf="column.field !== 'action'">
+                {{ element[column.field] }}
               </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="dataColumns; sticky: true"
-              ></tr>
-              <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
-            </table>
-          </mat-expansion-panel>
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-          <mat-expansion-panel class="modified-mc-content">
-            <mat-expansion-panel-header>
-              <mat-panel-title> Tasks Pending </mat-panel-title>
-              <mat-panel-description>
-                {{ taskPendingLength }} task(s) pending
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <table class="table-compnay" mat-table [dataSource]="taskPending">
-              <ng-container
-                [matColumnDef]="column.field"
-                *ngFor="let column of tableColumns; let firstColumn = first"
-              >
-                <th mat-header-cell *matHeaderCellDef>
-                  {{ column.displayName }}
-                </th>
-                <td mat-cell *matCellDef="let element; let i = index">
-                  <ng-container>
-                    <ng-container *ngIf="column.field !== 'action'">
-                      {{ element[column.field] }}
-                    </ng-container>
-                    <ng-container *ngIf="column.field === 'action'">
-                      <mat-icon (click)="onclickApprove(element)"
-                        >remove_red_eye</mat-icon
-                      >
-                    </ng-container>
-                  </ng-container>
-                </td>
+              <ng-container *ngIf="column.field === 'action'">
+                <mat-icon (click)="onclickApprove(element)"
+                  >remove_red_eye</mat-icon
+                >
               </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="dataColumns; sticky: true"
-              ></tr>
-              <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
-            </table>
-          </mat-expansion-panel>
-        </mat-grid-tile>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="dataColumns; sticky: true"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
+      </table>
+      </div>
+      <div class="card-footer"></div>
+    </div>
 
-        <mat-grid-tile>
-          <mat-expansion-panel class="modified-mc-content">
-            <mat-expansion-panel-header>
-              <mat-panel-title> Accounts Reminders </mat-panel-title>
-              <mat-panel-description>
-                {{ accountsRemindersLength }} account(s) pending
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-
-            <table
-              class="table-compnay"
-              mat-table
-              [dataSource]="accountsReminders"
-            >
-              <ng-container
-                [matColumnDef]="column.field"
-                *ngFor="let column of tableColumns; let firstColumn = first"
-              >
-                <th mat-header-cell *matHeaderCellDef>
-                  {{ column.displayName }}
-                </th>
-                <td mat-cell *matCellDef="let element; let i = index">
-                  <ng-container>
-                    <ng-container *ngIf="column.field !== 'action'">
-                      {{ element[column.field] }}
-                    </ng-container>
-                    <ng-container *ngIf="column.field === 'action'">
-                      <mat-icon (click)="onclickApprove(element)"
-                        >remove_red_eye</mat-icon
-                      >
-                    </ng-container>
-                  </ng-container>
-                </td>
+    <div class="card">
+      <div class="card-header">
+        <div class="main">
+          <mat-icon> list_alt</mat-icon>
+          <span>Tasks Pending</span>
+        </div> 
+        <div class="sub">{{ taskPendingLength }} task(s) pending</div>
+      </div>
+      <div class="card-body">
+        <table class="table-compnay" mat-table [dataSource]="taskPending">
+          <ng-container
+            [matColumnDef]="column.field"
+            *ngFor="let column of tableColumns; let firstColumn = first"
+          >
+            <th mat-header-cell *matHeaderCellDef>
+              {{ column.displayName }}
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <ng-container>
+                <ng-container *ngIf="column.field !== 'action'">
+                  {{ element[column.field] }}
+                </ng-container>
+                <ng-container *ngIf="column.field === 'action'">
+                  <mat-icon (click)="onclickApprove(element)"
+                    >remove_red_eye</mat-icon
+                  >
+                </ng-container>
               </ng-container>
-              <tr
-                mat-header-row
-                *matHeaderRowDef="dataColumns; sticky: true"
-              ></tr>
-              <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
-            </table>
-          </mat-expansion-panel>
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card-content>
-  </mat-card>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="dataColumns; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
+        </table>
+      </div>
+      <div class="card-footer"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="main">
+          <mat-icon> insert_invitation</mat-icon>
+          <span>Accounts Reminders</span>
+        </div> 
+        <div class="sub">{{ accountsRemindersLength }} account(s) pending</div>
+      </div>
+      <div class="card-body">
+        <table
+        class="table-compnay"
+        mat-table
+        [dataSource]="accountsReminders"
+        >
+        <ng-container
+          [matColumnDef]="column.field"
+          *ngFor="let column of tableColumns; let firstColumn = first"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            {{ column.displayName }}
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <ng-container>
+              <ng-container *ngIf="column.field !== 'action'">
+                {{ element[column.field] }}
+              </ng-container>
+              <ng-container *ngIf="column.field === 'action'">
+                <mat-icon (click)="onclickApprove(element)"
+                  >remove_red_eye</mat-icon
+                >
+              </ng-container>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="dataColumns; sticky: true"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: dataColumns"></tr>
+      </table>
+      </div>
+      <div class="card-footer"></div>
+    </div>
+  </div>
 </div>
