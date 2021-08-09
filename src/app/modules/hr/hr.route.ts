@@ -26,6 +26,10 @@ import { SubContractorIndentApprovalnewComponent } from './components/subcontrac
 import { WorkOrderApprovalComponent } from './components/work-order-approval/work-order-approval.component';
 import { WorkingHoursSettingComponent } from './components/working-hours-setting/working-hours-setting.component';
 import { LoanOrAdvancePaymentComponent } from './components/loan-or-advance-payment/loan-or-advance-payment.component';
+import { LabourBulkAttendanceEntryComponent } from './components/labour-bulk-attendance-entry/labour-bulk-attendance-entry.component';
+import { LabourBulkAttendanceEntryApprovalComponent } from './components/labour-bulk-attendance-entry-approval/labour-bulk-attendance-entry-approval.component';
+import { SubcontractorAttendanceBulkApprovalComponent } from './components/subcontractor-attendance-bulk-approval/subcontractor-attendance-bulk-approval.component';
+import { SubcontractorPaymentApprovalComponent } from './components/subcontractor-payment-approval/subcontractor-payment-approval.component';
 
 export const HRmoduleRoutes = [
   {
@@ -93,4 +97,8 @@ export const HRmoduleRoutes = [
     path: 'loanAdvancePayment',
     component: LoanOrAdvancePaymentComponent,
   },
+  { path: 'labourbulkattendanceentry', component: LabourBulkAttendanceEntryComponent },
+  { path: 'labourbulkattendanceentryapproval', component: LabourBulkAttendanceEntryApprovalComponent },
+  { path: 'subcontractorbulkattendanceapproval', component: SubcontractorAttendanceBulkApprovalComponent },
+  { path: 'subcontractorpaymentapproval', component: SubcontractorPaymentApprovalComponent },
 ];

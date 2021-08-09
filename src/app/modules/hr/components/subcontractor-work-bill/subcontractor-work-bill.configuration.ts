@@ -14,21 +14,22 @@ export const SubcontractorBillMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'workOrderId',
-            "displayName": 'Work'
+            "field": 'billDate',
+            "displayName": 'Bill Date'
         },
         {
-            "field": 'companyId ',
-            "displayName": 'company id'
+            "field": 'billno',
+            "displayName": 'Bill No'
         },
         {
-            "field": 'unitId',
-            "displayName": 'Unit'
+            "field": 'amountAsPerAttendance',
+            "displayName": 'Amount as Per Attendance'
         },
         {
             "field": 'action',
             "displayName": 'Action'
         }
+        
     ],
     "formFields": [
         {

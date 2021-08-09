@@ -50,6 +50,11 @@ import { SubcontractorWorkOrderComponent } from './components/subcontractor-work
 import { SubcontractorWorkOrderEditComponent } from './components/subcontractor-work-order/edit/subcontractor-work-order-edit.component';
 import { WorkOrderApprovalComponent } from './components/work-order-approval/work-order-approval.component';
 import { AdditionalBillComponent } from './components/subcontractor-work-bill/edit/additional-bill/additional-bill.component';
+import { LabourBulkAttendanceEntryComponent } from './components/labour-bulk-attendance-entry/labour-bulk-attendance-entry.component';
+import { LabourBulkAttendanceEntryEditComponent } from './components/labour-bulk-attendance-entry/edit/labour-bulk-attendance-entry-edit.component';
+import { LabourBulkAttendanceEntryApprovalComponent } from './components/labour-bulk-attendance-entry-approval/labour-bulk-attendance-entry-approval.component';
+import {SubcontractorAttendanceBulkApprovalComponent} from './components/subcontractor-attendance-bulk-approval/subcontractor-attendance-bulk-approval.component';
+import { SubcontractorPaymentApprovalComponent } from './components/subcontractor-payment-approval/subcontractor-payment-approval.component';
 
 export const HRmoduleComponents = [
   EmployeeDesignationRegistrationComponent,
@@ -103,4 +108,9 @@ export const HRmoduleComponents = [
   HolidaySettingComponent,
   LoanOrAdvancePaymentComponent,
   LoanOrAdvancePaymentEditComponent,
+  LabourBulkAttendanceEntryComponent,
+  LabourBulkAttendanceEntryEditComponent,
+  LabourBulkAttendanceEntryApprovalComponent,
+  SubcontractorAttendanceBulkApprovalComponent,
+  SubcontractorPaymentApprovalComponent
 ];

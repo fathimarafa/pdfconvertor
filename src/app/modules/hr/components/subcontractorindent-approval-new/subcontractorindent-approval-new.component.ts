@@ -72,7 +72,7 @@ fetchData() {
 
 get approvalServiceUrl() {
   let user = this.authService.loggedInUser;
-  return `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}/${user.userId}`;
+  return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}/${user.userId}`;
 }
 
 openApproveRemarkDialog(isApproved: boolean): void {

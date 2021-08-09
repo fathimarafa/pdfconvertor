@@ -74,7 +74,7 @@ export class SubcontractorbillPaymentComponent implements OnInit {
     )
   }
 
-  private affectedRowIndex(affectedRow?:SubcontractorbillPayment) {
+  private affectedRowIndex(affectedRow?: SubcontractorbillPayment) {
     let indexToUpdate;
     if (affectedRow) {
       indexToUpdate = this.dataSource.data.findIndex((row: SubcontractorbillPayment) => row.id === affectedRow.id);
@@ -88,7 +88,7 @@ export class SubcontractorbillPaymentComponent implements OnInit {
 
   onDownloadBtnClick() {
     const data: PdfExportSettings = {
-      title: 'supplier payment',
+      title: 'contractor payment',
       tableColumns: this.tableColumns,
       tableRows: this.dataSource.data
     }

@@ -13,7 +13,7 @@ import { SubcontractorBillMetadata } from 'src/app/modules/hr/components/subcont
 import { MatPaginator } from '@angular/material/paginator';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
 import { FormfieldHandler, ModalFormFields } from '../../subcontractor-work-bill/handlers/form-field.handler';
-import { SubContractorWorkOrder } from '../../subcontractor-work-order/definitions/subcontractor-work-order.definition';
+import { SubContractorWorkOrder, SubContractorWorkOrderDetails } from '../../subcontractor-work-order/definitions/subcontractor-work-order.definition';
 import { SubcontractorWorkOrderMetadata } from '../../subcontractor-work-order/subcontractor-work-order.configuration';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogEventHandlerService } from 'src/app/services/dialog-event-handler/dialogeventhandler.service';
@@ -122,8 +122,8 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
   onPrepareBtnClick() {
     if (this.modalForms.issued.form.valid) {
       const dummyCompanyId = 1; const dummyBranchId = 2;
-      this.dataHandler.get<SubContractorWorkOrder[]>(`${this.module.serviceEndPoint1}/${dummyCompanyId}/${dummyBranchId}`)
-        .subscribe((res: SubContractorWorkOrder[]) => {
+      this.dataHandler.get<SubContractorWorkOrderDetails[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+        .subscribe((res: SubContractorWorkOrderDetails[]) => {
           this.dataSource = new MatTableDataSource(res);
           this.dataSource.paginator = this.paginator;
         });
@@ -162,7 +162,6 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
 
   loadDropdowns() {
     this.fetchSubcontractorSelectOptions();
-    // this.fetchMaterial();
     this.bindProjectDivisionFields();
     this.fetchWorkOrderSelectOptions();
   }
