@@ -8,6 +8,7 @@
     border-bottom: 1px solid #edf2f7;
     box-sizing: border-box;
     cursor: pointer;
+    height: 40px;
 }
 
 .mat-list-base .mat-list-item .mat-list-icon {
