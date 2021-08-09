@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MenuSearchShortcutComponent } from '../menu-search-shortcut/menu-search-shortcut.component';
 
 @Component({
@@ -10,14 +11,18 @@ import { MenuSearchShortcutComponent } from '../menu-search-shortcut/menu-search
 })
 export class HomeComponent implements OnInit {
   keydownCallback;
-  constructor(private router: Router, private dialog: MatDialog) {}
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private authService: AuthenticationService
+  ) { }
 
   ngOnInit(): void {
     this.listenMenuSearchEvent();
   }
 
   onLogoutBtnClick() {
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   listenMenuSearchEvent() {

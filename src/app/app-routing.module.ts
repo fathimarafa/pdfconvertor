@@ -9,15 +9,18 @@ import { CRMmoduleRoutes } from './modules/crm/crm.route';
 import { PrebudgetModuleRoutes } from './modules/prebudget/prebudget.route';
 import { DashboardRoutes } from './modules/dashboard/dashboard.route';
 import { PaymentReceiptModuleRoutes } from './modules/payment-receipt/payment-receipt.route';
+import { RouteAuthGuardService, ChildRouteAuthGuardService } from './services/route-guard/route-auth-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   {
     path: 'home',
+    canActivate: [RouteAuthGuardService],
+    canActivateChild: [ChildRouteAuthGuardService],
     component: HomeComponent,
     children: [
-      { path: '', redirectTo: 'company', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       ...CRMmoduleRoutes,
       ...BasicModuleRoutes,
       ...MaterialModuleRoutes,
@@ -34,4 +37,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
