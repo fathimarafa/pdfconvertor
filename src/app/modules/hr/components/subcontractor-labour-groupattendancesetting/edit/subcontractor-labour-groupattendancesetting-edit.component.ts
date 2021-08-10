@@ -53,57 +53,9 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     }
     this.defineModalForms();
     this.loadDropdowns();
+    this.fetchData();
   }
 
-
-  projectDataset: Project[];
-  private fetchProjectSelectOptions() {
-    this.dataHandler.get<Project[]>(ProjectMetadata.serviceEndPoint).subscribe((res: Project[]) => {
-      if (res) {
-        this.projectDataset = res;
-        this.projectDropdown.templateOptions.options = res.map((e: Project) => (
-          {
-            label: e.projectId,
-            value: e.id
-          }
-        ));
-        this.listenProjectChange();
-      }
-    });
-  }
-
-  listenProjectChange() {
-    this.projectDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
-      const selectedProject: Project = this.projectDataset.find(e => e.id === this.model.projectId)
-      if (selectedProject) {
-        this.loadPendingClientBills();
-        // this.loadProjectStage();
-        // this.model['firstName'] = selectedProject.firstName;
-        // this.model['lastName'] = selectedProject.lastName;
-        // this.model['phoneNumber'] = selectedProject.phoneNumber;
-        // this.model['mobileNumber'] = selectedProject.mobileNumber;
-        // this.model['address'] = selectedProject.address;
-        // this.model = { ...this.model };
-      }
-    }
-  }
-
-  loadPendingClientBills() {
-    const dummyCompanyId = 2;
-    this.dataHandler.get<SubcontractorlabourgroupaAttendance[]>(`${'BuildExeHR/api/SubContractorAttendanceList'}/${dummyCompanyId}`)
-      .subscribe((res: SubcontractorlabourgroupaAttendance[]) => {
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.paginator = this.paginator;
-      })
-  }
-
-  // loadProjectStage() {
-  //   const endPoint = `${ProjectStageStatusMetadata.serviceEndPoint}/${this.model.projectId}`;
-  //   this.dataHandler.get<ProjectStage[]>(endPoint)
-  //     .subscribe((res: ProjectStage[]) => {
-  //       this.stageDatasource = new MatTableDataSource(res);
-  //     });
-  // }
 
   private get projectDropdown() {
     return this.fields.find(e => e.id === 'row-1')
@@ -125,16 +77,18 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
 
   }
 
-  ngOnInit(): void { }
+  ngOnInit(){
+     this.fetchData();
+   }
 
-  // fetchData() {
-  //   const dummyCompanyId = 2; 
-  //   this.dataHandler.get<SubcontractorlabourgroupaAttendance[]>(`${'BuildExeHR/api/SubContractorAttendanceList'}/${dummyCompanyId}`)
-  //     .subscribe((res: SubcontractorlabourgroupaAttendance[]) => {
-  //       this.dataSource = new MatTableDataSource(res);
-  //       this.dataSource.paginator = this.paginator;
-  //     });
-  // }
+  fetchData() {
+    const dummyCompanyId = 4; 
+    this.dataHandler.get<AttendanceDetails[]>(`${'BuildExeHR/api/SubContractorAttendanceList'}/${dummyCompanyId}`)
+      .subscribe((res: AttendanceDetails[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+      });
+  }
 
   defineModalForms() {
     this.modalForms = {
@@ -184,6 +138,7 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     }
   }
 
+
   onCancelBtnClick() {
     this.dialogRef.close();
   }
@@ -218,6 +173,7 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     }
   }
 
+
   get dataColumns() {
     if (this.tableColumns && this.tableColumns.length) {
       return this.tableColumns.map(col => col.field);
@@ -242,6 +198,7 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
         }
       });
   }
+
 
   fetchSubcontractorSelectOptions() {
     this.employeeService.getSubContractor().subscribe((res) => {

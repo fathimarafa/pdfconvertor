@@ -13,16 +13,16 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'companyId',
-            "displayName": ' Company Name'
+            "field": 'projectId',
+            "displayName": 'Project Id'
         },
         {
-            "field": 'financialYearId',
-            "displayName": 'Finantiatial year Id'
+            "field": 'billDate',
+            "displayName": 'Bill Date'
         },
         {
-            "field": 'branchId',
-            "displayName": 'Branch Id'
+            "field": 'subId',
+            "displayName": 'SubContractor Id'
         },
         {
             "field": 'action',

@@ -55,15 +55,15 @@ export class FormfieldHandler {
 
     }
     static get sitemanagerDropdown() {
-        return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-            .find((x: FormlyFieldConfig) => x.key === 'paymentModeId');
+        return this.forms.usage
+            .find((x: FormlyFieldConfig) => x.id === 'row-3').fieldGroup
+            .find((x: FormlyFieldConfig) => x.key === 'id');
 
     }
 
     static get bankaccountnameDropdown() {
-        return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-4').fieldGroup
+        return this.forms.usage
+            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'paymentModeId');
 
     }

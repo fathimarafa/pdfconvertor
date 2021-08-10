@@ -231,7 +231,6 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
 
-
   private fetchSubcontractorSelectOptions() {
     this.employeeService.getSubContractor().subscribe((res) => {
       if (res) {
@@ -250,6 +249,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     this.dataSource._updateChangeSubscription();
   }
 
+
   editStock(rowToEdit: AttendanceSettingDetails) {
     this.enableStockEdit = true;
     this.modalForms.usage.model = rowToEdit;
@@ -267,7 +267,6 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     this.modalForms.issued.form.reset();
     this.modalForms.usage.form.reset();
     this.projectDivisionFieldsHandler.clear();
-    this.subscribeProjectDivison.unsubscribe();
   }
 
 }

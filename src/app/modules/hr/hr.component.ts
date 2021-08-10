@@ -55,6 +55,18 @@ import { LabourBulkAttendanceEntryEditComponent } from './components/labour-bulk
 import { LabourBulkAttendanceEntryApprovalComponent } from './components/labour-bulk-attendance-entry-approval/labour-bulk-attendance-entry-approval.component';
 import {SubcontractorAttendanceBulkApprovalComponent} from './components/subcontractor-attendance-bulk-approval/subcontractor-attendance-bulk-approval.component';
 import { SubcontractorPaymentApprovalComponent } from './components/subcontractor-payment-approval/subcontractor-payment-approval.component';
+import { AddLabourToProjectComponent } from './components/add-labour-to-project/add-labour-to-project.component';
+import { LabourAttendanceEntryComponent } from './components/labour-attendance-entry/labour-attendance-entry.component';
+import { LabourAttendanceEntryEditComponent } from './components/labour-attendance-entry/edit/labour-attendance-entry-edit.component';
+import { AddLabourToProjectEditComponent } from './components/add-labour-to-project/edit/add-labour-to-project-edit.component';
+import { ContractorWorkOrderApprovalComponent } from './components/contractor-work-order-approval/contractor-work-order-approval.component';
+import { ContractorPaymentApprovalComponent } from './components/contractor-payment-approval/contractor-payment-approval.component';
+import { LabourAttendanceEntryApprovalComponent } from './components/labour-attendance-entry-approval/labour-attendance-entry-approval.component';
+import { ForemanPaymentApprovalComponent } from './components/foreman-payment-approval/foreman-payment-approval.component';
+import { ForemanWorkBillApprovalComponent } from './components/foreman-work-bill-approval/foreman-work-bill-approval.component';
+import { LabourWagePaymentApprovalComponent } from './components/labour-wage-payment-approval/labour-wage-payment-approval.component';
+import { GroupLabourWagePaymentApprovalComponent } from './components/group-labour-wage-payment-approval/group-labour-wage-payment-approval.component';
+
 
 export const HRmoduleComponents = [
   EmployeeDesignationRegistrationComponent,
@@ -112,5 +124,16 @@ export const HRmoduleComponents = [
   LabourBulkAttendanceEntryEditComponent,
   LabourBulkAttendanceEntryApprovalComponent,
   SubcontractorAttendanceBulkApprovalComponent,
-  SubcontractorPaymentApprovalComponent
+  SubcontractorPaymentApprovalComponent,
+  LabourAttendanceEntryComponent,
+  LabourAttendanceEntryEditComponent,
+  ContractorWorkOrderApprovalComponent,
+  ContractorPaymentApprovalComponent,
+  LabourAttendanceEntryApprovalComponent,
+  AddLabourToProjectEditComponent,
+  AddLabourToProjectComponent,
+  ForemanPaymentApprovalComponent,
+  ForemanWorkBillApprovalComponent,
+  LabourWagePaymentApprovalComponent,
+  GroupLabourWagePaymentApprovalComponent
 ];

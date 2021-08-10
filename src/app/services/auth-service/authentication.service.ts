@@ -13,11 +13,11 @@ export class AuthenticationService implements IAuthenticationService {
         private router: Router,
         private snackBar: MatSnackBar
     ) {
-        // this.user = { // dummy for test
-        //     userId: 1,
-        //     companyId: 1,
-        //     branchId: 2
-        // };
+        this.user = { // dummy for test
+            userId: 1,
+            companyId: 1,
+            branchId: 2
+        };
         const userdata = sessionStorage.getItem('user-session');
         if (userdata) {
             this.user = JSON.parse(userdata);

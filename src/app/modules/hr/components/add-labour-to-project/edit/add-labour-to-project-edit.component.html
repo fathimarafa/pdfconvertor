@@ -1,0 +1,35 @@
+<h2 mat-dialog-title class="form-dialog header-color">{{ isEdit ? 'Edit': 'Add'}} Add Labour To Project</h2>
+<mat-dialog-content class="form-dialog mat-typography dialog-content">
+    <form [formGroup]="form" id="attendance-form">
+        <formly-form [model]="model" [fields]="fields" [options]="options" [form]="form"></formly-form>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="form-dialog" align="end">
+    <button (click)="onShowBtnClick()" mat-button class="save" form="attendance-form">Show</button>
+    <button (click)="onSaveBtnClick()" mat-button class="save" form="attendance-form">Save</button>
+    <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+</mat-dialog-actions>
+<mat-card *ngIf="displayEmployeeTable" class="sub-table">
+    <mat-card-header>
+        <mat-form-field>
+            <mat-label>Search By Name</mat-label>
+            <input matInput type="text">
+            <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </mat-card-header>
+    <mat-card-content>
+        <table class="table-compnay" mat-table [dataSource]="dataSource">
+            <ng-container [matColumnDef]="columns.field" *ngFor="let columns of employeeTableColmns">
+                <th mat-header-cell *matHeaderCellDef> {{columns.displayName}} </th>
+                <td mat-cell *matCellDef="let element">
+                    <input class="row-input" type="text" [(ngModel)]="element[columns.field]" [ngModelOptions]="{standalone: true}">
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="dataColumnsEmployee"></tr>
+            <tr mat-row *matRowDef="let row; columns: dataColumnsEmployee;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </mat-card-content>
+</mat-card>

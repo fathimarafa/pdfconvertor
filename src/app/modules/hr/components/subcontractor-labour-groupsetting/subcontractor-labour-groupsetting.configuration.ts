@@ -13,16 +13,16 @@ export const SubcontractorlaboutgroupMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'workName',
+            "field": 'workTypeId',
             "displayName": 'Work Name'
         },
         {
-            "field": 'noOfLabours',
-            "displayName": 'No of Labours'
+            "field": 'projectId',
+            "displayName": 'Project'
         },
         {
-            "field": 'wage',
-            "displayName": 'Daily Wage'
+            "field": 'description',
+            "displayName": 'Description'
         },
         {
             "field": 'action',

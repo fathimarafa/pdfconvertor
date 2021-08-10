@@ -170,15 +170,15 @@ export const SubcontractorPaymentMetadata = {
                 "id": "row-3",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
-            {
-                "className": "flex-1",
-                "key": "id",
-                "type": "select",
-                "templateOptions": {
+                    {
+                    "className": "flex-1",
+                     "key": "id",
+                     "type": "select",
+                    "templateOptions": {
                     "label": "Site Manager",
                     "required": true,
                     "options": []
-                },
+                     },
                 "expressionProperties": {
                     "templateOptions.disabled": "!model.isSiteManager",
                 },

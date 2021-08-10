@@ -30,6 +30,14 @@ import { LabourBulkAttendanceEntryComponent } from './components/labour-bulk-att
 import { LabourBulkAttendanceEntryApprovalComponent } from './components/labour-bulk-attendance-entry-approval/labour-bulk-attendance-entry-approval.component';
 import { SubcontractorAttendanceBulkApprovalComponent } from './components/subcontractor-attendance-bulk-approval/subcontractor-attendance-bulk-approval.component';
 import { SubcontractorPaymentApprovalComponent } from './components/subcontractor-payment-approval/subcontractor-payment-approval.component';
+import { LabourAttendanceEntryComponent } from './components/labour-attendance-entry/labour-attendance-entry.component';
+import { ContractorWorkOrderApprovalComponent } from './components/contractor-work-order-approval/contractor-work-order-approval.component';
+import { ContractorPaymentApprovalComponent } from './components/contractor-payment-approval/contractor-payment-approval.component';
+import { LabourAttendanceEntryApprovalComponent } from './components/labour-attendance-entry-approval/labour-attendance-entry-approval.component';
+import { ForemanPaymentApprovalComponent } from './components/foreman-payment-approval/foreman-payment-approval.component';
+import { ForemanWorkBillApprovalComponent } from './components/foreman-work-bill-approval/foreman-work-bill-approval.component';
+import { LabourWagePaymentApprovalComponent } from './components/labour-wage-payment-approval/labour-wage-payment-approval.component';
+import { GroupLabourWagePaymentApprovalComponent } from './components/group-labour-wage-payment-approval/group-labour-wage-payment-approval.component';
 
 export const HRmoduleRoutes = [
   {
@@ -82,7 +90,7 @@ export const HRmoduleRoutes = [
     component: SubcontractorattendanceApprovalComponent,
   },
   {
-    path: 'subcontractorindentapprovalnew',
+    path: 'subcontractorindentapproval',
     component: SubContractorIndentApprovalnewComponent,
   },
   {
@@ -101,4 +109,14 @@ export const HRmoduleRoutes = [
   { path: 'labourbulkattendanceentryapproval', component: LabourBulkAttendanceEntryApprovalComponent },
   { path: 'subcontractorbulkattendanceapproval', component: SubcontractorAttendanceBulkApprovalComponent },
   { path: 'subcontractorpaymentapproval', component: SubcontractorPaymentApprovalComponent },
+  { path: 'contractorworkorderapproval', component: ContractorWorkOrderApprovalComponent },
+  { path: 'contractorpaymentapproval', component: ContractorPaymentApprovalComponent },
+  
+  { path: 'labourattendanceentry', component: LabourAttendanceEntryComponent }, 
+  { path: 'labourattendanceentryapproval', component: LabourAttendanceEntryApprovalComponent },
+  
+  { path: 'foremanpaymentapproval', component: ForemanPaymentApprovalComponent },
+  { path: 'foremanworkbillapproval', component: ForemanWorkBillApprovalComponent },
+  { path: 'labourwagepaymentapproval', component: LabourWagePaymentApprovalComponent },
+  { path: 'grouplabourwagepaymentapproval', component: GroupLabourWagePaymentApprovalComponent }
 ];

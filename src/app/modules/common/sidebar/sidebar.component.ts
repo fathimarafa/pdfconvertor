@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onSelection(navItem: SidebarMenu) {
     if (navItem.navLink.length < 1) {

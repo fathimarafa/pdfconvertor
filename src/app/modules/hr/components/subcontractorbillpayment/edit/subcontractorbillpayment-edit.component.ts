@@ -137,6 +137,7 @@ export class SubcontractorbillpaymentEditComponent implements OnInit {
       });
   }
 
+
   private fetchBankNameSelectOptions() {
     this.dataHandler.get<BankAccount[]>(this.bankServiceUrl)
       .subscribe((res: BankAccount[]) => {
@@ -192,8 +193,6 @@ export class SubcontractorbillpaymentEditComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-
-  
   onSaveBtnClick() {
     if (this.modalForms.issued.form.valid) {
       this.httpRequest.subscribe((res) => {
