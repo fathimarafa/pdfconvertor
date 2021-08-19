@@ -202,5 +202,5 @@ export const SideNavigationMenu = {
     10201: { menuId: 10201, menuName: 'Attendance Report', route: '' },
     10202: { menuId: 10202, menuName: 'Loan And Advance Report', route: '' },
     10203: { menuId: 10203, menuName: 'Salary Bill Report', route: '' },
-    9006: { menuId: 9006, menuName: 'Report Configuration', route: '' },
+    9006: { menuId: 9006, menuName: 'Report Configuration', route: '/reportconfiguration' },
 }

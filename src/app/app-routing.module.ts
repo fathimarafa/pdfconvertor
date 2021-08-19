@@ -10,6 +10,7 @@ import { PrebudgetModuleRoutes } from './modules/prebudget/prebudget.route';
 import { DashboardRoutes } from './modules/dashboard/dashboard.route';
 import { PaymentReceiptModuleRoutes } from './modules/payment-receipt/payment-receipt.route';
 import { RouteAuthGuardService, ChildRouteAuthGuardService } from './services/route-guard/route-auth-guard.service';
+import { ReportsModuleRoutes } from './modules/reports/reports.route';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,6 +29,7 @@ const routes: Routes = [
       ...PrebudgetModuleRoutes,
       ...DashboardRoutes,
       ...PaymentReceiptModuleRoutes,
+      ...ReportsModuleRoutes,
     ],
   },
   { path: '**', redirectTo: '/login' },

@@ -41,6 +41,7 @@ import { PaymentReceiptModuleComponents } from './modules/payment-receipt/paymen
 import { EmployeeService } from './services/employee-service/employee.service';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { ReportsModuleComponents } from './modules/reports/reports.component';
 
 const appearance: MatFormFieldDefaultOptions = {
   appearance: 'outline',
@@ -65,6 +66,7 @@ const appearance: MatFormFieldDefaultOptions = {
     ...BasicModuleComponents,
     ...PrebudgetModuleComponents,
     ...PaymentReceiptModuleComponents,
+    ...ReportsModuleComponents
   ],
   imports: [
     BrowserModule,

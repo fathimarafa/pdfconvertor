@@ -1,0 +1,39 @@
+.list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list-item {
+    width: 25%;
+    padding: 10px 0;
+}
+
+.section {
+    border: 1px solid rgba(0, 0, 0, .12);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    min-height: 10vh;
+}
+
+.section-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.section-title {
+    position: relative;
+    top: 10px;
+    color: #3182ce;
+    font-size: 11px;
+    background-color: #fff;
+    padding: 0 10px;
+    left: 10px;
+    display: inline-block;
+}
+
+.info-msg {
+    margin: auto;
+    font-size: 12px;
+    color: #424952;
+}

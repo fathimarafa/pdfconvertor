@@ -1,0 +1,51 @@
+<div class="module-default">
+    <mat-card class="mat-flex-card">
+        <mat-card-header>
+            <mat-card-title>{{module ? module.displayName : ''}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="padding: 20px;">
+
+            <mat-form-field style="margin-bottom: 10px;width: 100%;">
+                <mat-label>Report Menu</mat-label>
+                <mat-select (selectionChange)="onMenuSelection($event.value)">
+                    <mat-option *ngFor="let menu of reportMenu" [value]="menu.menuId">
+                        {{menu.menuName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div>
+
+                <div class="section-title">Report Fields</div>
+                <div class="section list">
+                    <div class="info-msg" *ngIf="!reportFields">Please select menu to load data</div>
+                    <div class="info-msg" *ngIf="reportFields && reportFields.length < 1">No data</div>
+                    <div class="list-item" *ngFor="let field of reportFields">
+                        <mat-checkbox [checked]="field.selected" (change)="field.selected = !field.selected">
+                            {{ field.fieldName }}
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title">Report Filters</div>
+                <div class="section list">
+                    <div class="info-msg" *ngIf="!reportFilters">Please select menu to load data</div>
+                    <div class="info-msg" *ngIf="reportFilters && reportFilters.length < 1">No data</div>
+                    <div class="list-item" *ngFor="let filter of reportFilters">
+                        <mat-checkbox [checked]="filter.selected" (change)="filter.selected = !filter.selected">
+                            {{ filter.filterFields }}
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-btn">
+                <button style="width: 20%;" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+            </div>
+
+        </mat-card-content>
+
+    </mat-card>
+</div>
