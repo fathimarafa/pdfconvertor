@@ -6,4 +6,5 @@ export interface EmployeeDesignationRegistration {
     companyId: number;
     branchId: number;
     marketing: number;
+    id: number;
 }

@@ -5,9 +5,9 @@ import { ConfirmModalComponent } from '../../../common/confirm-modal/confirm-mod
 import { EmployeeDesignationRegistrationEditComponent } from './edit/employee-designation-registration-edit.component';
 import { EmployeeDesignationRegistrationMetadata } from './employee-designation-registration.configuration';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
-import { EmployeeDesignationRegistration } from './definitions/employee-designation.definition';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { EmployeeDesignationRegistration } from './definitions/employee-designation.definition';
 
 @Component({
   selector: 'app-employee-designation-registration',
@@ -52,7 +52,7 @@ export class EmployeeDesignationRegistrationComponent implements OnInit {
 
   get serviceUrl() {
     const user = this.authService.loggedInUser;
-    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}/${0}`;
   }
 
   openDialog(rowToEdit?: EmployeeDesignationRegistration) {
@@ -64,10 +64,28 @@ export class EmployeeDesignationRegistrationComponent implements OnInit {
     )
   }
 
+  // openDeleteDialog(rowToDelete: EmployeeDesignationRegistration): void {
+  //   // const dummyUserId = 1;
+  //   const user = this.authService.loggedInUser;
+
+  //   const dataToComponent = {
+  //     endPoint: `${this.module.serviceEndPoint}/${rowToDelete.employeeDesignationId}/${user.userId}`,
+  //     deleteUid: rowToDelete.employeeDesignationId
+  //   }
+  //   this.dialogEventHandler.openDialog(
+  //     ConfirmModalComponent,
+  //     this.dataSource,
+  //     dataToComponent,
+  //     this.affectedRowIndex(rowToDelete)
+  //   )
+  // }
   openDeleteDialog(rowToDelete: EmployeeDesignationRegistration): void {
+    // const dummyUserId = 1;
+    const user = this.authService.loggedInUser;
+
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.employeeDesignationId}`,
-      deleteUid: rowToDelete.employeeDesignationId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${user.userId}`,
+      deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,
@@ -76,7 +94,6 @@ export class EmployeeDesignationRegistrationComponent implements OnInit {
       this.affectedRowIndex(rowToDelete)
     )
   }
-
   private affectedRowIndex(affectedRow?: EmployeeDesignationRegistration) {
     let indexToUpdate;
     if (affectedRow) {

@@ -4,8 +4,8 @@ export interface IEmployee {
     employeeDesignationId: number;
     employeeLabourGroupId: number;
     employeeSalaryTypeId: number;
-    fullName: number;
-    address: number;
+    fullName: string;
+    address: string;
     sex: string;
     dateOfBirth: Date;
     dateOfJoining: Date;
@@ -16,7 +16,7 @@ export interface IEmployee {
     esiNo: string;
     companyId: number;
     branchId: number;
-    labourHead: string;
+    labourHead: number;
     status: string;
     emailId: string;
     employeeCode: string;

@@ -65,8 +65,9 @@ export class EmployeeRegistrationComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: IEmployee): void {
+    const user = this.authService.loggedInUser;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}`,
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${user.userId}`,
       deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(

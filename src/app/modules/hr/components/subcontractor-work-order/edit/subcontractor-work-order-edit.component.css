@@ -23,7 +23,7 @@
 }
 
 ::ng-deep .cdk-overlay-pane {
-    max-width: 70vw!important;
+    max-width: 75vw!important;
     width: 100vw;
 }
 

@@ -72,12 +72,13 @@ export const EmployeeRegistrationMetadata = {
                     "type": "select",
                     "templateOptions": {
                         "label": "Select labour group",
-                        "required": true,
-                        "options": []
+                        "options": [],
+                        "required" : true
                     },
                     "expressionProperties": {
-                        "templateOptions.disabled": "![1,2,3,4].includes(model.employeeCategoryId)",
-                    }
+                        "templateOptions.disabled": "![1].includes(model.employeeCategoryId)",
+                    },
+
                 },
                 {
                     "className": "flex-1",
@@ -85,12 +86,13 @@ export const EmployeeRegistrationMetadata = {
                     "type": "select",
                     "templateOptions": {
                         "label": "Select labour head",
-                        "required": true,
-                        "options": []
+                        "options": [],
+                        "required": true
                     },
                     "expressionProperties": {
-                        "templateOptions.disabled": "!(model.employeeCategoryId == `1`)",
-                    }
+                        "templateOptions.disabled": "![1].includes(model.employeeCategoryId)",
+                    },
+                    "hideExpression": "[1].includes(model.employeeLabourGroupId)"
                 }
             ]
         },
@@ -98,12 +100,12 @@ export const EmployeeRegistrationMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1",
+                    "className": "flex-1 readonly",
                     "type": "input",
                     "key": "id",
                     "templateOptions": {
                         "label": "EmployeeID",
-                        "required": true
+                        // "required": true
                     }
                 },
                 {
@@ -121,6 +123,21 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "templateOptions": {
                         "label": "Employee Code",
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "status",
+                    "templateOptions": {
+                        "label": "Status",
+                        "options": [
+                            {
+                                "label": "ACTIVE",
+                                "value": "ACTIVE"
+                            },
+                        ],
+                        "required": true
                     }
                 },
                 {
@@ -206,27 +223,50 @@ export const EmployeeRegistrationMetadata = {
                                 "fieldGroupClassName": "display-flex",
                                 "fieldGroup": [
                                     {
-                                        "className": "flex-1",
-                                        "type": "select",
+                                        "className": "flex-1 readonly",
+                                        "type": "input",
                                         "key": "employeeSalaryTypeId",
+                                        // "defaultValue": 1,
                                         "templateOptions": {
-                                            "label": "Select salary type",
-                                            "options": [
-                                                {
-                                                    "label": "Daily",
-                                                    "value": 1
-                                                },
-                                                {
-                                                    "label": "Monthly",
-                                                    "value": 2
-                                                },
-                                                {
-                                                    "label": "Contract",
-                                                    "value": 3
-                                                }
-                                            ],
-                                            "required": true
-                                        }
+                                            "label": "Salary type : Daily",
+                                            "readonly": true,
+                                          
+                                        },
+                                        // // "expressionProperties": {
+                                        // //     "templateOptions.disabled": "![1].includes(model.employeeCategoryId)",
+    
+                                        // // },
+                                        "hideExpression": "![1].includes(model.employeeCategoryId)",
+                                     
+                                    },
+                                    {
+                                        "className": "flex-1 readonly",
+                                        "type": "input",
+                                        "key": "employeeSalaryTypeId",
+                                        // "defaultValue": 2,
+                                        "templateOptions": {
+                                            "label": "Salary type : Monthly",
+                                            "readonly": true,
+                                        },
+                                        // "expressionProperties": {
+                                        //     "templateOptions.disabled": "(model.employeeCategoryId == `6`)",
+                                        // },
+                                        "hideExpression": "![7].includes(model.employeeCategoryId)",
+                                    },
+                                    {
+                                        "className": "flex-1 readonly",
+                                        "type": "input",
+                                        "key": "employeeSalaryTypeId",
+                                        // "defaultValue" : 3,
+                                        "templateOptions": {
+                                            "label": "Salary type : Contract",
+                                            "readonly": true,
+                                           
+                                        },
+                                        // "expressionProperties": {
+                                        //     "templateOptions.disabled": "(model.employeeCategoryId == `6`)",
+                                        // },
+                                        "hideExpression": "![3,4,5].includes(model.employeeCategoryId)",
                                     },
                                     {
                                         "className": "flex-1",
@@ -236,7 +276,25 @@ export const EmployeeRegistrationMetadata = {
                                             "type": 'number',
                                             "label": "Salary",
                                             "required": true
-                                        }
+                                        },
+                                        // "expressionProperties": {
+                                        //     "templateOptions.disabled": "[3,4,5,6].includes(model.employeeCategoryId)",
+                                        // },
+                                        "hideExpression": "![7].includes(model.employeeCategoryId)",
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "type": "input",
+                                        "key": "salaryAmount",
+                                        "templateOptions": {
+                                            "type": 'number',
+                                            "label": "Wage",
+                                            "required": true
+                                        },
+                                        // "expressionProperties": {
+                                        //     "templateOptions.disabled": "[3,4,5,6].includes(model.employeeCategoryId)",
+                                        // },
+                                        "hideExpression": "![1].includes(model.employeeCategoryId)",
                                     }
                                 ]
                             },
@@ -250,8 +308,12 @@ export const EmployeeRegistrationMetadata = {
                                         "templateOptions": {
                                             "type": 'number',
                                             "label": "Overtime Amount",
-                                            "required": true
-                                        }
+                                            // "required": true
+                                        },
+                                        // "expressionProperties": {
+                                        //     "templateOptions.disabled": "[3,4,5,6].includes(model.employeeCategoryId)",
+                                        // }
+                                        "hideExpression": "![1,7].includes(model.employeeCategoryId)",
                                     },
                                     {
                                         "className": "flex-1 datepicker-width",
@@ -261,7 +323,8 @@ export const EmployeeRegistrationMetadata = {
                                             "label": "Joining Date",
                                             "required": true
                                         }
-                                    }
+                                    },
+                                  
                                 ]
                             },
                             {
@@ -273,7 +336,7 @@ export const EmployeeRegistrationMetadata = {
                                         "key": "esiNo",
                                         "templateOptions": {
                                             "label": "ESI number",
-                                            "required": true
+                                            
                                         }
                                     },
                                     {
@@ -282,7 +345,7 @@ export const EmployeeRegistrationMetadata = {
                                         "key": "pfNo",
                                         "templateOptions": {
                                             "label": "PF number",
-                                            "required": true
+                                            
                                         }
                                     }
                                 ]
@@ -299,8 +362,7 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "key": "bank",
                     "templateOptions": {
-                        "label": "Bank",
-                        "required": true
+                        "label": "Bank",  
                     }
                 },
                 {
@@ -309,7 +371,7 @@ export const EmployeeRegistrationMetadata = {
                     "key": "branch",
                     "templateOptions": {
                         "label": "Branch",
-                        "required": true
+                       
                     }
                 },
                 {
@@ -317,8 +379,7 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "key": "accno",
                     "templateOptions": {
-                        "label": "Account number",
-                        "required": true
+                        "label": "Account number",   
                     }
                 },
                 {
@@ -326,8 +387,7 @@ export const EmployeeRegistrationMetadata = {
                     "type": "input",
                     "key": "ifsc",
                     "templateOptions": {
-                        "label": "IFSC Code",
-                        "required": true
+                        "label": "IFSC Code",   
                     }
                 },
             ]

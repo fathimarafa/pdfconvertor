@@ -13,10 +13,6 @@ import { EmployeeDesignationRegistrationEditComponent } from './edit/employee-de
   ],
   entryComponents: [
     EmployeeDesignationRegistrationEditComponent
-  ],
-  exports: [
-    EmployeeDesignationRegistrationComponent
   ]
 })
-
 export class EmployeeDesignationRegistrationModule { }
