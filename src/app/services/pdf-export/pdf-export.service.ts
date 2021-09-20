@@ -35,7 +35,7 @@ export class PdfExportService {
     columnWidths[0] = 30; // S.No column
     let docDefinition = {
       content: [
-        { text: `List of ${data.title}`, style: 'subheader' },
+        { text: data.title , style: 'subheader' },
         {
           layout: {
             fillColor: (rowIndex) => {
@@ -58,7 +58,7 @@ export class PdfExportService {
         }
       }
     };
-    pdfMake.createPdf(docDefinition).download(`List of ${data.title}`);
+    pdfMake.createPdf(docDefinition).download(data.title);
   }
 
 

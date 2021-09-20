@@ -6,29 +6,26 @@ export const EnquiryReportMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "BuildExeCRM/api/EnquiryList",
-    "tableColumns": [
-        {
-            "field": 'id',
-            "displayName": 'SNo'
-        },
-        {
-            "field": 'mode',
-            "displayName": 'Mode of Enquiry'
-        },
-        {
-            "field": 'action',
-            "displayName": 'Action'
-        }
-    ],
-    "formFields": [
-        {
-            "type": "input",
-            "key": "mode",
-            "templateOptions": {
-                "label": "Mode of Enquiry",
-                "required": true
-            }
-        }
-    ]
+    "serviceEndPoint": {
+        "baseUrl": "BuildExeCRM/api/",
+        10050: "EnquiryList",
+        10051: "FollowUpReport",
+        10052: { menuId: 10052, menuName: 'Project Report', route: '' },
+        10053: { menuId: 10053, menuName: 'Project Booking Report', route: '' },
+        10054: { menuId: 10054, menuName: 'StageWise Payment Report', route: '' },
+        10055: "AdditionalBillList",
+        10056: "PartBillList",
+        10100: { menuId: 10100, menuName: 'Material List', route: '' },
+        10101: { menuId: 10101, menuName: 'Supplier List', route: '' },
+        10102: { menuId: 10102, menuName: 'Indent Report', route: '' },
+        10103: { menuId: 10103, menuName: 'Purchase Order Report', route: '' },
+        10200: { menuId: 10200, menuName: 'Employee List', route: '' },
+        10201: { menuId: 10201, menuName: 'Attendance Report', route: '' },
+        10202: { menuId: 10202, menuName: 'Loan And Advance Report', route: '' },
+        10203: { menuId: 10203, menuName: 'Salary Bill Report', route: '' },
+        9006: { menuId: 9006, menuName: 'Report Configuration', route: '' },
+        10057: "PercentageBillList",
+        10058: "ClientAdvanceList" 
+        //{ menuId: 10058, menuName: 'Client Advance Report', route: '' },
+    }
 }

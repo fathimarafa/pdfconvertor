@@ -7,6 +7,7 @@ import { ProjectEditComponent } from './edit/project-edit.component';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { Project } from './definitions/project.definition';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-project',
@@ -22,7 +23,8 @@ export class ProjectComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService
   ) {
     this.module = ProjectMetadata;
     this.tableColumns = this.module.tableColumns
@@ -58,9 +60,10 @@ export class ProjectComponent implements OnInit {
   }
 
   openDeleteDialog(rowToDelete: Project): void {
+    const user = this.authService.loggedInUser.userId;
     const dataToComponent = {
-      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.projectId}`,
-      deleteUid: rowToDelete.projectId
+      endPoint: `${this.module.serviceEndPoint}/${rowToDelete.id}/${user}`,
+      deleteUid: rowToDelete.id
     }
     this.dialogEventHandler.openDialog(
       ConfirmModalComponent,

@@ -8,6 +8,10 @@ import { AuthenticationService } from 'src/app/services/auth-service/authenticat
 import { ReportsConfigurationMetadata } from '../report-configuration/report-configuration.configuration';
 import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { Router } from '@angular/router';
+import { SidebarMenu } from 'src/app/modules/common/sidebar/definitions/sidebar.definition';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 
 @Component({
   selector: 'app-enquiry-report',
@@ -17,23 +21,34 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 export class EnquiryReportComponent implements OnInit {
 
   form = new FormGroup({});
-  model: any;
+  model: any = {};
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[];
 
-  selectedMenuId = 10051;
   module;
   tableColumns;
   dataSource;
+  navData: SidebarMenu = {};
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private router: Router,
+    private snackbar: MatSnackBar,
+    private pdfExportService: PdfExportService
   ) {
     this.module = EnquiryReportMetadata;
-    // this.tableColumns = this.module.tableColumns
+    this.navData = this.router.getCurrentNavigation().extras.state;
+    if (this.navData) {
+      sessionStorage.setItem("nav-session", JSON.stringify(this.navData));
+    } else {
+      const navDetails = sessionStorage.getItem('nav-session')
+      if (navDetails) {
+        this.navData = JSON.parse(navDetails);
+      }
+    }
   }
 
   get dataColumns() {
@@ -63,7 +78,7 @@ export class EnquiryReportComponent implements OnInit {
 
   private reportconfigServiceUrl() {
     const user = this.authService.loggedInUser;
-    return `${ReportsConfigurationMetadata.serviceEndPoint.report_config}/${this.selectedMenuId}/${user.companyId}/${user.branchId}`;
+    return `${ReportsConfigurationMetadata.serviceEndPoint.report_config}/${this.navData.menuId}/${user.companyId}/${user.branchId}`;
   }
 
   loadFields() {
@@ -71,7 +86,12 @@ export class EnquiryReportComponent implements OnInit {
   }
 
   fetchData() {
-    this.dataHandler.get(this.module.serviceEndPoint)
+    const endpoint = `${EnquiryReportMetadata.serviceEndPoint.baseUrl}${EnquiryReportMetadata.serviceEndPoint[this.navData.menuId]}`;
+    // 'BuildExeCRM/api/EnquiryList';
+    console.log('model', this.model);
+    const data = this.model;
+    // { "ModeOfEnquiryId": 1, "FromDate": "2020-01-05", "ToDate": "2020-12-05", "ReminderDate": "2021-01-01", "EnquiryStatusId": 1, "EnquiryForId": 4, "AssignStaffId": 2, "MarketingteamId": 1, "companyId": 1, "branchId": 2 }
+    this.dataHandler.post(endpoint, data)
       .subscribe((res: any[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -83,65 +103,85 @@ export class EnquiryReportComponent implements OnInit {
   }
 
   private loadReportFields(selectedFields: number[]) {
-    const endpoint = `${ReportsConfigurationMetadata.serviceEndPoint.report_fields}/${this.selectedMenuId}`;
+    const endpoint = `${ReportsConfigurationMetadata.serviceEndPoint.report_fields}/${this.navData.menuId}`;
     this.dataHandler.get(endpoint).subscribe((res: any) => {
       if (selectedFields && selectedFields.length) {
         res.forEach((e) => {
-          if (selectedFields.includes(e.id)) {
-            if (!this.tableColumns) {
-              this.tableColumns = [];
+
+          if (res && res.length) {
+
+            if (selectedFields.includes(e.id)) {
+              if (!this.tableColumns) {
+                this.tableColumns = [];
+              }
+              this.tableColumns.push({
+                "field": e.fieldName.charAt(0).toLowerCase() + e.fieldName.slice(1),
+                "displayName": e.fieldName
+              });
+
             }
-            this.tableColumns.push({
-              "field": e.fieldName,
-              "displayName": e.fieldName
-            });
+
+          } else {
+            this.snackbar.open('Warning : Please configure report fields', null, { panelClass: 'snackbar-error-message' });
           }
+
         });
       }
     });
   }
 
   private loadReportFilters(selectedFilters: number[]) {
-    const endpoint = `${ReportsConfigurationMetadata.serviceEndPoint.report_filters}/${this.selectedMenuId}`;
+    const endpoint = `${ReportsConfigurationMetadata.serviceEndPoint.report_filters}/${this.navData.menuId}`;
     this.dataHandler.get(endpoint).subscribe((res: any) => {
-      if (selectedFilters && selectedFilters.length) {
-        res.forEach((e) => {
-          if (selectedFilters.includes(e.id)) {
 
-            const formFieldGroup = {
-              "fieldGroupClassName": "display-flex",
-              "fieldGroup": []
-            }
+      if (res && res.length) {
 
-            const formField = this.generateFormField(e);
+        if (selectedFilters && selectedFilters.length) {
+          res.forEach((e) => {
+            if (selectedFilters.includes(e.id)) {
 
-            if (!this.fields) {
+              const formFieldGroup = {
+                "fieldGroupClassName": "display-flex",
+                "fieldGroup": []
+              }
 
-              this.fields = [];
-              formFieldGroup.fieldGroup.push(formField);
-              this.fields.push(formFieldGroup);
+              const formField = this.generateFormField(e);
 
-            } else {
+              if (!this.fields) {
 
-              const lastIndex = this.fields.length - 1;
-              const fieldGroupLen = this.fields[lastIndex].fieldGroup.length
-
-              if (fieldGroupLen === 3) {
-
+                this.fields = [];
                 formFieldGroup.fieldGroup.push(formField);
                 this.fields.push(formFieldGroup);
 
               } else {
 
-                this.fields[lastIndex].fieldGroup.push(formField)
+                const lastIndex = this.fields.length - 1;
+                const fieldGroupLen = this.fields[lastIndex].fieldGroup.length
+
+                if (fieldGroupLen === 3) {
+
+                  formFieldGroup.fieldGroup.push(formField);
+                  this.fields.push(formFieldGroup);
+
+                } else {
+
+                  this.fields[lastIndex].fieldGroup.push(formField)
+
+                }
 
               }
 
             }
-            
-          }
-        });
+          });
+        }
+
+      } else {
+
+        this.snackbar.open('Warning : Please configure filters', null, { panelClass: 'snackbar-error-message' });
+
       }
+
+
     });
   }
 
@@ -176,6 +216,25 @@ export class EnquiryReportComponent implements OnInit {
           }
         }
     }
+  }
+
+  onLoadDataBtnClick() {
+    this.fetchData();
+  }
+
+  onDownloadBtnClick() {
+    if (this.dataSource.data && this.dataSource.data.length) {
+      const data: PdfExportSettings = {
+        title: this.navData.menuName,
+        tableColumns: this.tableColumns,
+        tableRows: this.dataSource.data
+      }
+      this.pdfExportService.download(data);
+    }
+  }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem('nav-session');
   }
 
 }

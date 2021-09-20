@@ -173,9 +173,6 @@ export class MaterialTransferRequestEditComponent implements OnInit {
     FormfieldHandler.initialize(this.modalForms.material.fields, this.modalForms.transferCharges.fields);
     this.loadDropdowns();
     this.loadItemDetails()
-    if (this.isEdit) {
-      this.calculateItemDetailsTableTotal();
-    }
   }
 
   loadItemDetails() {
@@ -183,6 +180,9 @@ export class MaterialTransferRequestEditComponent implements OnInit {
       const endpoint = `${MaterialTransferRequestMetadata.serviceEndPoint}List/${this.editData.id}`;
       this.dataHandler.get(endpoint).subscribe((res: any[]) => {
         this.dataSource = new MatTableDataSource(res)
+        if (this.isEdit) {
+          this.calculateItemDetailsTableTotal();
+        }
       });
     } else {
       this.dataSource = new MatTableDataSource([]);

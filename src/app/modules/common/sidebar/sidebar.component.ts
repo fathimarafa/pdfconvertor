@@ -43,7 +43,7 @@ export class SidebarComponent implements OnInit {
       this.selectedNavItem.isSelected = false;
       this.selectedNavItem = navItem;
       this.selectedNavItem.isSelected = true;
-      this.router.navigateByUrl(`/home${navItem.navLink}`);
+      this.router.navigateByUrl(`/home${navItem.navLink}`, { state: navItem });
     }
   }
 

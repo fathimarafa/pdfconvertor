@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import { ProjectMetadata } from '../../project.configuration';
 import { DialogActions, IDialogEvent } from 'src/app/definitions/dialog.definitions';
 import { Project } from '../../definitions/project.definition';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-own-project',
@@ -30,7 +31,8 @@ export class OwnProjectComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<OwnProjectComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: OwnProject,
-    private dataHandler: DataHandlerService
+    private dataHandler: DataHandlerService,
+    private snackbar: MatSnackBar
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -140,13 +142,16 @@ export class OwnProjectComponent implements OnInit {
   private loadDepartmentDropdown() {
     this.dataHandler.get(DepartmentMetadata.serviceEndPoint)
       .subscribe((res: Department[]) => {
-        if (res) {
-          this.departmentDropdown.templateOptions.options = res.map((e: Department) => (
+        const privateDept = res.filter(e => e.departmentCategory.toUpperCase() === 'PRIVATE');
+        if (privateDept && privateDept.length) {
+          this.departmentDropdown.templateOptions.options = privateDept.map((e: Department) => (
             {
               label: e.departmentLongName,
               value: e.departmentId
             }
           ));
+        } else {
+          this.snackbar.open('WARNING : No private department found');
         }
       });
   }
@@ -154,6 +159,7 @@ export class OwnProjectComponent implements OnInit {
   onAddUnitsBtnClick() {
     this.dataSource.data.push(this.modalForms.child.model);
     this.dataSource._updateChangeSubscription();
+    this.modalForms.child.form.reset();
   }
 
   private listenFormChangeEvents() {
@@ -261,6 +267,11 @@ export class OwnProjectComponent implements OnInit {
   private calculateTotalCost() {
     this.modalForms.child.model.totalAmount = this.modalForms.child.model['totalAreaCostWithTax'] + this.modalForms.child.model['totalLandCost'];
     this.modalForms.child.model = { ...this.modalForms.child.model };
+  }
+
+  ngOnDestroy() {
+    this.modalForms.main.form.reset();
+    this.modalForms.child.form.reset();
   }
 
 
