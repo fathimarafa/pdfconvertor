@@ -16,7 +16,7 @@ export interface ForemanWorkOrder {
 
     foremanWorkOrderDetails: ForemanWorkOrderDetails[]
 }
-export interface   ForemanWorkOrderDetails{
+export interface ForemanWorkOrderDetails{
                 foremanWorkOrderDetailsId: number;
                 foremanWorkOrderId: number;
                     labourWorkId: number;

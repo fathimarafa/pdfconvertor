@@ -8,7 +8,7 @@ import { FormfieldHandler} from "src/app/modules/hr/components/subcontractor-ind
 import {  } from "src/app/modules/hr/components/subcontractor-indent/handlers/form-field.handler";
 import { DataHandlerService } from "src/app/services/datahandler/datahandler.service";
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from "src/app/services/project-division-fields-handler/project-division-fields-handler.service";
-import { Indent, IndentDetails, IndentForm } from "../definition/subcontractor-indent.definition";
+import { Indent, SubIndentDetails, IndentForm } from "../definition/subcontractor-indent.definition";
 import { SubcontractorIndentMetadata } from "../subcontractor-indent.configuration";
 import { FormGroup } from "@angular/forms";
 import { LabourWorkRateSettingMetadata } from "../../labour-workrate-setting/labour-workrate-setting.configuration";
@@ -18,6 +18,9 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { FormApprovalDialogComponent } from "src/app/modules/common/form-approval-dialog/form-approval-dialog.component";
 import { EmployeeService } from "src/app/services/employee-service/employee.service";
+import { BasicWorkCategory } from "src/app/modules/basic/components/work-category/definitions/basic-work-category.definition";
+import { BasicWorkCategoryMetadata } from "src/app/modules/basic/components/work-category/basic-work-category.configuration";
+import { IndentDetails } from "../../subcontractor-work-order/definitions/subcontractor-work-order.definition";
 
 @Component({
     selector: 'app-subcontractor-indent-edit',
@@ -25,231 +28,13 @@ import { EmployeeService } from "src/app/services/employee-service/employee.serv
     styleUrls: ['./subcontractor-indent-edit.component.css']
 })
 export class SubcontractorIndentEditComponent implements OnInit {
-
-    
-  //   modalForms;
-  //   isEdit: boolean;
-  //   tableColumns;
-  //   dataSource;
-  //   subscribeProjectDivison: Subscription;
-  //   enableStockEdit: boolean;
-  //   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  
-  //   constructor(
-  //     private dialogRef: MatDialogRef<SubcontractorIndentEditComponent>,
-  //     @Inject(MAT_DIALOG_DATA) private editData: Indent,
-  //     private dataHandler: DataHandlerService,
-  //     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
-  //   ) {
-  //     if (Object.keys(this.editData).length) {
-  //       this.isEdit = true;
-  //     }
-  //     this.defineModalForms();
-  //     this.loadDropdowns();
-  //   }
-  
-  //   bindProjectDivisionFields() {
-  //     const projectControllerFields: ProjectDivisionFields<IndentDetails> = {
-  //       projectDropdown: FormfieldHandler.projectDropdown,
-  //       blockDropdown: FormfieldHandler.blockDropdown,
-  //       floorDropdown: FormfieldHandler.floorDropdown,
-  //       unitDropdown: FormfieldHandler.unitDropdown,
-  //       model: this.modalForms.issued.model,
-  //       isEdit: this.isEdit
-  //     };
-  //     // this.projectDivisionFieldsHandler.initialize(projectControllerFields);
-  //     // this.subscribeProjectDivison = this.projectDivisionFieldsHandler.listenProjectDivisionChange
-  //     //   .subscribe((res: number) => {
-  //     //     this.showHideProjectDivisionBasedFields(res);
-  //       // })
-  //   }
-  
-  
-  //   ngOnInit(): void {
-  //     this.tableColumns = SubcontractorIndentMetadata .indentDetails.tableColumns;
-  //   }
-  
-  //   defineModalForms() {
-  //     this.modalForms = {
-  //       issued: {
-  //         form: new FormGroup({}),
-  //         model: this.editData,
-  //         options: {},
-  //         fields: SubcontractorIndentMetadata.formFields
-  //       },
-  //       usage: {
-  //         form: new FormGroup({}),
-  //         model: {},
-  //         options: {},
-  //         fields: SubcontractorIndentMetadata.indentDetails.formFields
-  //       }
-  //     }
-  //     const formFields: ModalFormFields = {
-  //       issued: this.modalForms.issued.fields,
-  //       usage: this.modalForms.usage.fields
-  //     }
-  //     FormfieldHandler.initialize(formFields);
-  //     this.loadDropdowns();
-  //     this.dataSource = new MatTableDataSource(this.editData.indentDetails || []);
-  //   }
-  
-  //   ngAfterViewInit() {
-  //     this.dataSource.paginator = this.paginator;
-  //   }
-  
-  //   loadDropdowns() {
-       
-  //     this. fetchSubcontractorSelectOptions();
-  //     this. fetchWorkNameSelectOptions() ;
-  //     this.bindProjectDivisionFields();
-  //   }
-  
-  //   onSaveBtnClick() {
-  //     if (this.modalForms.issued.form.valid) {
-  //       this.httpRequest.subscribe((res) => {
-  //         const closeEvent: IDialogEvent = {
-  //           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-  //           data: this.modalForms.issued.model
-  //         }
-  //         this.dialogRef.close(closeEvent);
-  //       });
-  //     }
-  //   }
-  
-  //   onCancelBtnClick() {
-  //     this.dialogRef.close();
-  //   }
-  
-  //   get httpRequest(): Observable<Indent> {
-  //     let payload = {
-  //       ...this.modalForms.issued.model,
-  //       materialUsageDetails: this.dataSource.data,
-  //     }
-  //     if (this.isEdit) {
-  //       return this.dataHandler.put<Indent>(SubcontractorIndentMetadata.serviceEndPoint, [payload]);
-  //     } else {
-  //       const dummyDefaultFields = {
-  //         companyId: 1,
-  //         branchId: 1,
-  //         userId: 1
-  //       }
-  //       payload = { ...payload, ...dummyDefaultFields }
-  //       return this.dataHandler.post<Indent>(SubcontractorIndentMetadata.serviceEndPoint, [payload]);
-  //     }
-  //   }
-    
-  
-  //   get dataColumns() {
-  //     if (this.tableColumns && this.tableColumns.length) {
-  //       return this.tableColumns.map(col => col.field);
-  //     } else {
-  //       return [];
-  //     }
-  //   }
-  
-  //   onAddBtnClick() {
-  //     if (this.modalForms.usage.form.valid) {
-  //       this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-  //       const dataRow: IndentDetails = Object.assign({}, this.modalForms.usage.model);
-  //       this.dataSource.data.push(Object.assign({}, dataRow));
-  //       this.dataSource._updateChangeSubscription();
-  //       this.modalForms.usage.form.reset();
-        
-  //     }
-  //   }
-  
-  //   showHideProjectDivisionBasedFields(projectDivision: number) {
-  //     switch (projectDivision) {
-  //       case 1:
-  //         FormfieldHandler.unitFieldRow.hideExpression = true;
-  //         FormfieldHandler.blockFloorRow.hideExpression = true;
-  //         break;
-  //       case 2:
-  //         FormfieldHandler.unitFieldRow.hideExpression = false;
-  //         FormfieldHandler.blockFloorRow.hideExpression = true;
-  //         break;
-  //       case 3:
-  //         FormfieldHandler.unitFieldRow.hideExpression = false;
-  //         FormfieldHandler.blockFloorRow.hideExpression = false;
-  //         break;
-  //       case 4:
-  //         FormfieldHandler.unitFieldRow.hideExpression = true;
-  //         FormfieldHandler.blockFloorRow.hideExpression = false;
-  //         break;
-  //     }
-  //   }
-  
-   
-   
-  // fetchSubcontractorSelectOptions() {
-  //   const dummyCompanyId = 1; const dummyBranchId = 0; const dummycategoryId = 4;
-  //   const endPoint = `${EmployeelistMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}/${dummycategoryId}`;
-  //   this.dataHandler.get<EmployeeList[]>(endPoint)
-  //     .subscribe((res: EmployeeList[]) => {
-  //       if (res) {
-  //         FormfieldHandler.subcontractorDropdown.templateOptions.options = res.map((e: EmployeeList) => (
-  //           {
-  //             label: e.fullName,
-  //             value: e['id']
-  //           }
-  //         ));
-  //       }
-  //     });
-  // }
-  
-
-  //     fetchWorkNameSelectOptions() {
-  //       const dummyCompanyId = 1; const dummyBranchId = 0;
-  //       const endPoint = `${LabourWorkRateSettingMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-  //       this.dataHandler.get<LabourWorkRate []>(endPoint)
-  //         .subscribe((res: LabourWorkRate []) => {
-  //           if (res) {
-  //             FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate ) => (
-  //               {
-  //                 label: e.labourWorkName,
-  //                 value: e.id
-  //               }
-  //             ));
-  //           }
-  //         });
-  //     }
-  
-
-  //   removeStock(rowIndex: number) {
-  //     this.dataSource.data.splice(rowIndex, 1)
-  //     this.dataSource._updateChangeSubscription();
-  //   }
-  
-  //   editStock(rowToEdit: IndentDetails) {
-  //     this.enableStockEdit = true;
-  //     this.modalForms.issued.model = rowToEdit;
-  //   }
-
-   
-  
-  //   onUpdateStockBtnClick() {
-  
-  //   }
-  
-  //   onCancelStockUpdateBtnClick() {
-  
-  //   }
-  
-  //   ngOnDestroy() {
-  //     this.modalForms.issued.form.reset();
-  //     this.modalForms.usage.form.reset();
-  //     this.projectDivisionFieldsHandler.clear();
-  //     this.subscribeProjectDivison.unsubscribe();
-  //   }
-  
-  // }
-
-  
+ 
 isEdit: boolean;
+iseye:boolean;
 tableColumns = SubcontractorIndentMetadata.indentDetails.tableColumns;
 dataSource;
 modalForm: IndentForm;
-
+enableItemEdit: boolean;
 
 constructor(
     private dialogRef: MatDialogRef<SubcontractorIndentEditComponent>,
@@ -291,7 +76,7 @@ defineForm() {
 
 loadItemDetails() {
     if (this.isEdit) {
-        const endpoint = `${SubcontractorIndentMetadata.serviceEndPoint}List/${this.editData.id}`;
+        const endpoint = `${SubcontractorIndentMetadata.serviceEndPoint}/${this.editData.id}`;
         this.dataHandler.get(endpoint).subscribe((res: any[]) => {
             this.dataSource = new MatTableDataSource(res)
         });
@@ -312,6 +97,7 @@ loadDropdowns() {
   this.fetchSubcontractorSelectOptions();
     this.fetchWorkNameSelectOptions() ;
     this.bindProjectDivisionFields();
+    this.fetchWorkCategorySelectOptions();
 }
 
 bindProjectDivisionFields() {
@@ -321,7 +107,7 @@ bindProjectDivisionFields() {
         floorDropdown: FormfieldHandler.floorDropdown,
         unitDropdown: FormfieldHandler.unitDropdown,
         model: this.modalForm.indent.model,
-        isEdit: this.isEdit
+        isEdit: this.isEdit,
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
 }
@@ -347,20 +133,42 @@ onSaveBtnClick(nextLevel?: boolean) {
             this.openApproveDialog();
         } else {
             if (nextLevel) {
+           
+            if(this.modalForm.indent.model.maxlevel===0)
+            {
+                this.modalForm.indent.model.approvalStatus=1;
                 this.modalForm.indent.model.approvedDate = new Date();
                 this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
                 this.modalForm.indent.model.approvalLevel = 1;
+                this.saveChanges(); 
             }
-            this.saveChanges();
+            else
+            {
+                this.modalForm.indent.model.approvalLevel=1;
+                this.modalForm.indent.model.approvedDate = new Date();
+                this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
+console.log("applevel",this.modalForm.indent.model.approvalLevel)
+                this.saveChanges(); 
+            }
+          
+            }
+          
         }
     }
 }
 
+
 saveChanges() {
+    // this.httpRequest.subscribe((res) => {
+    //     const closeEvent: IDialogEvent = {
+    //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+    //         data: res || this.modalForm.indent.model
+    //     }
+    //     this.dialogRef.close(closeEvent);
     this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
-            action: this.isEdit ? DialogActions.edit : DialogActions.add,
-            data: res || this.modalForm.indent.model
+          action: this.isEdit ? DialogActions.edit : DialogActions.add,
+          data: res || this.modalForm.indent.model
         }
         this.dialogRef.close(closeEvent);
     })
@@ -396,9 +204,11 @@ private fetchSubcontractorSelectOptions() {
         });
 }
 
+WorknameDataset: LabourWorkRate[];
 fetchWorkNameSelectOptions()  {
     this.dataHandler.get<LabourWorkRate[]>(this.worknameServiceUrl)
         .subscribe((res: LabourWorkRate[]) => {
+            this.WorknameDataset=res;
             if (res) {
                 FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
                     {
@@ -408,17 +218,52 @@ fetchWorkNameSelectOptions()  {
                 ));
             }
         });
-}
+    }
 
 get worknameServiceUrl() {
     const user = this.authService.loggedInUser;
-    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+    const specid=2;
+    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}/${specid}`;
+}
+
+private fetchWorkCategorySelectOptions() {
+    this.dataHandler.get<BasicWorkCategory[]>(this.workCategoryServiceUrl)
+      .subscribe((res: BasicWorkCategory[]) => {
+        if (res) {
+          FormfieldHandler.categoryDropdown.templateOptions.options = res.map((e: BasicWorkCategory) => (
+            {
+              label: e.workCategoryName,
+              value: e.id
+            }
+          ));
+        }
+      });
+  }
+
+  private get workCategoryServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${BasicWorkCategoryMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+
+
+  
+ onUpdateDetailBtnClick(rowToEdit: Indent) {
+    this.onEditBtnClick(rowToEdit);
+    this.dataSource._updateChangeSubscription();
+    this.enableItemEdit=false;
+}
+
+onCancelUpdateBtnClick() {
+
+  this.enableItemEdit = false;
+  this.dataSource._updateChangeSubscription();
+  this.modalForm.itemDetails.form.reset();
 }
 
 onAddItemBtnClick() {
     if (this.isValid) {
         const data: any = Object.assign({}, this.modalForm.itemDetails.model);
-        // data.labourWorkName = this.materialList.find(e => e.id === data.materialId).materialName;
+        data.labourWorkName = this.WorknameDataset.find(e => e.id === data.workId).labourWorkName;
         this.dataSource.data.push(data);
         this.dataSource._updateChangeSubscription();
         this.modalForm.itemDetails.form.reset();
@@ -426,7 +271,7 @@ onAddItemBtnClick() {
 }
 
 get isValid() {
-    if (!this.modalForm.itemDetails.model['materialId']) {
+    if (!this.modalForm.itemDetails.model['workId']) {
         this.snackBar.open('Warning : Please select material', null, { panelClass: 'snackbar-error-message' });
         return false;
     }
@@ -437,15 +282,27 @@ get isValid() {
     return true;
 }
 
-openDialog(rowToEdit?: Indent) {
-    const data = Object.assign({}, rowToEdit);
-    this.modalForm.itemDetails.model = data;
-}
+// openDialog(rowToEdit?: Indent) {
+//     const data = Object.assign({}, rowToEdit);
+//     this.modalForm.itemDetails.model = data;
+// }
 
-openDeleteDialog(rowToDelete): void {
-    this.dataSource.data.splice(rowToDelete, 1);
+// openDeleteDialog(rowToDelete): void {
+//     this.dataSource.data.splice(rowToDelete, 1);
+//     this.dataSource._updateChangeSubscription();
+// }
+
+removeItem(rowIndex: number) {
+   
+    this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
-}
+  }
+
+  onEditBtnClick(rowToEdit: Indent) {
+    this.enableItemEdit = true;
+    // this.modalForm.itemDetails.model  = Object.assign({}, rowToEdit);
+    this.modalForm.itemDetails.model = rowToEdit;
+  }
 
 ngAfterViewInit() {
     const cdkDom = document.getElementsByClassName('cdk-overlay-pane');

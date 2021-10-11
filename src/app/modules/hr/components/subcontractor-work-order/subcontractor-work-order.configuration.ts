@@ -10,26 +10,33 @@ export const SubcontractorWorkOrderMetadata = {
     "tableColumns": [
         {
             "field": 'id',
-            "displayName": 'S.No'
+            "displayName": 'SNo'
         },
         {
-            "field": 'companyId',
-            "displayName": ' Name'
+            "field": 'projectName',
+            "displayName": 'Project Id'
+        },
+        {
+            "field": 'dateOrdered',
+            "displayName": 'Assigning Date'
+        },
+        {
+            "field": 'fullName',
+            "displayName": 'Subcontractor Name'
         },
         {
             "field": 'workOrderNo',
-            "displayName": 'Work Oder No'
+            "displayName": 'Work Order No'
         },
         {
-            "field": 'category',
-            "displayName": 'Work Category'
+            "field": 'remarks',
+            "displayName": 'Description'
         },
         {
             "field": 'action',
             "displayName": 'Action'
         }
     ],
-   
     "formFields": [
         {
             "id": "row-1",
@@ -40,17 +47,10 @@ export const SubcontractorWorkOrderMetadata = {
                     "type": "select",
                     "key": "projectId",
                     "templateOptions": {
-                        "label": "Project",
-                        "options": [],
-                        "required": true
+                        "label": "Project ID",
+                        "options": []
                     }
-                }
-            ]
-        },
-        {
-            "id": "row-2",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
+                },
                 {
                     "className": "flex-1 readonly",
                     "key": "blockId",
@@ -84,10 +84,50 @@ export const SubcontractorWorkOrderMetadata = {
                         "required": true
                     }
                 }
+              
             ]
         },
+        // {
+        //     "id": "row-2",
+        //     "fieldGroupClassName": "display-flex",
+        //     "fieldGroup": [
+        //         {
+        //             "className": "flex-1 readonly",
+        //             "key": "blockId",
+        //             "type": "select",
+        //             "templateOptions": {
+        //                 "label": "Select block",
+        //                 "options": [],
+        //                 "disabled": true,
+        //                 "required": true
+        //             },
+        //         },
+        //         {
+        //             "className": "flex-1 readonly",
+        //             "key": "floorId",
+        //             "type": "select",
+        //             "templateOptions": {
+        //                 "label": "Select floor",
+        //                 "disabled": true,
+        //                 "options": [],
+        //                 "required": true
+        //             }
+        //         },
+        //         // {
+        //         //     "className": "flex-1 readonly",
+        //         //     "key": "unitId",
+        //         //     "type": "select",
+        //         //     "templateOptions": {
+        //         //         "label": "Select unit",
+        //         //         "disabled": true,
+        //         //         "options": [],
+        //         //         "required": true
+        //         //     }
+        //         // }
+        //     ]
+        // },
         {
-            "id": "row-3",
+            "id": "row-2",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -124,7 +164,7 @@ export const SubcontractorWorkOrderMetadata = {
             ]
         },
         {
-            "id": "row-4",
+            "id": "row-3",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -146,7 +186,7 @@ export const SubcontractorWorkOrderMetadata = {
                 "displayName": 'Indent No'
             },
             {
-                "field": 'workId',
+                "field": 'labourWorkName',
                 "displayName": 'Work Name'
             },
             {
@@ -182,16 +222,16 @@ export const SubcontractorWorkOrderMetadata = {
                             "required": true
                         }
                     },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "subContractorWorkOrderId",
-                        "templateOptions": {
-                            "label": "Unit",
-                            "required": true,
-                            "type": "number"
-                        }
-                    },
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "input",
+                    //     "key": "subContractorWorkOrderId",
+                    //     "templateOptions": {
+                    //         "label": "Unit",
+                    //         "required": true,
+                    //         "type": "number"
+                    //     }
+                    // },
                     {
                         "className": "flex-1",
                         "type": "input",
@@ -203,7 +243,7 @@ export const SubcontractorWorkOrderMetadata = {
                         }
                     },
                     {
-                        "className": "flex-1",
+                        "className": "flex-1 readonly",
                         "type": "input",
                         "key": "workRate",
                         "templateOptions": {
@@ -218,6 +258,33 @@ export const SubcontractorWorkOrderMetadata = {
 
     },
        
-   
+    "indent": {
+        "tableColumns": [
+            {
+                "field": 'subContractorWorkOrderDetailsId',
+                "displayName": 'Indent No'
+            },
+            {
+                "field": 'labourWorkName',
+                "displayName": 'Work Name'
+            },
+            {
+                "field": 'quantityRequired',
+                "displayName": 'Quantity'
+            },
+            {
+                "field": 'requiredDate',
+                "displayName": 'Required Date'
+            },
+            {
+                "field": 'quantityOrdered',
+                "displayName": 'Quantity Ordered'
+            },
+            {
+                "field": 'action',
+                "displayName": 'Action'
+            }
+        ],
+    }
 }
 

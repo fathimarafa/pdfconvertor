@@ -22,32 +22,32 @@ export class FormfieldHandler {
 
     static get blockDropdown(): FormlyFieldConfig {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'blockId');
     }
 
     static get floorDropdown(): FormlyFieldConfig {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'floorId');
     }
 
     static get unitDropdown(): FormlyFieldConfig {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'unitId');
     }
 
 
     static get workcategoryDropdown() {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-3').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'category');
             
     }
     static get subcontractorDropdown() {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-3').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'subContractorId');
 
     }

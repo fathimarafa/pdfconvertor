@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Indent, IndentDetails } from '../../../subcontractor-indent/definition/subcontractor-indent.definition';
+import { Indent} from '../../../subcontractor-indent/definition/subcontractor-indent.definition';
 import { SubcontractorIndentMetadata } from '../../../subcontractor-indent/subcontractor-indent.configuration';
 import { DataHandlerService } from 'src/app/services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from 'src/app/services/dialog-event-handler/dialogeventhandler.service';
@@ -37,7 +37,7 @@ export class SelectIndentComponent implements OnInit {
 
   ) {
    
-    this.tableColumns = SubcontractorWorkOrderMetadata.subContractorWorkOrderDetails.tableColumns;
+    this.tableColumns = SubcontractorWorkOrderMetadata.indent.tableColumns;
     this.dataSource = new MatTableDataSource(this.tableRows);
   }
 
@@ -54,7 +54,7 @@ export class SelectIndentComponent implements OnInit {
   }
 
   ngOnInit() {
-  this.fetchData();
+  // this.fetchData();
 }
 
 fetchData() {

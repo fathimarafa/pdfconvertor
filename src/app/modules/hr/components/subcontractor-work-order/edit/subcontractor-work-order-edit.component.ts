@@ -27,6 +27,7 @@ import { LabourWorkRateSettingMetadata } from '../../labour-workrate-setting/lab
 import { LabourWorkRate } from '../../labour-workrate-setting/definitions/labour-workrate-setting.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 
 @Component({
   selector: 'app-subcontractor-work-order-edit',
@@ -62,11 +63,11 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
       this.isEdit = true;
 
     }
-    this.calculateOrderTotal();
+    // this.calculateOrderTotal();
     this.defineModalForms();
     this.loadDropdowns();
-    this.fetchSubcontractorIndent();
-
+    this.bindFormSelectOptions();
+    // this.fetchSubcontractorIndent();
   }
 
   calculateOrderTotal() {
@@ -74,6 +75,31 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
       this.editData.subContractorWorkOrderDetails.forEach((e: SubContractorWorkOrderDetails) => e['total'] = e.quantityOrdered * e.workRate);
     }
   }
+
+  
+  loadItemDetails() {
+    if (this.isEdit) {
+        const endpoint = `${SubcontractorWorkOrderMetadata.serviceEndPoint}List/${this.editData.id}`;
+        this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+            this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+}
+
+  // bindProjectDivisionFields() {
+  //   const projectControllerFields: ProjectDivisionFields<SubContractorWorkOrderDetails> = {
+  //     projectDropdown: FormfieldHandler.projectDropdown,
+  //     blockDropdown: FormfieldHandler.blockDropdown,
+  //     floorDropdown: FormfieldHandler.floorDropdown,
+  //     unitDropdown: FormfieldHandler.unitDropdown,
+  //     model: this.modalForms.issued.model,
+  //     isEdit: this.isEdit
+  //   };
+  //   this.projectDivisionFieldsHandler.initialize(projectControllerFields);
+  //   this.fetchSubcontractorSelectOptions();
+  // }
 
 
   bindProjectDivisionFields() {
@@ -86,7 +112,31 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
+
+  }
+
+  
+  bindFormSelectOptions() {
     this.fetchSubcontractorSelectOptions();
+    this.bindProjectDivisionFields();
+    if(this.modalForms.issued.model.blockId == null || this.modalForms.issued.model.unitId == null || this.modalForms.issued.model.floorId == null){
+      this.modalForms.issued.model.blockId = 0;
+      this.modalForms.issued.model.unitId = 0;
+      this.modalForms.issued.model.floorId = 0;
+    }
+    FormfieldHandler.projectDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      // this.modalForms.issued.form.reset();
+      this.fetchSubcontractorIndent();
+    }
+    FormfieldHandler.subcontractorDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      this.fetchSubcontractorIndent();
+      
+    }
+    // FormfieldHandler.workorderDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+    //   this.fetchWorkBillnoSelectOptions();
+    // //  this.PreviousSubBillSelectOptions() 
+   
+    
   }
 
 
@@ -109,12 +159,14 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
         fields: SubcontractorWorkOrderMetadata.subContractorWorkOrderDetails.formFields
       }
     }
+
     const formFields: ModalFormFields = {
       issued: this.modalForms.issued.fields,
       usage: this.modalForms.usage.fields
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    this.loadItemDetails();
     this.dataSource = new MatTableDataSource(this.editData.subContractorWorkOrderDetails || []);
   }
 
@@ -123,24 +175,19 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
   }
 
   loadDropdowns() {
-
     this.fetchWorkCategorySelectOptions();
     this.fetchWorkNameSelectOptions();
-    this.bindProjectDivisionFields();
+    // this.bindProjectDivisionFields();
     // this.fetchWorkOrderSelectOptions();
   }
 
-
-
   fetchSubcontractorIndent() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Indent[]>(`${SubcontractorIndentMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    this.dataHandler.get<Indent[]>(`${'BuildExeHR/api/Indent'}/${this.modalForms.issued.model.projectId}/${this.modalForms.issued.model.unitId}/${this.modalForms.issued.model.blockId}/${this.modalForms.issued.model.floorId}/${this.modalForms.issued.model.subContractorId}`)
       .subscribe((res: Indent[]) => {
         this.indentList = res;
       });
   }
-
-
 
   onCancelBtnClick() {
     this.dialogRef.close();
@@ -176,6 +223,66 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
     }
   }
 
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+            this.saveChanges();
+        }
+    });
+}
+
+get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+}
+
+onSaveBtnClick(nextLevel?: boolean) {
+  if (this.modalForms.issued.form.valid) {
+      if (this.isEditedFromApproval) {
+          this.openApproveDialog();
+      } else {
+          if (nextLevel) {
+         
+          if(this.modalForms.issued.model.maxlevel===0)
+          {
+              this.modalForms.issued.model.approvalStatus=1;
+              this.modalForms.issued.model.approvedDate = new Date();
+              this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+              this.modalForms.issued.model.approvalLevel = 1;
+              this.saveChanges(); 
+          }
+          else
+          {
+            this.modalForms.issued.model.approvalLevel=1;
+            this.modalForms.issued.model.approvedDate = new Date();
+            this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+              this.saveChanges(); 
+          }
+        
+          }
+        
+      }
+  }
+}
+
+
+saveChanges() {
+    // this.httpRequest.subscribe((res) => {
+    //     const closeEvent: IDialogEvent = {
+    //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+    //         data: res || this.modalForm.indent.model
+    //     }
+    //     this.dialogRef.close(closeEvent);
+    this.httpRequest.subscribe((res) => {
+        const closeEvent: IDialogEvent = {
+          action: this.isEdit ? DialogActions.edit : DialogActions.add,
+          data: res || this.modalForms.issued.model
+        }
+        this.dialogRef.close(closeEvent);
+    })
+}
+
+
   get dataColumns() {
     if (this.tableColumns && this.tableColumns.length) {
       return this.tableColumns.map(col => col.field);
@@ -184,75 +291,84 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
     }
   }
 
-  onAddBtnClick() {
+  onAddItemBtnClick() {
     if (this.modalForms.usage.form.valid) {
-      this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-      const dataRow: SubContractorWorkOrderDetails = Object.assign({}, this.modalForms.usage.model);
+      const dataRow: any = Object.assign({}, this.modalForms.usage.model);
+      dataRow.labourWorkName = this.WorknameDataset.find(e => e.id === dataRow.workId).labourWorkName;
       dataRow['total'] = dataRow.quantityOrdered * dataRow.workRate;
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
       this.modalForms.usage.form.reset();
+    
     }
   }
 
+  // onSaveBtnClick() {
+  //   if (this.modalForms.issued.form.valid) {
+  //     this.httpRequest.subscribe((res) => {
+  //       const closeEvent: IDialogEvent = {
+  //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+  //         data: res || this.modalForms.issued.model
+  //       }
+  //       this.dialogRef.close(closeEvent);
+  //     })
 
-  onSaveBtnClick() {
-    if (this.modalForms.issued.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: res || this.modalForms.issued.model
-        }
-        this.dialogRef.close(closeEvent);
-      })
-
-    }
-  }
-
+  //   }
+  // }
 
   onSelectSubcontractorIndentBtnClick() {
     const indentList: Indent[] = this.indentBySelectedProject;
-    if (indentList.length) {
+    // if (indentList.length) {
       const dialogReference = this.dialog.open(SelectIndentComponent, { data: this.indentList });
       dialogReference.afterClosed().subscribe((result: Indent[]) => {
         if (result) {
-          const subContractorWorkOrderDetails = result.map((e: Indent) => {
+          const indent = result.map((e: Indent) => {
             return {
-              itemId: e.materialId,
+              labourWorkName: e.labourWorkName,
               indentId: e.id,
               remarks: e.remarks,
               quantityOrdered: e.quantityOrdered
             }
           });
-          this.dataSource.data = this.dataSource.data.concat(subContractorWorkOrderDetails);
+          this.dataSource.data = this.dataSource.data.concat(indent);
         }
       });
-    } else {
-      const errorMessage = 'No matching records found , please clear filter fields and try again';
-      this.snackBar.open(errorMessage, null, { panelClass: 'snackbar-error-message' });
-    }
+    // } else {
+    //   const errorMessage = 'No matching records found , please clear filter fields and try again';
+    //   this.snackBar.open(errorMessage, null, { panelClass: 'snackbar-error-message' });
+    // }
   }
 
-  onUpdateDetailBtnClick() {
+  // onUpdateDetailBtnClick() {
 
-  }
+  // }
 
-  onCancelUpdateBtnClick() {
-    this.enableItemEdit = false;
-    this.modalForms.usage.form.reset();
-  }
+  // onCancelUpdateBtnClick() {
+  //   this.enableItemEdit = true;
+  //   this.modalForms.usage.form.reset();
+  // }
+
+  onUpdateDetailBtnClick(rowToEdit: SubContractorWorkOrderDetails) {
+    this.onEditBtnClick(rowToEdit);
+    this.dataSource._updateChangeSubscription();
+    this.enableItemEdit=false;
+}
+
+onCancelUpdateBtnClick() {
+
+  this.enableItemEdit = false;
+  this.dataSource._updateChangeSubscription();
+  this.modalForms.usage.form.reset();
+}
+
 
   get indentBySelectedProject() {
-    if (this.modalForms.issued.projectId) {
-      return this.indentList.filter((e) => e.projectId === this.modalForms.issued.projectId);
+    if (this.modalForms.issued.model.projectId) {
+      return this.indentList.filter((e) => e.projectId === this.modalForms.issued.model.projectId);
     } else {
       return this.indentList;
     }
   }
-
-
-
-
 
   fetchWorkCategorySelectOptions() {
     const dummyCompanyId = 1; const dummyBranchId = 0;
@@ -270,22 +386,39 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
       });
   }
 
-
-  fetchWorkNameSelectOptions() {
-    const user = this.authService.loggedInUser;
-    const endPoint = `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
-    this.dataHandler.get<LabourWorkRate[]>(endPoint)
-      .subscribe((res: LabourWorkRate[]) => {
-        if (res) {
-          FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
-            {
-              label: e.labourWorkName,
-              value: e.id
-            }
-          ));
-        }
-      });
+  WorknameDataset: LabourWorkRate[];
+  private fetchWorkNameSelectOptions() {
+    this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl).subscribe((res: LabourWorkRate[]) => {
+      if (res) {
+        this.WorknameDataset=res;
+                FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+                  {
+                   label: e.labourWorkName,
+                   value: e.id
+                  }
+              ));
+        this.listenworknameChange();
+      }
+    });
   }
+
+  listenworknameChange() {
+    FormfieldHandler.worknameDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      const selectedworkname: LabourWorkRate = this.WorknameDataset.find(e => e.id === this.modalForms.usage.model.workId)
+      if (selectedworkname) {
+        this.modalForms.usage.model.workRate= selectedworkname.rate;
+        this.modalForms.usage.model = { ...this.modalForms.usage.model};
+        console.log("",this.modalForms.usage.model['workRate']);
+      }
+    }
+  }
+
+  private get labourWorkrateSerivceUrl() {
+    const user = this.authService.loggedInUser;
+    const specid=2;
+    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}/${specid}`;
+  }
+
 
   // fetchWorkOrderSelectOptions() {
   //   const user = this.authService.loggedInUser;
@@ -317,15 +450,29 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
     });
   }
 
-  removeStock(rowIndex: number) {
+  
+  // removeStock(rowIndex: number) {
+  //   this.dataSource.data.splice(rowIndex, 1)
+  //   this.dataSource._updateChangeSubscription();
+  // }
+
+  // editStock(rowToEdit: SubContractorWorkOrderDetails) {
+  //   this.enableStockEdit = true;
+  //   this.modalForms.usage.model = rowToEdit;
+  // }
+
+  removeItem(rowIndex: number) {
+   
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();
   }
 
-  editStock(rowToEdit: SubContractorWorkOrderDetails) {
-    this.enableStockEdit = true;
+  onEditBtnClick(rowToEdit: SubContractorWorkOrderDetails) {
+    this.enableItemEdit = true;
+    // this.modalForm.itemDetails.model  = Object.assign({}, rowToEdit);
     this.modalForms.usage.model = rowToEdit;
   }
+
 
   onUpdateStockBtnClick() {
 
@@ -334,7 +481,6 @@ export class SubcontractorWorkOrderEditComponent implements OnInit {
   onCancelStockUpdateBtnClick() {
 
   }
-
   ngOnDestroy() {
     this.modalForms.issued.form.reset();
     this.modalForms.usage.form.reset();

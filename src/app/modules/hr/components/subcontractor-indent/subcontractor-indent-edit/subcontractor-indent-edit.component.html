@@ -1,65 +1,3 @@
-<!-- <h2 mat-dialog-title class="form-dialog header-color">Add SubContractor Indent Details</h2>
-<mat-dialog-content style="display: flex;" class="form-dialog mat-typography dialog-content">
-    <div>
-        <div class="form-title">Indent Detials</div>
-        <div class="form-container">
-            <div class="form-child">
-                <form [formGroup]="modalForms.issued.form">
-                    <formly-form [model]="modalForms.issued.model" [fields]="modalForms.issued.fields" [options]="modalForms.issued.options" [form]="modalForms.issued.form">
-                    </formly-form>
-                </form>
-            </div>
-        </div>
-    
-    <div class="flex-1">
-        <div class="form-title">Indent Details</div>
-        <div class="form-container">
-            <div class="form-child">
-                <form [formGroup]="modalForms.usage.form">
-                    <formly-form [model]="modalForms.usage.model" [fields]="modalForms.usage.fields" [options]="modalForms.usage.options" [form]="modalForms.usage.form">
-                    </formly-form>
-                </form>
-                <ng-container *ngIf="enableStockEdit">
-                    <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
-                    <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
-                </ng-container>
-                <ng-container *ngIf="!enableStockEdit">
-                    <button (click)="onAddBtnClick()" mat-button class="save add-block">Add</button>
-                </ng-container>
-                <div class="inner-table-container">
-                    <table class="table-compnay" mat-table [dataSource]="dataSource">
-                        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
-                            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
-                            <td mat-cell *matCellDef="let element;let i =index">
-                                <ng-container *ngIf="firstColumn">
-                                    {{this.paginator.pageIndex == 0 ? i + 1 : 1 + i + this.paginator.pageIndex * this.paginator.pageSize}}
-                                </ng-container>
-                                <ng-container *ngIf="!firstColumn">
-                                    <ng-container *ngIf="column.field !== 'action'">
-                                        {{element[column.field]}}
-                                    </ng-container>
-                                    <ng-container *ngIf=" column.field === 'action'">
-                                        <mat-icon (click)="editStock(element)">edit</mat-icon>
-                                        <mat-icon (click)="removeStock(i)">delete_outline</mat-icon>
-                                    </ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
-</mat-dialog-content>
-<mat-dialog-actions class="form-dialog" align="end">
-    <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
-    <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
-</mat-dialog-actions>
- -->
 
  <h2 mat-dialog-title class="form-dialog header-color"> {{ isEdit ? 'Edit' : 'Add' }} Indent Details</h2>
 <mat-dialog-content class="form-dialog mat-typography dialog-content">
@@ -78,11 +16,16 @@
         <form id="itemdetails-form" [formGroup]="modalForm.itemDetails.form">
             <formly-form [model]="modalForm.itemDetails.model" [fields]="modalForm.itemDetails.fields" [options]="modalForm.itemDetails.options" [form]="modalForm.itemDetails.form"></formly-form>
         </form>
+        <div class="section-btn">
+            <ng-container *ngIf="!enableItemEdit">
+                <button (click)="onAddItemBtnClick()" mat-button class="save">Add</button>
+            </ng-container>
+            <ng-container *ngIf="enableItemEdit">
+                <button style="margin-right: 20px;" (click)="onUpdateDetailBtnClick()" mat-button class="save">Update</button>
+                <button (click)="onCancelUpdateBtnClick()" mat-button class="cancel">Cancel</button>
+            </ng-container>
 
-        <div style="display: flex;justify-content: flex-end;">
-            <button form="itemdetails-form" (click)="onAddItemBtnClick()" mat-button class="save">Add</button>
         </div>
-
         <table class="table-compnay" mat-table [dataSource]="dataSource">
             <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
                 <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
@@ -95,8 +38,8 @@
                             {{ column.field === 'requiredDate' ? element[column.field].toLocaleString() : element[column.field] }}
                         </ng-container>
                         <ng-container *ngIf=" column.field === 'action'">
-                            <mat-icon (click)="openDialog(element)">edit</mat-icon>
-                            <mat-icon (click)="openDeleteDialog(i)">delete_outline</mat-icon>
+                            <mat-icon (click)="onEditBtnClick(element)">edit</mat-icon>
+                            <mat-icon (click)="removeItem(i)">delete_outline</mat-icon>
                         </ng-container>
                     </ng-container>
                 </td>
@@ -105,13 +48,21 @@
             <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
         </table>
     </div>
-
-
-
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
-    <button form="indent-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <ng-container *ngIf="!iseye">
+        <button (click)="onSaveBtnClick(true)" mat-button class="save">Save</button>
+      </ng-container>   
     <button *ngIf="!isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save">Next
         Level</button>
-    <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+    <button  mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+     <!-- <ng-container *ngIf="!iseye">
+      <button (click)="onSaveBtnClick(true)" mat-button class="save">Approve</button>
+    </ng-container>   
+    <button *ngIf="!iseye" (click)="onSaveBtnClick(true)" mat-button class="save">Reject
+        </button>  -->
+    <!-- <div class="form-dialog">
+        <button (click)="Approve()" mat-button class="save margin-right-30">Approve</button>
+        <button mat-button (click)="Reject()" cdkFocusInitial class="cancel">Reject</button>
+    </div> -->
 </mat-dialog-actions>

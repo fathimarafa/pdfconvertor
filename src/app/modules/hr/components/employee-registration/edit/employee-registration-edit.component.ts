@@ -197,7 +197,22 @@ export class EmployeeRegistrationEditComponent implements OnInit {
       {
         this.model.overtime = 0;
       }
-      
+        
+      if(this.model.employeeCategoryId==1 || this.model.employeeCategoryId==2 )
+      {
+        this.model.employeeSalaryTypeId = 1;
+      }
+  
+      if(this.model.employeeCategoryId==3 || this.model.employeeCategoryId==4 || this.model.employeeCategoryId==5  )
+      {
+        this.model.employeeSalaryTypeId = 2;
+      }
+
+      if(this.model.employeeCategoryId==7 )
+      {
+        this.model.employeeSalaryTypeId = 3;
+      }
+       this.model.status = 'ACTIVE';
       // this.model.id = this.model.id || Math.round(Math.random() * 100);
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {

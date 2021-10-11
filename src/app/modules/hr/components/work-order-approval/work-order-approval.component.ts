@@ -8,9 +8,9 @@ import { AuthenticationService } from 'src/app/services/auth-service/authenticat
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubContractorWorkOrder } from '../subcontractor-work-order/definitions/subcontractor-work-order.definition';
 import { ConfirmModalComponent } from 'src/app/modules/common/confirm-modal/confirm-modal.component';
-import { SubcontractorWorkOrderEditComponent } from '../subcontractor-work-order/edit/subcontractor-work-order-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { SubcontractorWorkOrderappEditComponent } from './edit/subcontractor-work-orderapp-edit.component';
 
 @Component({
   selector: 'app-work-order-approval',
@@ -138,14 +138,16 @@ export class WorkOrderApprovalComponent implements OnInit {
     })
   }
 
-  openDialog(rowToEdit?: SubContractorWorkOrder ) {
+  openDialog1(rowToEdit?: SubContractorWorkOrder ) {
     this.dialogEventHandler.openDialog(
-      SubcontractorWorkOrderEditComponent,
+      SubcontractorWorkOrderappEditComponent,
       this.dataSource,
       rowToEdit,
       this.affectedRowIndex(rowToEdit)
     )
   }
+
+
 
   openDeleteDialog(rowToDelete: SubContractorWorkOrder ): void {
     const dummyUserId = 1;
@@ -163,7 +165,7 @@ export class WorkOrderApprovalComponent implements OnInit {
 
   openEditDialog(rowToEdit?: SubContractorWorkOrder) {
     this.dialogEventHandler.openDialog(
-      SubcontractorWorkOrderEditComponent,
+      SubcontractorWorkOrderappEditComponent,
       this.dataSource,
       rowToEdit,
       this.affectedRowIndex(rowToEdit)

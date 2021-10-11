@@ -8,6 +8,7 @@ import { ConfirmModalComponent } from 'src/app/modules/common/confirm-modal/conf
 import { SubcontractorWorkOrderEditComponent } from './edit/subcontractor-work-order-edit.component';
 import {SubContractorWorkOrder} from 'src/app/modules/hr/components/subcontractor-work-order/definitions/subcontractor-work-order.definition';
 import { PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-subcontractor-work-order',
@@ -24,7 +25,8 @@ export class SubcontractorWorkOrderComponent implements OnInit {
 
   constructor(
     private dataHandler: DataHandlerService,
-    private dialogEventHandler: DialogEventHandlerService
+    private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService,
   ) {
     this.module = SubcontractorWorkOrderMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,8 +45,9 @@ export class SubcontractorWorkOrderComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 2;
-    this.dataHandler.get<SubContractorWorkOrder []>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    // const dummyCompanyId = 1; const dummyBranchId = 2;
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<SubContractorWorkOrder []>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
       .subscribe((res: SubContractorWorkOrder []) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

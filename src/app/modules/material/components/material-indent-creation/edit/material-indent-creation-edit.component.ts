@@ -120,6 +120,19 @@ export class MaterialIndentCreationEditComponent implements OnInit {
         return this.router.url.includes('approval');
     }
 
+
+
+    onApproveBtnClick() {
+        const isApproved = true;
+        this.openApproveDialog();
+      }
+    
+      onRejectBtnClick() {
+        const isApproved = false;
+        this.openApproveDialog();
+      }
+
+
     onSaveBtnClick(nextLevel?: boolean) {
         if (this.modalForm.indent.form.valid) {
             if (this.isEditedFromApproval) {
@@ -129,6 +142,8 @@ export class MaterialIndentCreationEditComponent implements OnInit {
                     this.modalForm.indent.model.approvedDate = new Date();
                     this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
                     this.modalForm.indent.model.approvalLevel = 1;
+                    
+                console.log("success",this.modalForm.indent.model.approvalLevel);//i
                 }
                 this.saveChanges();
             }
@@ -247,3 +262,7 @@ export class MaterialIndentCreationEditComponent implements OnInit {
     }
 
 }
+function approvalLevel(arg0: string, approvalLevel: any) {
+    throw new Error('Function not implemented.');
+}
+

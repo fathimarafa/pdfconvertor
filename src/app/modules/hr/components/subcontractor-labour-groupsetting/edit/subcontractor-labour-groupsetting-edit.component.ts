@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 
 @Component({
   selector: 'app-subcontractor-labour-groupsetting-edit',
@@ -34,6 +35,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
   dataSource;
   subscribeProjectDivison: Subscription;
   enableStockEdit: boolean;
+  model: Subcontractorlabourgroup;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -55,6 +57,18 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     this.loadDropdowns();
   }
 
+
+  loadItemDetails() {
+    if (this.isEdit) {
+        const endpoint = `${SubcontractorlaboutgroupMetadata.serviceEndPoint}List/${this.editData.id}`;
+        this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+            this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+}
+
   bindProjectDivisionFields() {
     const projectControllerFields: ProjectDivisionFields<AttendanceSettingDetails> = {
       projectDropdown: FormfieldHandler.projectDropdown,
@@ -67,7 +81,6 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
 
   }
-
 
   ngOnInit(): void {
     this.tableColumns = SubcontractorlaboutgroupMetadata.attendanceSettingDetails.tableColumns;
@@ -94,6 +107,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    this.loadItemDetails();
     this.dataSource = new MatTableDataSource(this.editData.attendanceSettingDetails || []);
   }
 
@@ -175,7 +189,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
   onAddStockBtnClick() {
     if (this.isValid) {
       const data: any = Object.assign({}, this.modalForms.usage.model);
-      // data.labourWorkName = this.materialList.find(e => e.id === data.materialId).materialName;
+      data.labourWorkName = this.WorknameDataset.find(e => e.id === data.labourWorkId).labourWorkName;
       this.dataSource.data.push(data);
       this.dataSource._updateChangeSubscription();
       this.modalForms.usage.form.reset();
@@ -183,7 +197,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
   }
 
   get isValid() {
-    if (!this.modalForms.usage.model['workName']) {
+    if (!this.modalForms.usage.model['labourWorkId']) {
       this.snackBar.open('Warning : Please select Work Name', null, { panelClass: 'snackbar-error-message' });
       return false;
     }
@@ -212,24 +226,60 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
   }
 
 
-  fetchWorkNameSelectOptions() {
-    this.dataHandler.get<LabourWorkRate[]>(this.worknameServiceUrl)
-      .subscribe((res: LabourWorkRate[]) => {
-        if (res) {
-          FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
-            {
-              label: e.labourWorkName,
-              value: e.id
-            }
-          ));
-        }
-      });
+  // fetchWorkNameSelectOptions() {
+  //   this.dataHandler.get<LabourWorkRate[]>(this.worknameServiceUrl)
+  //     .subscribe((res: LabourWorkRate[]) => {
+  //       if (res) {
+  //         FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+  //           {
+  //             label: e.labourWorkName,
+  //             value: e.id
+  //           }
+  //         ));
+  //       }
+  //     });
+  // }
+
+  // get worknameServiceUrl() {
+  //   const user = this.authService.loggedInUser;
+  //   return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  // }
+
+  
+  WorknameDataset: LabourWorkRate[];
+  private fetchWorkNameSelectOptions() {
+    this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl).subscribe((res: LabourWorkRate[]) => {
+      if (res) {
+        this.WorknameDataset=res;
+                FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+                  {
+                   label: e.labourWorkName,
+                   value: e.id
+                  }
+              ));
+        this.listenworknameChange();
+      }
+    });
   }
 
-  get worknameServiceUrl() {
-    const user = this.authService.loggedInUser;
-    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  listenworknameChange() {
+    FormfieldHandler.worknameDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      const selectedworkname: LabourWorkRate = this.WorknameDataset.find(e => e.id === this.modalForms.usage.model.labourWorkId)
+      if (selectedworkname) {
+        this.modalForms.usage.model.workRate= selectedworkname.rate;
+        this.modalForms.usage.model = { ...this.modalForms.usage.model};
+        console.log("",this.modalForms.usage.model['workRate']);
+      }
+    }
+
   }
+
+  private get labourWorkrateSerivceUrl() {
+    const user = this.authService.loggedInUser;
+    const specid=2;
+    return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}/${specid}`;
+  }
+
 
   private fetchSubcontractorSelectOptions() {
     this.employeeService.getSubContractor().subscribe((res) => {

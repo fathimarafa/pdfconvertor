@@ -38,7 +38,7 @@ export class FormfieldHandler {
         return this.formFields
             .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'projectCategoryId');
     }
 

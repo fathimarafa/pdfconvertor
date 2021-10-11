@@ -54,14 +54,23 @@ export class FormfieldHandler {
     }*/
 
     static get siteManagerDropdown(){
-        return this.forms.usage
+        return this.forms.issued
+          .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+          .find((x: FormlyFieldConfig) => x.key === 'paymentModeId');
+      }
+      static get foremanDropdown(){
+        return this.forms.issued
           .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
           .find((x: FormlyFieldConfig) => x.key === 'employeeId');
       }
-      static get foremanDropdown(){
+      static get paymentModeDropdown(){
+        return this.forms.usage
+          .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+          .find((x: FormlyFieldConfig) => x.key === 'paymentMode');
+      }
+      static get bankDropdown(){
         return this.forms.usage
           .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-          .find((x: FormlyFieldConfig) => x.key === 'id');
+          .find((x: FormlyFieldConfig) => x.key === 'paymentModeId');
       }
-    
 }

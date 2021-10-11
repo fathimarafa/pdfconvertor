@@ -12,10 +12,10 @@
                         </button>
                     </mat-form-field>
                 </div>
-                <div class="form-dialog">
+                <!-- <div class="form-dialog">
                     <button (click)="onApproveBtnClick()" mat-button class="save margin-right-30">Approve</button>
                     <button mat-button (click)="onRejectBtnClick()" cdkFocusInitial class="cancel">Reject</button>
-                </div>
+                </div> -->
             </div>
 
 
@@ -25,17 +25,21 @@
                 <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
                     <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
                     <td mat-cell *matCellDef="let element;let i =index">
-                        <ng-container *ngIf="firstColumn">
+                        <!-- <ng-container *ngIf="firstColumn">
                             <mat-radio-button [checked]="element.isSelected"></mat-radio-button>
-                        </ng-container>
+                        </ng-container> -->
                         <ng-container *ngIf="!firstColumn">
                             <ng-container *ngIf="column.field !== 'action'">
                                 {{element[column.field]}}
                             </ng-container>
-                            <ng-container *ngIf=" column.field === 'action'">
+                            <!-- <ng-container *ngIf=" column.field === 'action'">
                                 <mat-icon (click)="openEditDialog(element)">edit</mat-icon>
-                            </ng-container>
+                            </ng-container> -->
                         </ng-container>
+                        <ng-container *ngIf="column.field === 'action'">
+                            <mat-icon (click)="openEditDialog(element)"
+                              >remove_red_eye</mat-icon>
+                          </ng-container>
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
@@ -58,12 +62,12 @@
                 <tr mat-header-row *matHeaderRowDef="itemDataColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: itemDataColumns;"></tr>
             </table>
-            <div class="info-text" *ngIf="!itemDatasource">
+            <!-- <div class="info-text" *ngIf="!itemDatasource">
                 Please select indent to load data
-            </div>
-            <div class="info-text" *ngIf="itemDatasource && itemDatasource.data.length < 1 ">
+            </div> //i-->
+            <!-- <div class="info-text" *ngIf="itemDatasource && itemDatasource.data.length < 1 ">
                 No data
-            </div>
+            </div> //i-->
 
         </mat-card-content>
     </mat-card>

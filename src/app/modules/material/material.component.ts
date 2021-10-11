@@ -44,6 +44,7 @@ import { MaterialPurchaseReturnApprovalComponent } from './components/material-p
 import { DamageStockEntryApprovalComponent } from './components/damage-stock-entry-approval/damage-stock-entry-approval.component';
 import { MaterialSupplierAdvanceApprovalComponent } from './components/material-supplier-advance-approval/material-supplier-advance-approval.component';
 import { MaterialSupplierPaymentApprovalComponent } from './components/material-supplier-payment-approval/material-supplier-payment-approval.component';
+import { MaterialIndentApprovalEditComponent } from './components/material-indent-approval/edit/material-indent-approval-edit.component';
 
 export const MaterialModuleComponents = [
     SupplierRegistrationComponent,
@@ -53,6 +54,7 @@ export const MaterialModuleComponents = [
     MaterialIndentCreationComponent,
     MaterialIndentCreationEditComponent,
     MaterialIndentApprovalComponent,
+    MaterialIndentApprovalEditComponent,
     DamageStockEntryComponent,
     DamageStockEntryEditComponent,
     DamageStockEntryApprovalComponent,

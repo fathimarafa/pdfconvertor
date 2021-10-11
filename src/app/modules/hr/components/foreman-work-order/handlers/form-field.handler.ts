@@ -47,12 +47,6 @@ export class FormfieldHandler {
             .find((x: FormlyFieldConfig) => x.id === 'row-2')
     }
 
-    /*static get materialDropdown() {
-        return this.forms.usage
-            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-            .find((x: FormlyFieldConfig) => x.key === 'materialId');
-    }*/
-
     static get categoryDropdown(){
         return this.forms.issued
           .find((x: FormlyFieldConfig) => x.id === 'row-5').fieldGroup
@@ -67,7 +61,7 @@ export class FormfieldHandler {
     static get nameDropdown(){
       return this.forms.usage
         .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-        .find((x: FormlyFieldConfig) => x.key === 'workName');
+        .find((x: FormlyFieldConfig) => x.key === 'labourWorkId');
     }
       
 }

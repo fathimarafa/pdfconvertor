@@ -34,7 +34,7 @@
             </div>
 
             <button style="float: right;" (click)="onAddUnitsBtnClick()" mat-button class="save">{{
-                isEdit ? 'Update' : 'Add' }}</button>
+                isUpdatingUnit ? 'Update' : 'Add' }}</button>
         </div>
     </div>
 
@@ -55,8 +55,8 @@
                             {{element[column.field]}}
                         </ng-container>
                         <ng-container *ngIf=" column.field === 'action'">
-                            <mat-icon (click)="openDialog(element)">edit</mat-icon>
-                            <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                            <mat-icon (click)="onEditRow(element)">edit</mat-icon>
+                            <mat-icon (click)="onDeleteRowBtnClick(element)">delete_outline</mat-icon>
                         </ng-container>
                     </ng-container>
                 </td>

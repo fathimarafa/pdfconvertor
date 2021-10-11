@@ -1,7 +1,7 @@
 export interface SubcontractorBill {
     id: number;
         billDate: Date;
-        billno: number;
+        billno: string;
         workOrderId: number;
         projectId: number;
         unitId: number;

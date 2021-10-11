@@ -4,11 +4,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { DataHandlerService } from '../../../../services/datahandler/datahandler.service';
 import { DialogEventHandlerService } from '../../../../services/dialog-event-handler/dialogeventhandler.service';
 import { MaterialIndentApprovalMetadata } from './material-indent-approval.configuration';
-import { MaterialIndent } from '../material-indent-creation/definitions/material-indent-creation.definiton';
+import { MaterialIndent } from '../material-indent-approval/definitions/material-indent-approval.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { MaterialIndentCreationEditComponent } from '../material-indent-creation/edit/material-indent-creation-edit.component';
+import { MaterialIndentApprovalEditComponent } from './edit/material-indent-approval-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 @Component({
@@ -88,6 +88,7 @@ export class MaterialIndentApprovalComponent implements OnInit {
   onApproveBtnClick() {
     const isApproved = true;
     this.openApproveRemarkDialog(isApproved);
+
   }
 
   onRejectBtnClick() {
@@ -138,7 +139,7 @@ export class MaterialIndentApprovalComponent implements OnInit {
 
   openEditDialog(rowToEdit?: MaterialIndent) {
     this.dialogEventHandler.openDialog(
-      MaterialIndentCreationEditComponent,
+      MaterialIndentApprovalEditComponent,
       this.dataSource,
       rowToEdit,
       this.affectedRowIndex(rowToEdit)

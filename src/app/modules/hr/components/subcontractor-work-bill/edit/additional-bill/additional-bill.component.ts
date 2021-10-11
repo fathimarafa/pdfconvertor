@@ -17,8 +17,10 @@ import { FormGroup } from '@angular/forms';
 import { DialogActions, IDialogEvent } from 'src/app/definitions/dialog.definitions';
 import { LabourWorkRateSettingMetadata } from '../../../labour-workrate-setting/labour-workrate-setting.configuration';
 import { LabourWorkRate } from '../../../labour-workrate-setting/definitions/labour-workrate-setting.definition';
-import { FormfieldHandler, ModalFormFields } from 'src/app/modules/hr/components/subcontractor-work-bill/handlers/form-field.handler';
-
+// import { FormfieldHandler, ModalFormFields } from 'src/app/modules/hr/components/subcontractor-work-bill/handlers/form-field.handler';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { FormfieldHandler, ModalFormFields } from 'src/app/modules/hr/components/subcontractor-work-order/handlers/form-field.handler';
 
 @Component({
   selector: 'app-additional-bill',
@@ -44,6 +46,7 @@ export class AdditionalBillComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private editData: SubContractorWorkOrder,
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
@@ -145,7 +148,9 @@ export class AdditionalBillComponent implements OnInit {
   onAddBtnClick() {
     if (this.modalForms.usage.form.valid) {
       this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-      const dataRow:  SubContractorWorkOrderDetails = Object.assign({}, this.modalForms.usage.model);
+      // const dataRow:  SubContractorWorkOrderDetails = Object.assign({}, this.modalForms.usage.model);
+      const dataRow: any = Object.assign({}, this.modalForms.usage.model);
+      dataRow.labourWorkName = this.WorknameDataset.find(e => e.id === dataRow.workId).labourWorkName;
       dataRow['total'] = dataRow.quantityOrdered * dataRow.workRate;
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
@@ -176,39 +181,39 @@ onCancelUpdateBtnClick() {
   this.enableItemEdit = false;
   this.modalForms.usage.form.reset();
 }
+WorknameDataset: LabourWorkRate[];
+private fetchWorkNameSelectOptions() {
+  this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl).subscribe((res: LabourWorkRate[]) => {
+    if (res) {
+      this.WorknameDataset=res;
+              FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+                {
+                 label: e.labourWorkName,
+                 value: e.id
+                }
+            ));
+      this.listenworknameChange();
+    }
+  });
+}
 
-
-
-
-  
-
-
- 
-  
- 
-  fetchWorkNameSelectOptions() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    const endPoint = `${LabourWorkRateSettingMetadata.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`;
-    this.dataHandler.get<LabourWorkRate []>(endPoint)
-      .subscribe((res: LabourWorkRate []) => {
-        if (res) {
-          FormfieldHandler.worknameDropdown.templateOptions.options = res.map((e: LabourWorkRate ) => (
-            {
-              label: e.labourWorkName,
-              value: e.id
-            }
-          ));
-        }
-      });
+listenworknameChange() {
+  FormfieldHandler.worknameDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+    const selectedworkname: LabourWorkRate = this.WorknameDataset.find(e => e.id === this.modalForms.usage.model.workId)
+    if (selectedworkname) {
+      this.modalForms.usage.model.workRate= selectedworkname.rate;
+      this.modalForms.usage.model = { ...this.modalForms.usage.model};
+      console.log("",this.modalForms.usage.model['workRate']);
+    }
   }
-  
- 
-  
+}
 
+private get labourWorkrateSerivceUrl() {
+  const user = this.authService.loggedInUser;
+  const specid=2;
+  return `${LabourWorkRateSettingMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}/${specid}`;
+}
 
- 
-
-  
   removeStock(rowIndex: number) {
     this.dataSource.data.splice(rowIndex, 1)
     this.dataSource._updateChangeSubscription();

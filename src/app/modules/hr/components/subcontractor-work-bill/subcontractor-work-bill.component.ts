@@ -8,6 +8,7 @@ import { SubcontractorBill} from 'src/app/modules/hr/components/subcontractor-wo
 import { MatTableDataSource } from '@angular/material/table';
 import {SubcontractorWorkBillEditComponent} from 'src/app/modules/hr/components/subcontractor-work-bill/edit/subcontractor-work-bill-edit.component';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-subcontractor-work-bill',
@@ -20,10 +21,10 @@ export class SubcontractorWorkBillComponent implements OnInit {
   tableColumns;
   dataSource;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService,
     private pdfExportService: PdfExportService
   ) {
     this.module = SubcontractorBillMetadata;
@@ -43,8 +44,8 @@ export class SubcontractorWorkBillComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1;
-    this.dataHandler.get<SubcontractorBill[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}`)
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<SubcontractorBill[]>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
       .subscribe((res: SubcontractorBill[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

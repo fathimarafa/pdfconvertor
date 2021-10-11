@@ -18,6 +18,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Project } from 'src/app/modules/crm/components/project/definitions/project.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { SubContractorWorkOrder } from '../../subcontractor-work-order/definitions/subcontractor-work-order.definition';
 
 
 @Component({
@@ -53,15 +54,9 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     }
     this.defineModalForms();
     this.loadDropdowns();
-    this.fetchData();
+    // this.fetchData();
+    this.bindFormSelectOptions();
   }
-
-
-  private get projectDropdown() {
-    return this.fields.find(e => e.id === 'row-1')
-      .fieldGroup.find(e => e.key === 'projectId')
-  }
-
 
 
   bindProjectDivisionFields() {
@@ -78,17 +73,18 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
   }
 
   ngOnInit(){
-     this.fetchData();
+    //  this.fetchData();
    }
 
-  fetchData() {
-    const dummyCompanyId = 4; 
-    this.dataHandler.get<AttendanceDetails[]>(`${'BuildExeHR/api/SubContractorAttendanceList'}/${dummyCompanyId}`)
-      .subscribe((res: AttendanceDetails[]) => {
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.paginator = this.paginator;
-      });
-  }
+  // fetchData() {
+  //   // const dummyCompanyId = 4; 
+  //   // this.dataHandler.get<AttendanceDetails[]>(`${'BuildExeHR/api/SubContractorAttendanceSetting'}/${this.modalForms.issued.model.projectId}/${this.modalForms.issued.model.unitId}/${this.modalForms.issued.model.blockId}/${this.modalForms.issued.model.floorId}/${this.modalForms.issued.model.subContractorId}`)
+  //   this.dataHandler.get<AttendanceDetails[]>(`${'BuildExeHR/api/SubContractorAttendanceSetting'}/${1009}/${17}/${4}/${2}/${12}`)
+  //     .subscribe((res: AttendanceDetails[]) => {
+  //       this.dataSource = new MatTableDataSource(res);
+  //       this.dataSource.paginator = this.paginator;
+  //     });
+  // }
 
   defineModalForms() {
     this.modalForms = {
@@ -111,8 +107,21 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    this.loadItemDetails();
     this.dataSource = new MatTableDataSource(this.editData.attendanceDetails || []);
   }
+
+
+  loadItemDetails() {
+    if (this.isEdit) {
+        const endpoint = `${"BuildExeHR/api/SubContractorAttendanceSetting"}List/${this.editData.id}`;
+        this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+            this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+}
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -120,9 +129,9 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
 
   loadDropdowns() {
 
-    this.fetchSubcontractorSelectOptions();
-    this.bindProjectDivisionFields();
-    this.fetchWorkOrderSelectOptions();
+    // this.fetchSubcontractorSelectOptions();
+    // this.bindProjectDivisionFields();
+    // this.fetchWorkOrderSelectOptions();
   }
 
   onSaveBtnClick() {
@@ -182,22 +191,149 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     }
   }
 
+  bindFormSelectOptions() {
+    this.fetchSubcontractorSelectOptions();
+    this.bindProjectDivisionFields();
+    if(this.modalForms.issued.model.blockId == null || this.modalForms.issued.model.unitId == null || this.modalForms.issued.model.floorId == null){
+      this.modalForms.issued.model.blockId = 0;
+      this.modalForms.issued.model.unitId = 0;
+      this.modalForms.issued.model.floorId = 0;
+    }
+    FormfieldHandler.projectDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      // this.modalForms.issued.form.reset();
+      this.fetchWorkOrderSelectOptions();
+    }
+    FormfieldHandler.subcontractorDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      this.fetchWorkOrderSelectOptions();
+      
+    }
+    FormfieldHandler.workorderDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      // this.fetchData();
+      this.fetchWorkBillnoSelectOptions();
+      
+    }
+  }
+
+  // private fetchsubcontractorSelectOptions() {
+  //   this.employeeService.getForeman().subscribe((res) => {
+  //     if (res) {
+  //       FormfieldHandler.subcontractorDropdown.templateOptions.options = res.map((e) => (
+  //         {
+  //           label: e.fullName,
+  //           value: e.id
+  //         }
+  //       ));
+ 
+  //     }
+  //   });
+  // }
+
+  // private fetchWorkCategorySelectOptions() {
+  //   this.dataHandler.get<BasicWorkCategory[]>(this.workCategoryServiceUrl)
+  //     .subscribe((res: BasicWorkCategory[]) => {
+  //       if (res) {
+  //         FormfieldHandler.categoryDropdown.templateOptions.options = res.map((e: BasicWorkCategory) => (
+  //           {
+  //             label: e.workCategoryName,
+  //             value: e.id
+  //           }
+  //         ));
+  //       }
+  //     });
+  // }
+
+  private get workCategoryServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${BasicWorkCategoryMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
+  onUserInput($event, row, column) {
+    row[column] = $event.target.value;
+    row['amount'] = row.noOfLabours * row.workRate;
+    row['oTAmount'] = row.oTRate * row.oTHours;
+    row['total'] = row['amount'] + row['oTAmount'];
+    // this.calculateItemDetailsTableTotal();
+  }
+
+  WorknoDataset: SubContractorWorkOrder[]; 
+  BillnoDataset: any[];  
 
   fetchWorkOrderSelectOptions() {
-    const dummyprojectId = 1008; const dummyUnitId = 0; const dummyBlockId = 5; const dummyFloorId = 1; const dummySubContractorId = 12;
-    const endPoint = `${SubcontractorWorkOrderMetadata.serviceEndPoint}/${dummyprojectId}/${dummyUnitId}/${dummyBlockId}/${dummyFloorId}/${dummySubContractorId}`;
+    const user = this.authService.loggedInUser;
+    // const dummyprojectId = 1008; const dummyUnitId = 0; const dummyBlockId = 5; const dummyFloorId = 1; 
+    // const dummyforemanId = 13;
+    const subContractorId = this.modalForms.issued.model.subId;
+    const projectId = this.modalForms.issued.model.projectId;
+    const blockId = this.modalForms.issued.model.blockId;
+    const unitId = this.modalForms.issued.model.unitId;
+    const floorId = this.modalForms.issued.model.floorId;
+    const endPoint = `${SubcontractorlaboutgroupattendanceMetadata.dropdownEndpoints.workno}/${projectId}/${unitId}/${blockId}/${floorId}/${subContractorId}`;
     this.dataHandler.get<any[]>(endPoint)
       .subscribe((res: any[]) => {
         if (res) {
+        this.WorknoDataset=res;
           FormfieldHandler.workorderDropdown.templateOptions.options = res.map((e: any) => (
             {
               label: e.workOrderNo,
               value: e.id
             }
           ));
+          // this.listenworknoChange();
+        // console.log("", this.modalForms.issued.model.id);
+        // this.fetchWorkBillnoSelectOptions()
         }
       });
   }
+
+  
+  // listenworknoChange() {
+  //   FormfieldHandler.workorderDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+  //     const selectedworkno: SubContractorWorkOrder = this.WorknoDataset.find(e => e.id === this.modalForms.issued.model.workOrderMasterId)
+  //     if (selectedworkno) {
+  //       // this.modalForms.issued.model.voucherTypeId= selectedworkno.workTypeId;
+  //       console.log("", this.modalForms.issued.model.voucherTypeId);
+  //       this.modalForms.issued.model = { ...this.modalForms.issued.model};
+  //       console.log("",this.modalForms.issued.model['workOrderMasterId']);
+  //     }
+  //   }
+  // }
+
+  fetchWorkBillnoSelectOptions() {
+    const user = this.authService.loggedInUser;
+    const dummytype = 1; 
+    console.log("wid",this.modalForms.issued.model.workOrderMasterId);
+    const endPoint = `${'BuildExeHR/api/MaxNo'}/${dummytype}/${this.modalForms.issued.model.workOrderMasterId}/${1}`;
+    this.dataHandler.get<any[]>(endPoint)
+      .subscribe((res: any[]) => {
+        if (res) {
+          this.modalForms.issued.model['billno']=String(res);
+          console.log("bill",this.modalForms.issued.model.billno);
+          this.modalForms.issued.model = { ...this.modalForms.issued.model};
+        }
+      });
+    }
+
+    // FormfieldHandler.workorderDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+    //   const selectedbillno: any = this.BillnoDataset.find(e => e.id === this.modalForms.issued.model.workOrderMasterId)
+    //   if (selectedbillno) {
+    //     this.modalForms.issued.model.voucherTypeId= selectedbillno.workTypeId;
+    //     console.log("", this.modalForms.issued.model.voucherTypeId);
+    //     this.modalForms.issued.model = { ...this.modalForms.issued.model};
+    //     console.log("",this.modalForms.issued.model['workOrderMasterId']);
+    //   }
+    // }
+  // }
+
+  
+  fetchData() {
+    // const dummyCompanyId = 1; const dummyBranchId = 0;
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<any[]>(`${"BuildExeHR/api/ForemanWorkOrder"}List/${user.companyId}/${user.branchId}`)
+    .subscribe((res: any[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+      });
+  }
+
 
 
   fetchSubcontractorSelectOptions() {

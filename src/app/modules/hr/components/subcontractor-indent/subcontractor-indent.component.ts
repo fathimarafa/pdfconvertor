@@ -10,6 +10,7 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
 import { Observable } from 'rxjs';
 import { ProjectDivisionFields } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 
 @Component({
@@ -27,7 +28,8 @@ export class SubcontractorIndentComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private pdfExportService: PdfExportService,
+    private authService: AuthenticationService,
   ) {
     this.module = SubcontractorIndentMetadata ;
     this.tableColumns = this.module.tableColumns
@@ -46,8 +48,8 @@ export class SubcontractorIndentComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Indent[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<Indent[]>(`${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`)
       .subscribe((res: Indent[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

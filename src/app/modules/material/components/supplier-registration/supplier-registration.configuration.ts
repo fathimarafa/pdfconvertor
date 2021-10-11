@@ -116,7 +116,7 @@ export const SupplierRegistrationMetadata = {
                 }
             ]
         },
-        {
+        {   "id": "row-5",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
@@ -125,7 +125,7 @@ export const SupplierRegistrationMetadata = {
                     "key": "tinNo",
                     "templateOptions": {
                         "label": "TIN number",
-                        "required": true
+                        // "required": true
                     }
                 },
                 {
@@ -134,16 +134,17 @@ export const SupplierRegistrationMetadata = {
                     "key": "gstNo",
                     "templateOptions": {
                         "label": "GST number",
-                        "required": true
+                        // "required": true
                     }
                 },
                 {
                     "className": "flex-1",
                     "type": "input",
                     "key": "openingBalance",
+                    "defaultValue":0,
                     "templateOptions": {
                         "label": "Opening Balance",
-                        "required": true,
+                        // "required": true,
                         "type":"number"
                     }
                 },
@@ -151,8 +152,12 @@ export const SupplierRegistrationMetadata = {
                     "className": "flex-1",
                     "type": "select",
                     "key": "openingType",
+                    "expressionProperties": {
+                        "templateOptions.disabled": "!model.openingBalance > 0",
+                    },
                     "templateOptions": {
                         "label": "Opening Type",
+                        // "disabled": "!model.openingBalance<0",
                         "options": [
                             {
                                 "label": "debit",
@@ -163,7 +168,7 @@ export const SupplierRegistrationMetadata = {
                                 "value": "C"
                             }
                         ],
-                        "required": true
+                        // "required": true
                     }
                 }
             ]

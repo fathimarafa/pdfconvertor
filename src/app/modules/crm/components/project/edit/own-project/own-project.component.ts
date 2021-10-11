@@ -23,6 +23,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class OwnProjectComponent implements OnInit {
 
   isEdit: boolean;
+  isUpdatingUnit: boolean;
 
   modalForms;
   tableColumns;
@@ -37,9 +38,6 @@ export class OwnProjectComponent implements OnInit {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
-    this.defineFormMetadata();
-    this.loadDropdown();
-    this.dataSource = new MatTableDataSource([]);
   }
 
   loadDropdown() {
@@ -48,11 +46,18 @@ export class OwnProjectComponent implements OnInit {
     this.listenFormChangeEvents();
   }
 
+  loadProjectUnits() {
+    const endpoint = `${OwnProjectMetadata.serviceEndPoint}/${this.editData.id}`
+    this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+      this.dataSource = new MatTableDataSource(res);
+    })
+  }
+
   private defineFormMetadata() {
     this.modalForms = {
       main: {
         form: new FormGroup({}),
-        model: {},
+        model: this.editData || {},
         options: {},
         fields: OwnProjectMetadata.formFields
       },
@@ -74,6 +79,13 @@ export class OwnProjectComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.defineFormMetadata();
+    this.loadDropdown();
+    if (this.isEdit) {
+      this.loadProjectUnits();
+    } else {
+      this.dataSource = new MatTableDataSource([]);
+    }
     this.tableColumns = OwnProjectMetadata.unit.tableColumns
   }
 
@@ -94,40 +106,53 @@ export class OwnProjectComponent implements OnInit {
 
   saveProject() {
     this.projectHttpRequest.subscribe((res) => {
-      const projectId = res ? res.id : this.modalForms.main.model.id;
-      this.saveUnits(projectId);
+      const projectId = res ? res : this.modalForms.main.model.id;
+      if (this.dataSource.data.length) {
+        this.saveUnits(projectId);
+      } else {
+        // this.snackbar.open('WARNING : No private department found');
+        this.closeModal();
+      }
     })
   }
 
   get projectHttpRequest(): Observable<Project> {
     if (this.isEdit) {
-      const endPoint = `${ProjectMetadata.serviceEndPoint}/${this.modalForms.main.model.id}`;
-      return this.dataHandler.put<Project>(endPoint, this.modalForms.main.model);
+      // const endPoint = `${ProjectMetadata.serviceEndPoint}/${this.modalForms.main.model.id}`;
+      return this.dataHandler.put<Project>(ProjectMetadata.serviceEndPoint, this.modalForms.main.model);
     } else {
-      const dummyFields = { companyId: 1, branchId: 1, userId: 1 };
       this.modalForms.main.model.projectTypeId = 'OP';
-      return this.dataHandler.post<Project>(ProjectMetadata.serviceEndPoint, { ...this.modalForms.main.model, ...dummyFields });
+      return this.dataHandler.post<Project>(ProjectMetadata.serviceEndPoint, this.modalForms.main.model);
     }
   }
 
   saveUnits(projectId) {
     this.modalForms.child.model.projectId = projectId;
     this.unitHttpRequest.subscribe((res) => {
-      const closeEvent: IDialogEvent = {
-        action: this.isEdit ? DialogActions.edit : DialogActions.add,
-        data: this.modalForms.main.model
-      }
-      this.dialogRef.close(closeEvent);
+      this.closeModal();
     })
   }
 
+  closeModal() {
+    const closeEvent: IDialogEvent = {
+      action: this.isEdit ? DialogActions.edit : DialogActions.add,
+      data: this.modalForms.main.model
+    }
+    this.dialogRef.close(closeEvent);
+  }
+
   get unitHttpRequest(): Observable<OwnProject> {
-    const payload = this.dataSource.data.map(e => e.projectId = this.modalForms.child.model.projectId);
+    this.dataSource.data.forEach(row => {
+      if (typeof (row.id) === 'string' && row.id.startsWith('temp')) {
+        delete row.id; // delete temp id
+      }
+      row.projectId = this.modalForms.child.model.projectId;
+    })
     if (this.isEdit) {
-      const endPoint = `${ProjectMetadata.serviceEndPoint}/${this.modalForms.child.model.id}`;
-      return this.dataHandler.put<OwnProject>(endPoint, payload);
+      // const endPoint = `${OwnProjectMetadata.serviceEndPoint}/${this.modalForms.child.model.projectId}`;
+      return this.dataHandler.put<OwnProject>(OwnProjectMetadata.serviceEndPoint, this.dataSource.data);
     } else {
-      return this.dataHandler.post<OwnProject>(OwnProjectMetadata.serviceEndPoint, payload);
+      return this.dataHandler.post<OwnProject>(OwnProjectMetadata.serviceEndPoint, this.dataSource.data);
     }
   }
 
@@ -157,9 +182,49 @@ export class OwnProjectComponent implements OnInit {
   }
 
   onAddUnitsBtnClick() {
-    this.dataSource.data.push(this.modalForms.child.model);
-    this.dataSource._updateChangeSubscription();
-    this.modalForms.child.form.reset();
+    if(this.modalForms.child.form.valid){
+      if (this.isUpdatingUnit) {
+        const indexToUpdate = this.dataSource.data.findIndex(row => row.id === this.modalForms.child.model.id);
+        if (indexToUpdate !== -1) {
+          this.dataSource.data[indexToUpdate] = Object.assign({}, this.modalForms.child.model);
+          this.isUpdatingUnit = false;
+        }
+      } else {
+        this.dataSource.data.push(Object.assign(
+          { id: `temp-${this.dataSource.data.length + 1}` },
+          this.modalForms.child.model
+        ));
+      }
+      this.dataSource._updateChangeSubscription();
+      this.modalForms.child.form.reset();
+      this.bindUnitDefaultValues();
+    }
+  }
+
+  bindUnitDefaultValues() {
+    this.modalForms.child.model = {
+      balconyArea: 0,
+      carParking: 0,
+      carpetArea: 0,
+      commonArea: 0,
+      gst: 0,
+      kfc: 0,
+      landCost: 0,
+      landRate: 0,
+      landgst: 0,
+      landkfc: 0,
+      privateTerrace: 0,
+      ratePerArea: 0,
+      scalableWorkArea: 0,
+      scalableWorkAreaCost: 0,
+      terraceRate: 0,
+      terraceTotalCost: 0,
+      totalAmount: 0,
+      totalAreaCost: 0,
+      totalAreaCostWithTax: 0,
+      totalLandCost: 0,
+      workArea: 0
+    }
   }
 
   private listenFormChangeEvents() {
@@ -274,5 +339,17 @@ export class OwnProjectComponent implements OnInit {
     this.modalForms.child.form.reset();
   }
 
+  onDeleteRowBtnClick(selectedRow) {
+    const indexToRemove = this.dataSource.data.findIndex(row => row.id === selectedRow.id);
+    if (indexToRemove !== -1) {
+      this.dataSource.data.splice(indexToRemove, 1);
+      this.dataSource._updateChangeSubscription();
+    }
+  }
+
+  onEditRow(row) {
+    this.modalForms.child.model = Object.assign({}, row);
+    this.isUpdatingUnit = true;
+  }
 
 }

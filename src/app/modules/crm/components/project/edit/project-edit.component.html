@@ -1,29 +1,27 @@
-<ng-container [ngSwitch]="selectedValue">
-
-    <ng-container *ngSwitchCase="'One'">
-        <app-own-project></app-own-project>
+<ng-container *ngIf="showProject">
+    <ng-container [ngSwitch]="selectedType">
+        <ng-container *ngSwitchCase="'OP'">
+            <app-own-project></app-own-project>
+        </ng-container>
+        <ng-container *ngSwitchCase="'CN'">
+            <app-normal-project></app-normal-project>
+        </ng-container>
+        <ng-container *ngSwitchCase="'CP'">
+            <app-normal-project></app-normal-project>
+        </ng-container>
+        <ng-container *ngSwitchCase="'CG'">
+            <app-govt-project></app-govt-project>
+        </ng-container>
     </ng-container>
+</ng-container>
 
-    <ng-container *ngSwitchCase="'Two'">
-        <app-normal-project></app-normal-project>
-    </ng-container>
+<ng-container *ngIf="!showProject">
+    <h2 style="width: 500px;" mat-dialog-title class="form-dialog header-color">Select Project Type</h2>
+    <mat-radio-group class="radio-group" [(ngModel)]="selectedType">
+        <mat-radio-button class="radio-button" style="padding: 20px" *ngFor="let project of projectTypes" [value]="project.id">
+            {{project.name}}
+        </mat-radio-button>
+    </mat-radio-group>
 
-    <ng-container *ngSwitchCase="'Three'">
-        <app-govt-project></app-govt-project>
-    </ng-container>
-
-
-    <ng-container *ngSwitchDefault>
-
-        <h2 style="width: 500px;" mat-dialog-title class="form-dialog header-color">Select Project Type</h2>
-        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" #selection>
-            <mat-radio-button style="padding: 20px" (click)="onRadioBtnClick(project)" class="example-radio-button" *ngFor="let project of projectTypes" [value]="project">
-                {{project}}
-            </mat-radio-button>
-        </mat-radio-group>
-
-        <button style="float: right" (click)="onProceedBtnClick(selection)" mat-button class="save">Proceed</button>
-
-    </ng-container>
-
+    <button style="float: right" (click)="onProceedBtnClick()" mat-button class="save">Proceed</button>
 </ng-container>

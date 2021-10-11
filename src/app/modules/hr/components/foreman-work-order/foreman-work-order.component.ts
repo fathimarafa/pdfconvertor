@@ -8,6 +8,8 @@ import { ForemanWorkOrder } from './definitions//foreman-work-order.definition';
 import { ForemanWorkOrderEditComponent } from './edit//foreman-work-order-edit.component';
 import { ForemanWorkOrderMetadata } from './foreman-work-order.configuration';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { Project } from 'src/app/modules/crm/components/project/definitions/project.definition';
 
 @Component({
   selector: 'app-foreman-work-order',
@@ -17,13 +19,16 @@ import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export
 export class ForemanWorkOrderComponent implements OnInit {
 
   module;
+  model: ForemanWorkOrder;
   tableColumns;
   dataSource;
+  Project: Project[];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService,
     private pdfExportService: PdfExportService
   ) {
     this.module = ForemanWorkOrderMetadata;
@@ -40,12 +45,16 @@ export class ForemanWorkOrderComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+    // const data: any = Object.assign({}, this.model);
+    // data.projectName = this.Project.find(e => e.id === data.projectId).projectName;
+    
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<ForemanWorkOrder[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
-      .subscribe((res: ForemanWorkOrder[]) => {
+    // const dummyCompanyId = 1; const dummyBranchId = 0;
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<ForemanWorkOrder[]>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
+    .subscribe((res: ForemanWorkOrder[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });

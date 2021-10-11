@@ -13,12 +13,16 @@ export const SubcontractorlaboutgroupMetadata = {
             "displayName": 'S.No'
         },
         {
-            "field": 'workTypeId',
-            "displayName": 'Work Name'
+            "field": 'projectName',
+            "displayName": 'Project'
         },
         {
-            "field": 'projectId',
-            "displayName": 'Project'
+            "field": 'fullName',
+            "displayName": 'SubContractor Name'
+        },
+        {
+            "field": 'workTypeName',
+            "displayName": 'Work Type'
         },
         {
             "field": 'description',
@@ -149,10 +153,9 @@ export const SubcontractorlaboutgroupMetadata = {
                 "displayName": 'Indent No'
             },
             {
-                "field": 'workName',
+                "field": 'labourWorkName',
                 "displayName": 'Work Name'
             },
-          
             {
                 "field": 'workRate',
                 "displayName": 'Rate'
@@ -174,7 +177,7 @@ export const SubcontractorlaboutgroupMetadata = {
                     {
                         "className": "flex-1",
                         "type": "select",
-                        "key": "workName",
+                        "key": "labourWorkId",
                         "templateOptions": {
                             "label": "Work Name",
                             "options": [
@@ -192,7 +195,7 @@ export const SubcontractorlaboutgroupMetadata = {
                 "fieldGroup": [
                    
                     {
-                        "className": "flex-1",
+                        "className": "flex-1 readonly",
                         "type": "input",
                         "key": "workRate",
                         "templateOptions": {

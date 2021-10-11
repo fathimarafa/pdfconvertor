@@ -18,6 +18,7 @@ import { UnitRegistration } from '../../unit-registration/definitions/unit-regis
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { getMatIconFailedToSanitizeUrlError } from '@angular/material/icon';
 
 @Component({
   selector: 'app-material-registration-edit',
@@ -33,7 +34,9 @@ export class MaterialRegistrationEditComponent implements OnInit {
   addedStocks = [];
   hasOpeningStock: boolean;
   enableStockEdit: boolean;
+  landingCost:any;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  
 
   constructor(
     private dialogRef: MatDialogRef<MaterialRegistrationEditComponent>,
@@ -44,10 +47,12 @@ export class MaterialRegistrationEditComponent implements OnInit {
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
+      this.editData.openingStock.forEach((e: OpeningStock) => e['total'] = e.stock + e.rate);//i
     }
     this.defineModalForms();
     this.bindProjectDivisionFields();
     this.checkOpeningStock();
+    // this.totalLandCost();
   }
 
   bindProjectDivisionFields() {
@@ -67,7 +72,11 @@ export class MaterialRegistrationEditComponent implements OnInit {
     FormfieldHandler.openingStockDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
       this.hasOpeningStock = this.modalForms.material.model.openigStock > 0 ? true : false;
     }
+    // this.modalForms.material.model.landingCost = 0  //i
+    // this.totalLandCost();  //i
   }
+
+ 
 
   ngOnInit(): void {
     this.tableColumns = MaterialRegistrationMetadata.openingStock.tableColumns;
@@ -94,6 +103,7 @@ export class MaterialRegistrationEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    // this.editData.openingStock.forEach((e: OpeningStock) => e['total'] = e.stock + e.rate);//i
     this.dataSource = new MatTableDataSource(this.editData.openingStock || []);
     // this.dataSource.paginator = this.paginator;
   }
@@ -111,7 +121,7 @@ export class MaterialRegistrationEditComponent implements OnInit {
   onSaveBtnClick() {
     if (this.hasOpeningStock && this.dataSource.data.length < 1) {
       return;
-    }
+    }''
     if (this.modalForms.material.form.valid) {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
@@ -128,8 +138,10 @@ export class MaterialRegistrationEditComponent implements OnInit {
   }
 
   get httpRequest(): Observable<MaterialRegistration> {
+    let payload: any=this.modalForms.material.model//i
+    // this.modalForms= this.dataSource.data//i
     if (this.isEdit) {
-      return this.dataHandler.put<MaterialRegistration>(MaterialRegistrationMetadata.serviceEndPoint, this.modalForms.material.model);
+      return this.dataHandler.put<MaterialRegistration>(MaterialRegistrationMetadata.serviceEndPoint, [payload]);
     } else {
       const dummyDefaultFields = {
         companyId: 1,
@@ -139,6 +151,7 @@ export class MaterialRegistrationEditComponent implements OnInit {
       const payload = {
         ...this.modalForms.material.model,
         openingStock: this.dataSource.data,
+        // model: this.dataSource.data,//i
         ...dummyDefaultFields
       }
       console.log(payload);
@@ -156,17 +169,90 @@ export class MaterialRegistrationEditComponent implements OnInit {
   }
 
   onAddStockBtnClick() {
-    if (this.modalForms.stock.form.valid) {
-      this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-      const dataRow: OpeningStock = Object.assign({}, this.modalForms.stock.model);
-      dataRow.unit_Id = this.modalForms.stock.model.unitId;
-      dataRow.financialYearId = 0;
-      dataRow.materialId = 1;
-      this.dataSource.data.push(Object.assign({}, dataRow));
-      this.dataSource._updateChangeSubscription();
-      this.modalForms.stock.form.reset();
+    if (this.modalForms.stock.form.valid)  {
+      // if (this.modalForms.stock.form.valid) {
+      console.log("value stock ",this.modalForms.stock.model.stock);
+      if(this.onDuplicateProjectIdValidate() !== true){
+        
+        if(this.modalForms.stock.model.stock<= this.countTotalStock() ){ 
+          this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+          const dataRow: OpeningStock = Object.assign({}, this.modalForms.stock.model);
+          dataRow.unit_Id = this.modalForms.stock.model.unitId;
+          dataRow.financialYearId = 0;
+          dataRow.materialId = 1;
+          // dataRow['total'] = dataRow.stock + dataRow.rate;//inouse
+          // this.dataSource.total=this.modalForms.material.model.stock+this.modalForms.material.model.rate;//inouse 
+          this.dataSource.data.push(Object.assign({}, dataRow));
+          this.dataSource._updateChangeSubscription();
+          let itemRow = this.dataSource.data.map(e => {//ifrom here
+            return {
+              // materialId: e.materialId,
+              // quantity: e.quantity,
+              // rate: e.rate,
+              // tax: e.tax,
+              total: e.stock + e.rate
+            }
+          })//ito here
+          this.modalForms.stock.form.reset();   
+        }else{
+          console.log("out of value : todo ");
+
+        }
+      }else{
+        console.log("duplicate vlues has been found ");
+        
+      }
     }
   }
+
+  /**
+   * Function to check duplicate projectID on material entery
+   * return true if duplicate else false always
+   */
+  onDuplicateProjectIdValidate(validate:Boolean = true):Boolean{
+    let flag = false
+    if(this.dataSource.data != undefined &&  this.dataSource.data.length > 0){
+       this.dataSource.data.forEach(data=>{
+        if(data.projectId == this.modalForms.stock.model.projectId){
+           flag = true;
+        }
+      })
+      return flag
+    }else{
+      return false
+    }
+  }
+
+  /**
+   * Function give remaing stock count that can be cross check against current projectID stock
+   * @returns remianing balance count
+   */
+  countTotalStock():number{
+    let totCount = this.modalForms.material.model.openigStock;
+    if(this.dataSource.data != undefined &&  this.dataSource.data.length > 0 ){
+      this.dataSource.data.forEach(data=>{
+        totCount -= data.stock
+      }) 
+    }else{
+      totCount = this.modalForms.material.model.openigStock;
+    } 
+
+    return (totCount == undefined || totCount == null || totCount <=0) ? 0 : totCount;
+  }
+
+  totalLandCost(materialModel:MaterialRegistration = this.modalForms.material.model){
+    if(materialModel.materialUnitRate !== undefined && materialModel.materialUnitRate !== null && materialModel.materialUnitRate >= 0){
+      let landingCost = materialModel.materialUnitRate + materialModel.taxPer + materialModel.kfcPer
+      materialModel.landingCost = landingCost
+    }
+
+
+  //  this.landingCost = this.modalForms.material.model.landingCost;   //i
+  // this.landingCost= this.dataSource.materialUnitRate  + this.dataSource.taxPer + this.dataSource.kfcPer;   //i
+  // this.modalForms.material.model.landingCost = this.landingCost  //i
+   console.log("landcost value: ",materialModel.landingCost);   
+  }
+
 
   fetchMaterialCategory() {
     this.dataHandler.get<MaterialCategoryRegistration[]>(this.materialCategoryServiceUrl)
@@ -233,6 +319,14 @@ export class MaterialRegistrationEditComponent implements OnInit {
   editStock(rowToEdit: OpeningStock) {
     this.enableStockEdit = true;
     this.modalForms.stock.model = rowToEdit;
+  }
+
+  onTotal(ev, row: OpeningStock, column: string) {//i(onTotal method)
+    if (ev.target.value) {
+      // row[column] = Number(ev.target.value);
+      row['total'] = row.stock + row.rate;
+      // this.calculateItemDetailsTableTotal();
+    }
   }
 
   onUpdateStockBtnClick() {

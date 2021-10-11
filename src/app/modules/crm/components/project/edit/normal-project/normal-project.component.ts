@@ -3,9 +3,12 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NormalProjectMetadata } from './normal-project.configuration';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { ProjectRegistration, ProjectStage } from '../../definitions/project.definition';
+import { Project, ProjectRegistration, ProjectStage } from '../../definitions/project.definition';
 import { DataHandlerService } from 'src/app/services/datahandler/datahandler.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { ProjectMetadata } from '../../project.configuration';
+import { Observable } from 'rxjs';
+import { DialogActions, IDialogEvent } from 'src/app/definitions/dialog.definitions';
 
 export interface StepType {
   id: string;
@@ -78,6 +81,9 @@ export class NormalProjectComponent implements OnInit {
     this.stageTableColumns = NormalProjectMetadata.projectStageForm.tableColumns;
     this.stageDatasource = new MatTableDataSource([]);
 
+    if (this.isEdit) {
+      this.bindProjectTypeBasedForms();
+    }
 
   }
 
@@ -107,15 +113,27 @@ export class NormalProjectComponent implements OnInit {
   listenProjectTypeChange() {
     this.projectTypeDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
       this.steps.splice(2);
-      if (this.model['projectTypeId'] === 'CP') {
-        this.steps.push(NormalProjectMetadata.privateProjectForm);
-        this.listenPrivateProjectCostChange();
-      }
-      if (this.model['projectTypeId'] === 'CN') {
-        this.steps.push(NormalProjectMetadata.projectConsultancyForm.fields);
-      }
-      this.loadPayment();
+      // if (this.model['projectTypeId'] === 'CP') {
+      //   this.steps.push(NormalProjectMetadata.privateProjectForm);
+      //   this.listenPrivateProjectCostChange();
+      // }
+      // if (this.model['projectTypeId'] === 'CN') {
+      //   this.steps.push(NormalProjectMetadata.projectConsultancyForm.fields);
+      // }
+      // this.loadPayment();
+      this.bindProjectTypeBasedForms();
     }
+  }
+
+  private bindProjectTypeBasedForms() {
+    if (this.model['projectTypeId'] === 'CP') {
+      this.steps.push(NormalProjectMetadata.privateProjectForm);
+      this.listenPrivateProjectCostChange();
+    }
+    if (this.model['projectTypeId'] === 'CN') {
+      this.steps.push(NormalProjectMetadata.projectConsultancyForm.fields);
+    }
+    this.loadPayment();
   }
 
   private get paymentDropdown() {
@@ -466,5 +484,27 @@ export class NormalProjectComponent implements OnInit {
   }
 
   /*  */
+
+  onSaveBtnClick() {
+    if (this.form.valid) {
+      this.projectHttpRequest.subscribe((res) => {
+        const closeEvent: IDialogEvent = {
+          action: this.isEdit ? DialogActions.edit : DialogActions.add,
+          data: res || this.model
+        }
+        this.dialogRef.close(closeEvent);
+      })
+    }
+  }
+
+  get projectHttpRequest(): Observable<Project> {
+    if (this.isEdit) {
+      return this.dataHandler.put<Project>(ProjectMetadata.serviceEndPoint, this.model);
+    } else {
+      this.model.projectTypeId = 'CN';
+      return this.dataHandler.post<Project>(ProjectMetadata.serviceEndPoint, this.model);
+    }
+  }
+
 
 }

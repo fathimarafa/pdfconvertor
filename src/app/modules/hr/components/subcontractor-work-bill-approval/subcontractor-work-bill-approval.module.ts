@@ -6,7 +6,7 @@ import { SubcontractorWorkBillApprovalComponent } from './subcontractor-work-bil
 
 @NgModule({
   declarations: [
-    SubcontractorWorkBillApprovalComponent
+    SubcontractorWorkBillApprovalComponent,
   ],
   imports: [
     CommonModule

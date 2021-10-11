@@ -6,14 +6,21 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
+       // "serviceEndPoint": "BuildExeHR/api/SubcontractorBill",
+    // "serviceEndPoint1": "BuildExeHR/api/SubContractorWorkOrder",
     "serviceEndPoint": "BuildExeHR/api/SubcontractorAttendance",
+    // "serviceEndPoint1": "BuildExeHR/api/ForemanWorkOrderList",
+    "dropdownEndpoints": {
+        // "employeeforeman": "BuildExeHR/api/Employee",
+        "workno": "BuildExeHR/api/SubContractorWorkOrder",
+    },
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'S.No'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project Id'
         },
         {
@@ -21,7 +28,7 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
             "displayName": 'Bill Date'
         },
         {
-            "field": 'subId',
+            "field": 'fullName',
             "displayName": 'SubContractor Id'
         },
         {
@@ -44,13 +51,6 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                         "options": []
                     }
                 },
-              
-            ]
-        },
-        {
-            "id": "row-2",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
                 {
                     "className": "flex-1 readonly",
                     "key": "blockId",
@@ -73,6 +73,14 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                         "required": true
                     }
                 },
+               
+              
+            ]
+        },
+        {
+            "id": "row-2",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
                 {
                     "className": "flex-1 readonly",
                     "key": "unitId",
@@ -83,14 +91,7 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                         "options": [],
                         "required": true
                     }
-                }
-            ]
-        },
-        
-        {
-            "id": "row-3",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
+                },
                 {
                     "className": "flex-1",
                     "type": "select",
@@ -102,6 +103,32 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                 },
                 {
                     "className": "flex-1",
+                    "type": "select",
+                    "key": "workOrderMasterId",
+                    "templateOptions": {
+                        "label": "Work Order No",
+                        "options": []
+                    }
+                },
+              
+            ]
+        },
+        
+        {
+            "id": "row-3",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "input",
+                    "key": "billno",
+                    "templateOptions": {
+                        "label": "Bill Number"
+                    }
+                },
+               
+                {
+                    "className": "flex-1",
                     "type": "datepicker",
                     "key": "billDateFrom",
                     "templateOptions": {
@@ -110,30 +137,7 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                 },
             ]
         },
-        {
-            "id": "row-4",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "workOrderMasterId",
-                    "templateOptions": {
-                        "label": "Work Order No",
-                        "options": []
-                    }
-                },
-                {
-                    "className": "flex-1",
-                    "type": "input",
-                    "key": "billNumber",
-                    "templateOptions": {
-                        "label": "Bill No",
-                        "options": []
-                    }
-                },
-            ]
-        }
+      
     ],
     "attendanceDetails": {
         "tableColumns": [
@@ -142,7 +146,7 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                 "displayName": 'SNo'
             },
             {
-                "field": 'labourWorkName',
+                "field": 'labourWorkId',
                 "displayName": 'Work Name'
             },
             {
@@ -150,7 +154,7 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                 "displayName": 'No of Labours'
             },
             {
-                "field": 'wage',
+                "field": 'workRate',
                 "displayName": 'Daily wage'
             },
             {

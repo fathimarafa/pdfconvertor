@@ -5,12 +5,19 @@ import { DataHandlerService } from '../../../../../services/datahandler/datahand
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable, Subscription } from 'rxjs';
 import { ForemanForPayment, ForemanPayment, ForemanPaymentDetails } from '../definitions/foreman-payment.definition';
-import { ForemanPaymentMetadata } from '../foreman-payment.configuration';
+// import { ForemanPaymentMetadata } from '../foreman-payment.configuration';
 import { MatTableDataSource } from '@angular/material/table';
+import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
 import { FormfieldHandler, ModalFormFields } from '../handlers/form-field.handler';
 import { MatPaginator } from '@angular/material/paginator';
+import { BankAccountRegistrtaionMetadata } from 'src/app/modules/basic/components/bank-account-registration/bank-account-registration.configuration';
+import { BankAccount } from 'src/app/modules/basic/components/bank-account-registration/definitions/bank-account-registration.definition';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { ForemanPaymentMetadata } from '../foreman-payment.configuration';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+//import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
+//import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 
 @Component({
   selector: 'app-foreman-payment-edit',
@@ -33,7 +40,9 @@ export class ForemanPaymentEditComponent implements OnInit {
     private dialogRef: MatDialogRef<ForemanPaymentEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: ForemanPayment,
     private dataHandler: DataHandlerService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private authService: AuthenticationService
+
     // private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
   ) {
     // if (Object.keys(this.editData).length) {
@@ -43,8 +52,28 @@ export class ForemanPaymentEditComponent implements OnInit {
     this.tableColumns = this.module.tableColumns
     this.defineModalForms();
     this.loadDropdowns();
+   
   }
+  onUserInput($event, row, column) {
+    row[column] = Number($event.target.value);
+    // row['amount'] = row.noOfLabours * row.workRate;
+    // row['oTAmount'] = row.oTRate * row.oTHours;
+    // row['total'] = row['amount'] + row['oTAmount'];
+    // // this.calculateItemDetailsTableTotal();
+  }
+  fetchData() {
+    // const dummyCompanyId = 1; const dummyBranchId = 0; 
+    const foremanId = this.modalForms.issued.model.employeeId;
+    const To = this.modalForms.issued.model.dateTo;
+    const Todate = To.toISOString().split('T')[0]
+    const sitemanagerId = this.modalForms.issued.model.paymentModeId; const dummyFinancialyearId = 1; 
+    this.dataHandler.get<ForemanForPayment[]>(`${"BuildExeHR/api/ForemanForPayment"}/${foremanId}/${sitemanagerId}/${dummyFinancialyearId}/${Todate}`)
+      .subscribe((res: ForemanForPayment[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+      });
 
+  }
   get dataColumns() {
     if (this.tableColumns && this.tableColumns.length) {
       const columns = this.tableColumns.map(col => col.field);
@@ -69,7 +98,11 @@ export class ForemanPaymentEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tableColumns = ForemanPaymentMetadata.foremanForPayment.tableColumns;
+    this.tableColumns = ForemanPaymentMetadata.foremanPaymentDetails.tableColumns;
+    if (this.modalForms.issued.model.paymentModeId === 0) {
+      FormfieldHandler.paymentModeDropdown.templateOptions.disabled = true;
+    
+    }
 
   }
 
@@ -85,7 +118,7 @@ export class ForemanPaymentEditComponent implements OnInit {
         form: new FormGroup({}),
         model: {},
         options: {},
-        fields: ForemanPaymentMetadata.foremanForPayment.formFields
+        fields: ForemanPaymentMetadata.foremanPaymentDetails.formFields
       }
     }
     const formFields: ModalFormFields = {
@@ -102,15 +135,28 @@ export class ForemanPaymentEditComponent implements OnInit {
   }
 
   loadDropdowns() {
-
     this.fetchSiteManagerSelectOptions();
     this.fetchForemanSelectOptions();
-    //this.fetchForemanSelectOptions();
-
-    //this.fetchMaterial();
-    // this.bindProjectDivisionFields();
+    this.fetchBankNameSelectOptions();
+  }
+  private fetchBankNameSelectOptions() {
+    this.dataHandler.get<BankAccount[]>(this.bankServiceUrl)
+      .subscribe((res: BankAccount[]) => {
+        if (res) {
+          FormfieldHandler.bankDropdown.templateOptions.options = res.map((e: BankAccount) => (
+            {
+              label: e.bankName,
+              value: e.id
+            }
+          ));
+        }
+      });
   }
 
+  private get bankServiceUrl() {
+    const user = this.authService.loggedInUser;
+    return `${BankAccountRegistrtaionMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  }
   private fetchSiteManagerSelectOptions() {
     this.employeeService.getSiteManager().subscribe((res) => {
       if (res) {
@@ -136,7 +182,7 @@ export class ForemanPaymentEditComponent implements OnInit {
       }
     });
   }
-
+  
   onSaveBtnClick() {
     if (this.modalForms.issued.form.valid) {
       this.httpRequest.subscribe((res) => {
@@ -148,21 +194,10 @@ export class ForemanPaymentEditComponent implements OnInit {
       });
     }
   }
-
-  fetchData() {
-    // const dummyCompanyId = 1; const dummyBranchId = 0; 
-    const dummyEmployeeId = 13; const dummySitemanagerId = 0; const dummyFinancialyearId = 1; const dummyTodate = "2021-06-06";
-    this.dataHandler.get<ForemanForPayment[]>(`${"BuildExeHR/api/ForemanForPayment"}/${dummyEmployeeId}/${dummySitemanagerId}/${dummyFinancialyearId}/${dummyTodate}`)
-      .subscribe((res: ForemanForPayment[]) => {
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.paginator = this.paginator;
-      });
-
-  }
   onShowBtnClick() {
-    //if (this.modalForms.issued.form.valid) {
-    this.fetchData();
-    //}
+    if (this.modalForms.issued.form.valid) {
+      this.fetchData();
+    }
   }
   onCancelBtnClick() {
     this.dialogRef.close();
@@ -171,7 +206,7 @@ export class ForemanPaymentEditComponent implements OnInit {
   get httpRequest(): Observable<ForemanPayment> {
     let payload = {
       ...this.modalForms.issued.model,
-      materialUsageDetails: this.dataSource.data,
+    foremanPaymentDetails: this.dataSource.data,
     }
     if (this.isEdit) {
       return this.dataHandler.put<ForemanPayment>(ForemanPaymentMetadata.serviceEndPoint, [payload]);
@@ -185,72 +220,9 @@ export class ForemanPaymentEditComponent implements OnInit {
       return this.dataHandler.post<ForemanPayment>(ForemanPaymentMetadata.serviceEndPoint, [payload]);
     }
   }
-
-  // get dataColumns() {
-  //   if (this.tableColumns && this.tableColumns.length) {
-  //     return this.tableColumns.map(col => col.field);
-  //   } else {
-  //     return [];
-  //   }
-  // }
-
-  // onAddStockBtnClick() {
-  //   if (this.modalForms.usage.form.valid) {
-  //     this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-  //     const dataRow: ForemanPaymentDetails = Object.assign({}, this.modalForms.usage.model);
-  //     this.dataSource.data.push(Object.assign({}, dataRow));
-  //     this.dataSource._updateChangeSubscription();
-  //     this.modalForms.usage.form.reset();
-  //   }
-  // }
-
-  // showHideProjectDivisionBasedFields(projectDivision: number) {
-  //   switch (projectDivision) {
-  //     case 1:
-  //       FormfieldHandler.unitFieldRow.hideExpression = true;
-  //       FormfieldHandler.blockFloorRow.hideExpression = true;
-  //       break;
-  //     case 2:
-  //       FormfieldHandler.unitFieldRow.hideExpression = false;
-  //       FormfieldHandler.blockFloorRow.hideExpression = true;
-  //       break;
-  //     case 3:
-  //       FormfieldHandler.unitFieldRow.hideExpression = false;
-  //       FormfieldHandler.blockFloorRow.hideExpression = false;
-  //       break;
-  //     case 4:
-  //       FormfieldHandler.unitFieldRow.hideExpression = true;
-  //       FormfieldHandler.blockFloorRow.hideExpression = false;
-  //       break;
-  //   }
-  // }
-
-
-
-
-  // removeStock(rowIndex: number) {
-  //   this.dataSource.data.splice(rowIndex, 1)
-  //   this.dataSource._updateChangeSubscription();
-  // }
-
-  // editStock(rowToEdit: ForemanPaymentDetails) {
-  //   this.enableStockEdit = true;
-  //   this.modalForms.usage.model = rowToEdit;
-  // }
-
-  // onUpdateStockBtnClick() {
-
-  // }
-
-  // onCancelStockUpdateBtnClick() {
-
-  // }
-
   ngOnDestroy() {
     this.modalForms.issued.form.reset();
     this.modalForms.usage.form.reset();
-    // this.projectDivisionFieldsHandler.clear();
-    // this.subscribeProjectDivison.unsubscribe();
   }
 
 }

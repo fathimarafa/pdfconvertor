@@ -13,7 +13,7 @@ export const EmployeeRegistrationMetadata = {
     },
     "tableColumns": [
         {
-            "field": 'employeeId',
+            "field": 'id',
             "displayName": 'SNo'
         },
         {
@@ -125,21 +125,21 @@ export const EmployeeRegistrationMetadata = {
                         "label": "Employee Code",
                     }
                 },
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "status",
-                    "templateOptions": {
-                        "label": "Status",
-                        "options": [
-                            {
-                                "label": "ACTIVE",
-                                "value": "ACTIVE"
-                            },
-                        ],
-                        "required": true
-                    }
-                },
+                // {
+                //     "className": "flex-1",
+                //     "type": "select",
+                //     "key": "status",
+                //     "templateOptions": {
+                //         "label": "Status",
+                //         "options": [
+                //             {
+                //                 "label": "ACTIVE",
+                //                 "value": "ACTIVE"
+                //             },
+                //         ],
+                //         "required": true
+                //     }
+                // },
                 {
                     "className": "flex-1 datepicker-width",
                     "type": "datepicker",

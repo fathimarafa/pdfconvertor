@@ -6,19 +6,23 @@ export const SubcontractorIndentMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint": "BuildExeMaterial/api/Indent",
+    "serviceEndPoint": "BuildExeHR/api/Indent",
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'SNo'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project Id'
         },
         {
             "field": 'indentedDate',
             "displayName": 'Indented Date'
+        },
+        {
+            "field": 'fullName',
+            "displayName": 'SubContractor Name'
         },
         {
             "field": 'action',
@@ -31,15 +35,6 @@ export const SubcontractorIndentMetadata = {
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
                 {
-                    "className": "flex-1 readonly",
-                    "type": "input",
-                    "key": "indentTypeId",
-                    "templateOptions": {
-                        "label": "Indent Type : Sub-Contract",
-                        
-                    }
-                },
-                {
                     "className": "flex-1",
                     "type": "select",
                     "key": "projectId",
@@ -49,22 +44,6 @@ export const SubcontractorIndentMetadata = {
                         "required": true
                     }
                 },
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "subContractorId",
-                    "templateOptions": {
-                        "label": "SubContractor Name",
-                        "required": true,
-                        "options": []
-                    }
-                }
-            ]
-        },
-        {
-            "id": "row-2",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
                 {
                     "className": "flex-1 readonly",
                     "key": "blockId",
@@ -100,11 +79,19 @@ export const SubcontractorIndentMetadata = {
                 }
             ]
         },
-        
         {
             "id": "row-3",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "subContractorId",
+                    "templateOptions": {
+                        "label": "SubContractor Name",
+                        "required": true
+                    }
+                },
                 {
                     "className": "flex-1",
                     "type": "datepicker",
@@ -115,42 +102,14 @@ export const SubcontractorIndentMetadata = {
                     }
                 },
                 {
-                    "className": "flex-2 checkbox-outline-none",
-                    "type": "checkbox",
-                    "key": "quotation",
-                    "defaultValue": 0,
-                    "templateOptions": {
-                        "label": "For Quotation",
-                    }
-                }
-            ]
-        },
-
-        {
-            "id": "row-4",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
-                {
                     "className": "flex-1",
                     "type": "select",
                     "key": "indentCategoryId",
                     "templateOptions": {
                         "label": "Category",
-                        "options": [
-                            {
-                                "label": "capital",
-                                "value": 1
-                            },
-                            {
-                                "label": "consumable",
-                                "value": 2
-                            }
-                        ],
                         "required": true
                     }
                 },
-              
-               
             ]
         },
         {
@@ -158,36 +117,36 @@ export const SubcontractorIndentMetadata = {
             "fieldGroup": [
                
                 {
-                    "className": "flex-2",
+                    "className": "flex-1",
                     "type": "textarea",
                     "key": "remarks",
                     "templateOptions": {
                         "label": "Remarks",
                         "required": true,
-                        "rows": 5
+                        "rows": 1
                     }
                 }
             ]
         },
         {
-            "className":"checkbox-outline-none",
+            "className": "flex-2 checkbox-outline-none",
             "type": "checkbox",
-            "key": "nextLevel",
+            "key": "quotation",
             "defaultValue": 0,
             "templateOptions": {
-                "label": "Next Level",
+                "label": "For Quotation",
             }
-        },
+        }
     ],
 
     "indentDetails": {
         "tableColumns": [
             {
-                "field": 'indentDetailsId ',
+                "field": 'indentDetailsId',
                 "displayName": 'Indent No'
             },
             {
-                "field": 'materialId',
+                "field": 'labourWorkName',
                 "displayName": 'Work'
             },
           
@@ -213,7 +172,7 @@ export const SubcontractorIndentMetadata = {
                     {
                         "className": "flex-1",
                         "type": "select",
-                        "key": "materialId",
+                        "key": "workId",
                         "templateOptions": {
                             "label": "Work",
                             "required": true,

@@ -12,21 +12,37 @@ export const MaterialRegistrationMetadata = {
             "field": 'id',
             "displayName": 'SNo'
         },
+        // {
+        //     "field": 'materialName',
+        //     "displayName": 'Name'
+        // },
         {
-            "field": 'materialName',
+            "field": 'MaterialName',
             "displayName": 'Name'
         },
+        // {
+        //     "field": 'materialTypeId',
+        //     "displayName": 'Type'
+        // },
         {
-            "field": 'materialTypeId',
+            "field": 'MaterialTypeId',
             "displayName": 'Type'
         },
+        // {
+        //     "field": 'materialBrandId',
+        //     "displayName": 'Brand Name'
+        // },
         {
-            "field": 'materialBrandId',
+            "field": 'Brand',
             "displayName": 'Brand Name'
         },
+        // {
+        //     "field": 'materialCategoryId',
+        //     "displayName": 'Category'
+        // },
         {
-            "field": 'materialCategoryId',
-            "displayName": 'Category'
+            "field": 'MaterialCategoryName',
+            "displayName": 'Category '
         },
         {
             "field": 'action',
@@ -152,9 +168,10 @@ export const MaterialRegistrationMetadata = {
                     "className": "flex-1",
                     "type": "input",
                     "key": "openigStock",
+                    "defaultValue":0,
                     "templateOptions": {
                         "label": "Opening Stock",
-                        "required": true,
+                        // "required": true,
                         "type": "number"
                     }
                 },
@@ -178,6 +195,7 @@ export const MaterialRegistrationMetadata = {
                     "className": "flex-1",
                     "type": "input",
                     "key": "taxPer",
+                    "defaultValue":0,
                     "templateOptions": {
                         "label": "Tax(%)",
                         "required": true,
@@ -188,6 +206,7 @@ export const MaterialRegistrationMetadata = {
                     "className": "flex-1",
                     "type": "input",
                     "key": "kfcPer",
+                    "defaultValue":0,
                     "templateOptions": {
                         "label": "Kfc Tax(%)",
                         "required": true,
@@ -208,6 +227,7 @@ export const MaterialRegistrationMetadata = {
                         "label": "Landing Cost",
                         "required": true,
                         "type": "number"
+                        
                     }
                 }
             ]
@@ -224,9 +244,13 @@ export const MaterialRegistrationMetadata = {
                 "displayName": 'Project Id'
             },
             {
-                "field": 'unitId',
+                "field": 'unit_Id',
                 "displayName": 'Unit Id'
             },
+            // {
+            //     "field": 'unitId',
+            //     "displayName": 'Unit Name'
+            // },
             {
                 "field": 'stock',
                 "displayName": 'Stock'

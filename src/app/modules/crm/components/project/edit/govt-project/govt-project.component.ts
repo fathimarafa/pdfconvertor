@@ -7,6 +7,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../../services/datahandler/datahandler.service';
 import { IDialogEvent, DialogActions } from '../../../../../../definitions/dialog.definitions';
 import { Observable } from 'rxjs';
+import { Project } from '../../definitions/project.definition';
+import { ProjectMetadata } from '../../project.configuration';
 
 export interface StepType {
   label: string;
@@ -20,7 +22,7 @@ export interface StepType {
 export class GovernmentProjectComponent implements OnInit {
 
   activedStep = 0;
-  model: GovernmentProject;
+  model: Project;
   steps: StepType[];
   form: FormArray;
   options: FormlyFormOptions[];
@@ -28,7 +30,7 @@ export class GovernmentProjectComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<GovernmentProjectComponent>,
-    @Inject(MAT_DIALOG_DATA) private editData: GovernmentProject,
+    @Inject(MAT_DIALOG_DATA) private editData: Project,
     private dataHandler: DataHandlerService
   ) {
     if (Object.keys(this.editData).length) {
@@ -52,31 +54,29 @@ export class GovernmentProjectComponent implements OnInit {
     this.activedStep = step + 1;
   }
 
+  onCancelBtnClick() {
+    this.dialogRef.close();
+  }
+
   onSaveBtnClick() {
     if (this.form.valid) {
-      this.model.projectId = this.model.projectId || Math.round(Math.random() * 100).toString();
-      this.httpRequest.subscribe((res) => {
+      this.projectHttpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.model
+          data: res || this.model
         }
         this.dialogRef.close(closeEvent);
       })
     }
   }
 
-  onCancelBtnClick() {
-    this.dialogRef.close();
-  }
-
-  get httpRequest(): Observable<GovernmentProject> {
+  get projectHttpRequest(): Observable<Project> {
     if (this.isEdit) {
-      // const endPoint = `${GovernmentProjectMetadata.serviceEndPoint}/${this.model.projectId}`;
-      return this.dataHandler.put<GovernmentProject>(GovernmentProjectMetadata.serviceEndPoint, this.model);
+      return this.dataHandler.put<Project>(ProjectMetadata.serviceEndPoint, this.model);
     } else {
-      const dummyFields = { companyId: 1, branchId: 1, userId: 1 , status : 1 };
-      const payload = { ...dummyFields, ...this.model };
-      return this.dataHandler.post<GovernmentProject>(GovernmentProjectMetadata.serviceEndPoint, payload);
+      // this.model.projectTypeId = 'CG';
+      this.model.departmentId = 2;
+      return this.dataHandler.post<Project>(ProjectMetadata.serviceEndPoint, this.model);
     }
   }
 

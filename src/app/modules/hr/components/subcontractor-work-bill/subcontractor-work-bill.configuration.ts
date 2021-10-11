@@ -6,12 +6,26 @@ export const SubcontractorBillMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
+    // "serviceEndPoint": "BuildExeHR/api/SubcontractorBill",
+    // "serviceEndPoint1": "BuildExeHR/api/SubContractorWorkOrder",
     "serviceEndPoint": "BuildExeHR/api/SubcontractorBill",
-    "serviceEndPoint1": "BuildExeHR/api/SubContractorWorkOrder",
+    // "serviceEndPoint1": "BuildExeHR/api/ForemanWorkOrderList",
+    "dropdownEndpoints": {
+        // "employeeforeman": "BuildExeHR/api/Employee",
+        "workno": "BuildExeHR/api/SubContractorWorkOrder",
+    },
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'SNo'
+        },
+        {
+            "field": 'projectName',
+            "displayName": 'Project Id'
+        },
+        {
+            "field": 'fullName',
+            "displayName": 'Subcontractor Name'
         },
         {
             "field": 'billDate',
@@ -20,10 +34,6 @@ export const SubcontractorBillMetadata = {
         {
             "field": 'billno',
             "displayName": 'Bill No'
-        },
-        {
-            "field": 'amountAsPerAttendance',
-            "displayName": 'Amount as Per Attendance'
         },
         {
             "field": 'action',
@@ -45,22 +55,6 @@ export const SubcontractorBillMetadata = {
                         "options": []
                     }
                 },
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "workOrderId",
-                    "templateOptions": {
-                        "label": "Work order",
-                        "options": []
-                    }
-                },
-              
-            ]
-        },
-        {
-            "id": "row-2",
-            "fieldGroupClassName": "display-flex",
-            "fieldGroup": [
                 {
                     "className": "flex-1 readonly",
                     "key": "blockId",
@@ -94,12 +88,31 @@ export const SubcontractorBillMetadata = {
                         "required": true
                     }
                 }
+              
             ]
         },
         {
-            "id": "row-3",
+            "id": "row-2",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "subContractorId",
+                    "templateOptions": {
+                        "label": "SubContractor Name",
+                        "options": []
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "workOrderId",
+                    "templateOptions": {
+                        "label": "Work order",
+                        "options": []
+                    }
+                },
                 {
                     "className": "flex-1",
                     "type": "input",
@@ -115,23 +128,13 @@ export const SubcontractorBillMetadata = {
                     "templateOptions": {
                         "label": "Bill Date"
                     }
-                },
-               
+                },   
             ]
         },
         {
-            "id": "row-4",
+            "id": "row-3",
             "fieldGroupClassName": "display-flex",
             "fieldGroup": [
-                {
-                    "className": "flex-1",
-                    "type": "select",
-                    "key": "subContractorId",
-                    "templateOptions": {
-                        "label": "SubContractor Name",
-                        "options": []
-                    }
-                },
                 {
                     "className": "flex-1",
                     "type": "datepicker",
@@ -147,8 +150,7 @@ export const SubcontractorBillMetadata = {
                     "templateOptions": {
                         "label": "To"
                     }
-                }
-               
+                } 
             ]
         },
     ],
@@ -159,7 +161,7 @@ export const SubcontractorBillMetadata = {
                 "displayName": 'Indent No'
             },
             {
-                "field": 'workId',
+                "field": 'labourWorkName',
                 "displayName": 'Work Name'
             },
             {
@@ -171,7 +173,7 @@ export const SubcontractorBillMetadata = {
                 "displayName": 'Rate'
             },
             {
-                "field": 'billDateFrom',
+                "field": 'previousBillQty',
                 "displayName": 'Previous Sub Bill'
             },
             {
@@ -185,6 +187,14 @@ export const SubcontractorBillMetadata = {
             {
                 "field": 'negotiatedAmount',
                 "displayName": 'Negotiate Amount'
+            },
+            {
+                "field": 'Total Qty',
+                "displayName": 'Totalqty'
+            },
+            {
+                "field": 'Total Amount',
+                "displayName": 'Amount'
             },
             {
                 "field": 'action',
@@ -203,7 +213,7 @@ export const SubcontractorBillMetadata = {
                         "templateOptions": {
                             "label": "Remarks",
                             "options": [],
-                            "required": true
+                            // "required": true
                         }
                     },
                 ]
@@ -219,7 +229,7 @@ export const SubcontractorBillMetadata = {
                         "templateOptions": {
                             "label": "Payment As per Atttendance",
                             "options": [],
-                            "required": true
+                            // "required": true
                         }
                     },
                     {
@@ -229,7 +239,7 @@ export const SubcontractorBillMetadata = {
                         "templateOptions": {
                             "label": "Other Charges",
                             "options": [],
-                            "required": true
+                            // "required": true
                         }
                     },
                     {
@@ -248,7 +258,7 @@ export const SubcontractorBillMetadata = {
                                     "value": "INTRA"
                                 }
                             ],
-                            "required": true
+                          
                         }
                     },
                 ]
@@ -338,7 +348,7 @@ export const SubcontractorBillMetadata = {
                         "templateOptions": {
                             "label": "CGST Amount",
                             "type": "number",
-                            "readonly": true
+                            // "readonly": true
                         }
                     },
                     {
@@ -404,10 +414,10 @@ export const SubcontractorBillMetadata = {
                     {
                         "className": "flex-1 readonly",
                         "type": "input",
-                        "defaultValue": 0,
+                        // "defaultValue": 0,
                         "key": "netAmount",
                         "templateOptions": {
-                            "label": "Total Amount",
+                            "label": "Net Payable",
                             "type": "number",
                             "readonly": true
                         }

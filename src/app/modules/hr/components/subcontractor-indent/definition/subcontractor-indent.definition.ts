@@ -14,20 +14,22 @@ export interface Indent {
     indentedDate : Date
     approvalStatus : number;
     remarks : String;
+    labourWorkName:string;
     supplierPreferred : number;
     subContractorId : number;
     approvedDate : Date;
     approvedBy : number;
+    maxlevel : number;
     companyId : number;
     branchId: number;
     isDeleted : number;
     approvalLevel : number;
     approvalRemarks : string;
     isReject : number;
-    indentDetails:IndentDetails[]
+    indentDetails: SubIndentDetails[]
 }
 
- export interface IndentDetails {
+ export interface SubIndentDetails {
         indentDetailsId: number;
         indentId : number;
         materialId : number;

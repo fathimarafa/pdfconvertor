@@ -1,17 +1,12 @@
 export const ForemanPaymentMetadata = {
     "moduleId": "foremanpayment",
-    "moduleName": "ForemanPayment",
+    "moduleName": "Foreman Payment",
     "displayName": "HR / Foreman Payment",
     "hasAddNew": true,
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint":  "BuildExeHR/api/ForemanPayment",
-    /*{
-        "contractorPayment": "BuildExeHR/api/ContractorPayment",
-        "contractorWorkOrder": "BuildExeHR/api/ContractorWorkOrder"
-    },
-    */
+    "serviceEndPoint": "BuildExeHR/api/ForemanPayment",
     "tableColumns": [
         {
             "field": 'id',
@@ -21,10 +16,10 @@ export const ForemanPaymentMetadata = {
             "field": 'employeeId',
             "displayName": 'Foreman Name'
         },
-        {
-            "field": 'dateFrom',
-            "displayName": 'From'
-        },
+        // {
+        //     "field": 'dateFrom',
+        //     "displayName": 'From'
+        // },
         {
             "field": 'dateTo',
             "displayName": 'To'
@@ -34,248 +29,205 @@ export const ForemanPaymentMetadata = {
             "displayName": 'Action'
         }
     ],
-    "formFields":  [
-    {
-        "id": "row-1",
-        "fieldGroupClassName": "display-flex",
-        "fieldGroup": [
-            {
-                "className": "is-siteManager checkbox-outline-none",
-                "type": "checkbox",
-                "key": "isSiteManager",
-                "defaultValue": 0,
-                "templateOptions": {
-                    "label": "Site Manager",
+    "formFields": [
+        // {
+        //     "id": "row-0",
+        //     "fieldGroupClassName": "display-flex",
+        //     "fieldGroup": [
+        //         {
+        //             "className": "is-siteManager checkbox-outline-none",
+        //             "type": "checkbox",
+        //             "key": "isSiteManager",
+        //             "defaultValue": 0,
+        //             "templateOptions": {
+        //                 "label": "Site Manager",
+        //             }
+        //         },
+        //     ]
+        // },
+        {
+            "id": "row-1",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+
+                {
+                    "className": "is-siteManager checkbox-outline-none",
+                    "type": "checkbox",
+                    "key": "isSiteManager",
+                    "defaultValue": 0,
+                    "templateOptions": {
+                        "label": "Site Manager",
+                    }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "paymentModeId",
+                    "defaultValue": 0,
+                    "templateOptions": {
+                        "label": "",
+                        "options": [],
+                        "required": true
+                    },
+                    "expressionProperties": {
+                        "templateOptions.disabled": "!model.isSiteManager",
+                    },
+                },
+                // {
+                //     "className": "flex-1",
+                //     "type": "datepicker",
+                //     "key": "dateFrom",
+                //     "templateOptions": {
+                //         "label": "From",
+                //         "required": true
+                //     }
+                // }
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "employeeId",
+                    "templateOptions": {
+                        "label": "Foreman Name",
+                        "options": [],
+                        "required": true
+                    },
+                    // "expressionProperties": {
+                    //     "templateOptions.disabled": "model.isSiteManager",
+                    // },
+                },
+                {
+                    "className": "flex-1",
+                    "type": "datepicker",
+                    "key": "dateTo",
+                    "templateOptions": {
+                        "label": "To",
+                        "required": true
+                    }
                 }
-            },
-            {
-                "className": "flex-1",
-                "key": "paymentAmount",
-                "type": "input",
-                "templateOptions": {
-                    "label": "Paying Amount",
-                    "required": true,
-                    "type": "number"
-                },
-                "expressionProperties": {
-                    "templateOptions.disabled": "!model.isSiteManager",
-                },
-            },
-            {
-                "className": "flex-1",
-                "key": "contractorPaymentId",
-                "type": "select",
-                "templateOptions": {
-                    "label": "Select Bank Name",
-                    "required": true,
-                    "options": []
-                },
-                "expressionProperties": {
-                    "templateOptions.disabled": "!model.isSiteManager",
-                },
                 
-            },
+            ]
             
-        ]
-        
-    },
-    {
-        "id": "row-3",
-        "fieldGroupClassName": "display-flex",
-        "fieldGroup": [
-    {
-        "className": "flex-1",
-        "key": "id",
-        "type": "select",
-        "templateOptions": {
-            "label": "Select Site Manager",
-            "required": true,
-            "options": []
         },
-        "expressionProperties": {
-            "templateOptions.disabled": "!model.isSiteManager",
-        },
-        
-    },
-    {
-        "className": "flex-1",
-        "type": "input",
-        "key": "chequeClearenceID",
-        "templateOptions": {
-            "label": "Cheque No",
-            "required": true
-        },
-        "expressionProperties": {
-            "templateOptions.disabled": "!model.isSiteManager",
-        },
-    },
-    
-
-
-]
-        
-},
-
-    {
-        "id": "row-4",
-        "fieldGroupClassName": "display-flex",
-        "fieldGroup": [
-            {
-                "className": "flex-1",
-                "type": "input",
-                "key": "discountAmount",
-                "templateOptions": {
-                    "label": "Site Balance",
-                    "required": true
-                },
-                "expressionProperties": {
-                    "templateOptions.disabled": "!model.isSiteManager",
-                },
-            },
-            {
-                "className": "flex-1",
-                "key": "paymentDate",
-                "type": "datepicker",
-                "templateOptions": {
-                    "label": "Cheque Date",
-                    "required": true
-                }
-            },
-        ]
-    },
- 
-    {
-        "id": "row-5",
-        "fieldGroupClassName": "display-flex",
-        "fieldGroup": [
-            {
-                "className": "flex-2",
-                "key": "remarks",
-                "type": "textarea",
-                "templateOptions": {
-                    "label": "Description",
-                    "required": true,
-                    "rows": 6
-                }
-            }
-        ]
-    }
-],
-    "foremanForPayment": {
+//         {
+//             "id": "row-2",
+//             "fieldGroupClassName": "display-flex",
+//             "fieldGroup": [
+//                 {
+//                     "className": "flex-1",
+//                     "type": "select",
+//                     "key": "employeeId",
+//                     "templateOptions": {
+//                         "label": "Foreman Name",
+//                         "options": [],
+//                         "required": true
+//                     },
+//                     // "expressionProperties": {
+//                     //     "templateOptions.disabled": "model.isSiteManager",
+//                     // },
+//                 },
+//                 {
+//                     "className": "flex-1",
+//                     "type": "datepicker",
+//                     "key": "dateTo",
+//                     "templateOptions": {
+//                         "label": "To",
+//                         "required": true
+//                     }
+//                 }
+//     ]
+// }   
+       
+    ],
+    "foremanPaymentDetails": {
         "tableColumns": [
             {
-                "field": 'contractorPaymentDetailsId',
-                "displayName": 'CNo'
+                "field": 'billNumber',
+                "displayName": 'Bill Number'
             },
             {
-                "field": 'projectId',
-                "displayName": 'Project Id'
+                "field": 'billDate',
+                "displayName": 'Bill Date'
             },
             {
-                "field": 'unitId',
-                "displayName": 'Unit Id'
+                "field": 'projectName',
+                "displayName": 'Project Name'
+            },
+            {
+                "field": 'unitName',
+                "displayName": 'Unit Name'
+            },
+            {
+                "field": 'floorName',
+                "displayName": 'Floor Name'
+            },
+            {
+                "field": 'blockName',
+                "displayName": 'Block Name'
             },
             {
                 "field": 'totalWage',
-                "displayName": 'Work Order'
-            },
-            {
-                "field": 'discountAmount',
-                "displayName": 'Previous Balance'
-            },
-            {
-                "field": 'paymentAmount',
                 "displayName": 'Total Wage'
             },
             {
-                "field": 'paymentAmoun',
-                "displayName": 'Total OTHrs'
+                "field": 'totOtAmount',
+                "displayName": 'Total Amount'
             },
             {
-                "field": 'paymentAmou',
-                "displayName": 'Total OTAmt'
-            },
-            {
-                "field": 'paymentAmo',
-                "displayName": 'Total WorkOrder Amt'
-            },
-            {
-                "field": 'paymentAm',
+                "field": 'advancePaid',
                 "displayName": 'Advance Amount'
             },
             {
-                "field": 'paymentA',
-                "displayName": 'Grand Total'
+                "field": 'billAmount',
+                "displayName": 'Bill Amount'
             },
             {
-                "field": 'paymemount',
+                "field": 'payment',
                 "displayName": 'Paying Amount'
             },
             {
-                "field": 'pntAmount',
-                "displayName": 'Discount'
+                "field": 'billAmountBalance',
+                "displayName": 'bill Amount Balance'
             },
             {
-                "field": 'action',
-                "displayName": 'Action'
+                "field": 'discount',
+                "displayName": 'Discount'
             },
-            // {
-            //     "field": 'action',
-            //     "displayName": 'Action'
-            // }
         ],
         "formFields": [
-          
-                    {
+            {
                 "id": "row-1",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
-                    {
-                        "className": "is-siteManager checkbox-outline-none",
-                        "type": "checkbox",
-                        "key": "isSiteManager",
-                        "defaultValue": 0,
-                        "templateOptions": {
-                            "label": "Site Manager",
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "select",
-                        "key": "employeeId",
-                        "templateOptions": {
-                            "label": "",
-                            "options": [],
-                            "required": true
-                        },
-                        "expressionProperties": {
-                            "templateOptions.disabled": "!model.isSiteManager",
-                        },
-                    },
+                   
                     {
                         "className": "flex-1",
                         "type": "datepicker",
-                        "key": "dateFrom",
+                        "key": "paymentDate",
                         "templateOptions": {
-                            "label": "From",
-                            "required": true
-                        }
-                    }
-                    
-                ]
-                
-            },
-            {
-                "id": "row-2",
-                "fieldGroupClassName": "display-flex",
-                "fieldGroup": [
+                            "label": "Payment Date",
+                            "required": true,
+                            
+                        },
+                        // "expressionProperties": {
+                        //     "templateOptions.disabled": "model.isSiteManager",
+                        // },
+                    },
                     {
                         "className": "flex-1",
                         "type": "select",
-                        "key": "id",
+                        "key": "paymentMode",
                         "templateOptions": {
-                            "label": "Foreman Name",
-                            "options": [],
+                            "label": "Payment Mode",
+                            "options": [
+                                {
+                                    "label": "Cash/DD",
+                                    "value": 0
+                                },
+                                {
+                                    "label": "Cheque",
+                                    "value": 1
+                                }
+                            ],
                             "required": true
                         },
                         "expressionProperties": {
@@ -285,16 +237,65 @@ export const ForemanPaymentMetadata = {
                     {
                         "className": "flex-1",
                         "type": "datepicker",
-                        "key": "dateTo",
+                        "key": "approvedDate",
                         "templateOptions": {
-                            "label": "To",
-                            "required": true
-                        }
+                            "label": "Cheque Date",
+                            "required": true,
+                            
+                        },
+                        "expressionProperties": {
+                            "templateOptions.disabled": "model.isSiteManager",
+                        },
                     }
-        ]
-    }
-            
+                ]
+            },
+            {
+                "id": "row-2",
+                "fieldGroupClassName": "display-flex",
+                "fieldGroup": [
+                   
+                    {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "am",
+                        "templateOptions": {
+                            "label": "Amount",
+                            "required": true,
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "select",
+                        "key": "paymentModeId",
+                        "templateOptions": {
+                            "label": "Bank",
+                            "options": [],
+                            "required": true
+                        },
+                        "expressionProperties": {
+                            "templateOptions.disabled": "!model.paymentMode",
+                        },
+                        
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "voucherNumber",
+                        "templateOptions": {
+                            "label": "Cheque No.",
+                            "required": true,
+                        },
+                        "expressionProperties": {
+                            "templateOptions.disabled": "!model.paymentMode" ,
+                            // "templateOptions.disabled": "model.isSiteManager"
+                            
+                        },
+                    },
+                   
+                ]
+            }
         ]
     }
 
-    }
+}

@@ -50,10 +50,15 @@ export class MaterialRegistrationComponent implements OnInit {
       });
   }
 
+  // get serviceUrl() {
+  //   const user = this.authService.loggedInUser;
+  //   return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+  // }//for getting ids(no List api)
+
   get serviceUrl() {
     const user = this.authService.loggedInUser;
-    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
-  }
+    return `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`;
+  }//for getting names instead of ids(List api)
 
   openDialog(rowToEdit?: MaterialRegistration) {
     this.dialogEventHandler.openDialog(

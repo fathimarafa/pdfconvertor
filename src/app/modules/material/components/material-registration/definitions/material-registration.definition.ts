@@ -1,7 +1,7 @@
 export interface MaterialRegistration {
     id: string;
     materialId: number;
-    materialName: number;
+    materialName: string;
     materialTypeId: number;
     materialBrandId: number;
     materialCategoryId: number;
@@ -18,9 +18,12 @@ export interface MaterialRegistration {
     remarks: string;
     userId: number;
     openingStock?: OpeningStock[]
+    total: number;
+    // unitLongName: string;//i
 }
 
 export interface OpeningStock {
+    total: number;
     openingStockId: number;
     materialId: number;
     projectId: number;
@@ -30,4 +33,5 @@ export interface OpeningStock {
     floorId: number;
     rate: number;
     financialYearId: number;
+    // unitLongName: string;//i
 }

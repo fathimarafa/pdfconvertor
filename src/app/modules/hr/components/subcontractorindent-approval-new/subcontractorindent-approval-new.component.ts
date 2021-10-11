@@ -8,10 +8,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubContractorIndentApprovalComponentMetadata } from '../subcontractorindent-approval-new/subcontractorindent-approval-new.configuration';
 import { Indent } from '../subcontractor-indent/definition/subcontractor-indent.definition';
 import { ConfirmModalComponent } from 'src/app/modules/common/confirm-modal/confirm-modal.component';
-import { SubcontractorIndentEditComponent } from '../subcontractor-indent/subcontractor-indent-edit/subcontractor-indent-edit.component';
-
 import { MatDialog } from '@angular/material/dialog';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { SubcontractorIndentApprovalEditComponent } from './subcontractor-indent-approval-edit/subcontractor-indent-approval-edit.component';
 
 
 @Component({
@@ -28,6 +27,7 @@ dataSource;
 itemTableColumns;
 itemDatasource;
 selectedIndent;
+iseye: boolean;
 
 @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -140,9 +140,10 @@ fetchDetails() {
   })
 }
 
-openDialog(rowToEdit?:Indent) {
+openDialog1(rowToEdit?:Indent) {
+      this.iseye = true;
       this.dialogEventHandler.openDialog(
-        SubcontractorIndentEditComponent,
+        SubcontractorIndentApprovalEditComponent,
         this.dataSource,
         rowToEdit,
         this.affectedRowIndex(rowToEdit)
@@ -164,6 +165,7 @@ openDialog(rowToEdit?:Indent) {
       )
     }
   
+   
     
 private affectedRowIndex(affectedRow?: Indent) {
   let indexToUpdate;

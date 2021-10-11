@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { Observable, Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { DialogActions, IDialogEvent } from 'src/app/definitions/dialog.definiti
 import { Project } from 'src/app/modules/crm/components/project/definitions/project.definition';
 import { ProjectMetadata } from 'src/app/modules/crm/components/project/project.configuration';
 import { DataHandlerService } from 'src/app/services/datahandler/datahandler.service';
-import { SubcontractorBill, SubcontractorBillDetails } from 'src/app/modules/hr/components/subcontractor-work-bill/definitions/subcontractor-work-bill.definition';
+import { SubcontractorBill, SubcontractorBillDetails, SubContractorPreviousSubBill } from 'src/app/modules/hr/components/subcontractor-work-bill/definitions/subcontractor-work-bill.definition';
 import { SubcontractorBillMetadata } from 'src/app/modules/hr/components/subcontractor-work-bill/subcontractor-work-bill.configuration';
 import { MatPaginator } from '@angular/material/paginator';
 import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
@@ -20,6 +20,8 @@ import { DialogEventHandlerService } from 'src/app/services/dialog-event-handler
 import { AdditionalBillComponent } from 'src/app/modules/hr/components/subcontractor-work-bill/edit/additional-bill/additional-bill.component';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { Router } from '@angular/router';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 
 @Component({
   selector: 'app-subcontractor-work-bill-edit',
@@ -38,13 +40,16 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
   model: SubcontractorBill;
   selection = new SelectionModel<SubContractorWorkOrder>(true, []);
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  BillnoDataset: any;
 
   constructor(
+    private router: Router,
     private dialogRef: MatDialogRef<SubcontractorWorkBillEditComponent>,
     private dialogEventHandler: DialogEventHandlerService,
     @Inject(MAT_DIALOG_DATA) private editData: SubcontractorBill,
     private dataHandler: DataHandlerService,
     private authService: AuthenticationService,
+    private dialog: MatDialog,
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
     private employeeService: EmployeeService
   ) {
@@ -55,8 +60,10 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
+    this.model = this.editData;
     this.defineModalForms();
     this.loadDropdowns();
+    this.bindFormSelectOptions();
   }
 
 
@@ -73,16 +80,76 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
 
   }
 
+  
+  bindFormSelectOptions() {
+    this.fetchSubcontractorSelectOptions();
+    this.bindProjectDivisionFields();
+    if(this.modalForms.issued.model.blockId == null || this.modalForms.issued.model.unitId == null || this.modalForms.issued.model.floorId == null){
+      this.modalForms.issued.model.blockId = 0;
+      this.modalForms.issued.model.unitId = 0;
+      this.modalForms.issued.model.floorId = 0;
+    }
+    FormfieldHandler.projectDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      // this.modalForms.issued.form.reset();
+      this.fetchWorkOrderSelectOptions();
+    }
+    FormfieldHandler.subcontractorDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      this.fetchWorkOrderSelectOptions();
+      
+    }
+    FormfieldHandler.workorderDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
+      this.fetchWorkBillnoSelectOptions();
+    //  this.PreviousSubBillSelectOptions() 
+   
+    }
+  }
+
+  loadItemDetails() {
+    if (this.isEdit) {
+        const endpoint = `${SubcontractorWorkOrderMetadata.serviceEndPoint}List/${this.editData.id}`;
+        this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+            this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+}
 
 
+
+  // fetchWorkOrderSelectOptions() {
+  //   // const user = this.authService.loggedInUser;
+  //   const dummyprojectId = 1008; const dummyUnitId = 0; const dummyBlockId = 5; const dummyFloorId = 1; 
+  //   this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+  //   const quueryData = {...this.model} as any;
+  //   const endPoint = `${SubcontractorWorkOrderMetadata.serviceEndPoint}/${dummyprojectId}/${dummyUnitId}/${dummyBlockId}/${dummyFloorId}/${quueryData.subContractorId}`;
+  //   this.dataHandler.get<any[]>(endPoint)
+  //     .subscribe((res: any[]) => {
+  //       if (res) {
+  //         FormfieldHandler.workorderDropdown.templateOptions.options = res.map((e: any) => (
+  //           {
+  //             label: e.workOrderNo,
+  //             value: e.id
+  //           }
+  //         ));
+  //       }
+  //     });
+  // }
 
   fetchWorkOrderSelectOptions() {
     const user = this.authService.loggedInUser;
-    const dummyprojectId = 1008; const dummyUnitId = 0; const dummyBlockId = 5; const dummyFloorId = 1; const dummySubContractorId = 12;
-    const endPoint = `${SubcontractorWorkOrderMetadata.serviceEndPoint}/${dummyprojectId}/${dummyUnitId}/${dummyBlockId}/${dummyFloorId}/${dummySubContractorId}`;
+    // const dummyprojectId = 1008; const dummyUnitId = 0; const dummyBlockId = 5; const dummyFloorId = 1; 
+    // const dummyforemanId = 13;
+    const subContractorId = this.modalForms.issued.model.subContractorId;
+    const projectId = this.modalForms.issued.model.projectId;
+    const blockId = this.modalForms.issued.model.blockId;
+    const unitId = this.modalForms.issued.model.unitId;
+    const floorId = this.modalForms.issued.model.floorId;
+    const endPoint = `${SubcontractorBillMetadata.dropdownEndpoints.workno}/${projectId}/${unitId}/${blockId}/${floorId}/${subContractorId}`;
     this.dataHandler.get<any[]>(endPoint)
       .subscribe((res: any[]) => {
         if (res) {
+        // this.WorknoDataset=res;
           FormfieldHandler.workorderDropdown.templateOptions.options = res.map((e: any) => (
             {
               label: e.workOrderNo,
@@ -90,8 +157,10 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
             }
           ));
         }
+      //  this.fetchWorkBillnoSelectOptions();
       });
   }
+
 
   // fetchWorkOrderSelectOptions() {
 
@@ -116,18 +185,21 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
 
 
   ngOnInit() {
-
+  //  this.onPrepareBtnClick();
   }
 
   onPrepareBtnClick() {
-    if (this.modalForms.issued.form.valid) {
+    // if (this.modalForms.issued.valid) {
       const dummyCompanyId = 1; const dummyBranchId = 2;
-      this.dataHandler.get<SubContractorWorkOrderDetails[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
-        .subscribe((res: SubContractorWorkOrderDetails[]) => {
+      console.log("",this.modalForms.issued.model.workOrderId);
+      // this.PreviousSubBillSelectOptions();
+      this.dataHandler.get<SubContractorWorkOrder[]>(`${SubcontractorWorkOrderMetadata.serviceEndPoint}List/${this.modalForms.issued.model.workOrderId}`)
+        .subscribe((res: SubContractorWorkOrder[]) => {
           this.dataSource = new MatTableDataSource(res);
           this.dataSource.paginator = this.paginator;
+         
         });
-    }
+    // }
   }
 
 
@@ -153,6 +225,7 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    this.loadItemDetails();
     this.dataSource = new MatTableDataSource(this.editData.subcontractorBillDetails || []);
   }
 
@@ -161,22 +234,68 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
   }
 
   loadDropdowns() {
-    this.fetchSubcontractorSelectOptions();
-    this.bindProjectDivisionFields();
-    this.fetchWorkOrderSelectOptions();
+    // this.fetchSubcontractorSelectOptions();
+    // this.bindProjectDivisionFields();
+    // this.fetchWorkOrderSelectOptions();
   }
 
-  onSaveBtnClick() {
-    if (this.modalForms.issued.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.modalForms.issued.model
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+            this.saveChanges();
         }
-        this.dialogRef.close(closeEvent);
-      });
+    });
+}
+
+get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+}
+
+  onSaveBtnClick(nextLevel?: boolean) {
+    if (this.modalForms.issued.form.valid) {
+        if (this.isEditedFromApproval) {
+            this.openApproveDialog();
+        } else {
+            if (nextLevel) {
+           
+            if(this.modalForms.issued.model.maxlevel===0)
+            {
+                this.modalForms.issued.model.approvalStatus=1;
+                this.modalForms.issued.model.approvedDate = new Date();
+                this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+                this.modalForms.issued.model.approvalLevel = 1;
+            }
+            else
+            {
+              this.modalForms.issued.model.approvalLevel=1;
+              this.modalForms.issued.model.approvedDate = new Date();
+              this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+                this.saveChanges(); 
+            }
+          
+            }
+          
+        }
     }
   }
+
+
+  saveChanges() {
+    // this.httpRequest.subscribe((res) => {
+    //     const closeEvent: IDialogEvent = {
+    //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+    //         data: res || this.modalForm.indent.model
+    //     }
+    //     this.dialogRef.close(closeEvent);
+    this.httpRequest.subscribe((res) => {
+        const closeEvent: IDialogEvent = {
+          action: this.isEdit ? DialogActions.edit : DialogActions.add,
+          data: res || this.modalForms.issued.model
+        }
+        this.dialogRef.close(closeEvent);
+    })
+}
 
   onCancelBtnClick() {
     this.dialogRef.close();
@@ -222,6 +341,14 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
     }
   }
 
+  onUserInput($event, row, column) {
+    row[column] = $event.target.value;
+    row['category'] = row.currentQuantity * row.workRate;
+    row['negotiatedAmount']=row.currentQuantity * row.workRate;
+    this.modalForms.issued.model['netAmount']=row['category'];
+    // this.calculateItemDetailsTableTotal();
+  }
+
 
   onAdditionalbillBtnClick(rowToEdit?: SubContractorWorkOrder) {
     this.dialogEventHandler.openDialog(
@@ -262,8 +389,39 @@ export class SubcontractorWorkBillEditComponent implements OnInit {
           }
         ));
       }
+    //  this.fetchWorkOrderSelectOptions()
     });
   }
+
+  fetchWorkBillnoSelectOptions() {
+    const user = this.authService.loggedInUser;
+    const dummytype = 1; 
+    console.log("wid",this.modalForms.issued.model.workOrderId);
+    const endPoint = `${'BuildExeHR/api/MaxNo'}/${dummytype}/${this.modalForms.issued.model.workOrderId}/${1}`;
+    this.dataHandler.get<any[]>(endPoint)
+      .subscribe((res: any[]) => {
+        if (res) {
+          this.modalForms.issued.model['billno']=String(res);
+          console.log("bill",this.modalForms.issued.model.billno);
+          this.modalForms.issued.model = { ...this.modalForms.issued.model};
+        }
+      });
+    }
+
+
+  //    PreviousSubBillSelectOptions() {
+  //       const user = this.authService.loggedInUser;
+  //       const dummytype = 1; 
+  //       const endPoint = `${'BuildExeHR/api/SubContractorPreviousSubBill'}/${this.modalForms.issued.model.workOrderId}/${this.modalForms.issued.model.billno}`;
+  //       this.dataHandler.get<any[]>(endPoint)
+  //         .subscribe((res: any[]) => {
+  //           if (res) {
+  //             const dataRow: any = Object.assign({}, this.modalForms.issued.model);
+  //             dataRow['previousBillQty'] = res[0].previousBillQty;
+  //           }
+  //         });  
+  // }
+
 
   removeStock(rowIndex: number) {
     this.dataSource.data.splice(rowIndex, 1)

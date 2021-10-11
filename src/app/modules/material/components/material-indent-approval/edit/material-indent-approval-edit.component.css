@@ -1,0 +1,17 @@
+.section {
+    border: 1px solid rgba(0, 0, 0, .12);
+    padding: 20px 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    position: relative;
+    top: 10px;
+    color: #3182ce;
+    font-size: 11px;
+    background-color: #fff;
+    padding: 0 10px;
+    left: 10px;
+    display: inline-block;
+}

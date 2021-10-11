@@ -73,17 +73,17 @@ export const OwnProjectMetadata = {
                 "field": 'description',
                 "displayName": 'Description'
             },
-            {
-                "field": 'totalAreaCostWithTax',
-                "displayName": 'Area Cost'
-            },
-            {
-                "field": 'totalLandCost',
-                "displayName": 'Land Cost'
-            },
+            // {
+            //     "field": 'unitStartDate',
+            //     "displayName": 'Area Cost'
+            // },
+            // {
+            //     "field": 'unitEndDate',
+            //     "displayName": 'Land Cost'
+            // },
             {
                 "field": 'totalAmount',
-                "displayName": 'Total'
+                "displayName": 'Unit Cost'
             },
             {
                 "field": 'action',
@@ -131,13 +131,7 @@ export const OwnProjectMetadata = {
                                             "required": true,
                                             "options": []
                                         }
-                                    }
-                                ]
-                            },
-                            {
-                                "id": "row-2",
-                                "fieldGroupClassName": "display-flex",
-                                "fieldGroup": [
+                                    },
                                     {
                                         "className": "flex-1",
                                         "key": "projectCategoryId",
@@ -147,7 +141,13 @@ export const OwnProjectMetadata = {
                                             "required": true,
                                             "options": []
                                         }
-                                    },
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "row-2",
+                                "fieldGroupClassName": "display-flex",
+                                "fieldGroup": [
                                     {
                                         "className": "flex-1",
                                         "type": "datepicker",
@@ -163,6 +163,15 @@ export const OwnProjectMetadata = {
                                         "type": "datepicker",
                                         "templateOptions": {
                                             "label": "End Date",
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "className": "flex-1",
+                                        "key": "dateCompleted",
+                                        "type": "datepicker",
+                                        "templateOptions": {
+                                            "label": "Date Completed",
                                             "required": true
                                         }
                                     },

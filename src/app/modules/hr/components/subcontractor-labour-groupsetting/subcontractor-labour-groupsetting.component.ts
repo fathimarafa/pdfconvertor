@@ -8,6 +8,7 @@ import { DataHandlerService } from 'src/app/services/datahandler/datahandler.ser
 import { DialogEventHandlerService } from 'src/app/services/dialog-event-handler/dialogeventhandler.service';
 import { ConfirmModalComponent } from 'src/app/modules/common/confirm-modal/confirm-modal.component';
 import { SubcontractorlabourgroupEditComponent } from './edit/subcontractor-labour-groupsetting-edit.component';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-subcontractor-labour-groupsetting',
@@ -24,7 +25,8 @@ export class SubcontractorlabourgroupComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private pdfExportService: PdfExportService,
+    private authService: AuthenticationService,
   ) {
     this.module = SubcontractorlaboutgroupMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,8 +45,8 @@ export class SubcontractorlabourgroupComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<Subcontractorlabourgroup[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<Subcontractorlabourgroup[]>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
       .subscribe((res: Subcontractorlabourgroup[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

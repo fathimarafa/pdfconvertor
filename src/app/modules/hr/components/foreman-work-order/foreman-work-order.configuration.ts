@@ -7,13 +7,14 @@ export const ForemanWorkOrderMetadata = {
     "hasDelete": true,
     "useMultiStepForm": false,
     "serviceEndPoint": "BuildExeHR/api/ForemanWorkOrder",
+    // "serviceEndPoint1": "BuildExeHR/api/ForemanWorkOrderList",
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'SNo'
         },
         {
-            "field": 'projectId',
+            "field": 'projectName',
             "displayName": 'Project Id'
         },
         {
@@ -21,25 +22,25 @@ export const ForemanWorkOrderMetadata = {
             "displayName": 'Assigning Date'
         },
         {
-            "field": 'foremanId',
+            "field": 'fullName',
             "displayName": 'Foreman Name'
         },
         {
-            "field": 'userId',
+            "field": 'workName',
             "displayName": 'Work Order No'
         },
         {
-            "field": 'workTypeId',
+            "field": 'workTypeName',
             "displayName": 'Work Type'
         },
         {
             "field": 'description',
             "displayName": 'Description'
         },
-        {
-            "field": 'workStatus',
-            "displayName": 'Status'
-        },
+        // {
+        //     "field": 'workStatus',
+        //     "displayName": 'Status'
+        // },
         {
             "field": 'action',
             "displayName": 'Action'
@@ -187,16 +188,9 @@ export const ForemanWorkOrderMetadata = {
                         "templateOptions": {
                             "label": "Status",
                             "options": [
-                                { "label": 'Pending', "value": 1 },
-                                    { "label": 'Tender Submitted', "value": 2 },
-                                    { "label": 'Tender Opened', "value": 3 },
-                                    { "label": 'Negotiated', "value": 4 },
-                                    { "label": 'Work Order', "value": 5 },
-                                    { "label": 'Active', "value": 6 },
-                                    { "label": 'Silent', "value": 7 },
-                                    { "label": 'Rejected', "value": 8 },
-                                    { "label": 'Completed', "value": 9 },
-                                    { "label": 'Enquiry', "value": 10 }
+                                { "label": 'Active', "value": 1 },
+                                { "label": 'Pending', "value": 2 },
+                                { "label": 'Completed', "value": 3 },
                             ],
                             "required": true
                         }
@@ -212,7 +206,7 @@ export const ForemanWorkOrderMetadata = {
                 "displayName": 'SNo'
             },
             {
-                "field": 'workName',
+                "field": 'labourWorkName',
                 "displayName": 'Work Name'
             },
             {
@@ -239,7 +233,7 @@ export const ForemanWorkOrderMetadata = {
                     {
                         "className": "flex-1",
                         "type": "select",
-                        "key": "workName",
+                        "key": "labourWorkId",
                         "templateOptions": {
                             "label": "Work Name",
                             "options": [],
@@ -247,12 +241,14 @@ export const ForemanWorkOrderMetadata = {
                         }
                     },
                     {
-                        "className": "flex-1",
+                        "className": "flex-1 readonly",
                         "type": "input",
                         "key": "workRate",
                         "templateOptions": {
                             "label": "Wage",
-                            "required": true,
+                            // "type":"number",
+                            // "required": true,
+                            "readonly": true
                             
                         }
                     },

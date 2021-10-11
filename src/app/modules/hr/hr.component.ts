@@ -49,11 +49,10 @@ import { SubContractorIndentApprovalnewComponent } from 'src/app/modules/hr/comp
 import { SubcontractorWorkOrderComponent } from './components/subcontractor-work-order/subcontractor-work-order.component';
 import { SubcontractorWorkOrderEditComponent } from './components/subcontractor-work-order/edit/subcontractor-work-order-edit.component';
 import { WorkOrderApprovalComponent } from './components/work-order-approval/work-order-approval.component';
-import { AdditionalBillComponent } from './components/subcontractor-work-bill/edit/additional-bill/additional-bill.component';
 import { LabourBulkAttendanceEntryComponent } from './components/labour-bulk-attendance-entry/labour-bulk-attendance-entry.component';
 import { LabourBulkAttendanceEntryEditComponent } from './components/labour-bulk-attendance-entry/edit/labour-bulk-attendance-entry-edit.component';
 import { LabourBulkAttendanceEntryApprovalComponent } from './components/labour-bulk-attendance-entry-approval/labour-bulk-attendance-entry-approval.component';
-import {SubcontractorAttendanceBulkApprovalComponent} from './components/subcontractor-attendance-bulk-approval/subcontractor-attendance-bulk-approval.component';
+import { SubcontractorAttendanceBulkApprovalComponent } from './components/subcontractor-attendance-bulk-approval/subcontractor-attendance-bulk-approval.component';
 import { SubcontractorPaymentApprovalComponent } from './components/subcontractor-payment-approval/subcontractor-payment-approval.component';
 import { AddLabourToProjectComponent } from './components/add-labour-to-project/add-labour-to-project.component';
 import { LabourAttendanceEntryComponent } from './components/labour-attendance-entry/labour-attendance-entry.component';
@@ -66,7 +65,13 @@ import { ForemanPaymentApprovalComponent } from './components/foreman-payment-ap
 import { ForemanWorkBillApprovalComponent } from './components/foreman-work-bill-approval/foreman-work-bill-approval.component';
 import { LabourWagePaymentApprovalComponent } from './components/labour-wage-payment-approval/labour-wage-payment-approval.component';
 import { GroupLabourWagePaymentApprovalComponent } from './components/group-labour-wage-payment-approval/group-labour-wage-payment-approval.component';
-
+import { SubcontractorIndentApprovalEditComponent } from './components/subcontractorindent-approval-new/subcontractor-indent-approval-edit/subcontractor-indent-approval-edit.component';
+import { SubcontractorWorkOrderappEditComponent } from './components/work-order-approval/edit/subcontractor-work-orderapp-edit.component';
+import { SubcontractorWorkBillappEditComponent } from 'src/app/modules/hr/components/subcontractor-work-bill-approval/edit/subcontractor-work-billapp-edit.component';
+import { AdditionalBillComponent } from './components/subcontractor-work-bill/edit/additional-bill/additional-bill.component';
+import { AdditionalBillappComponent } from './components/subcontractor-work-bill-approval/edit/additional-bill/additional-billapp.component';
+import { ForemanWorkBillApprovalEditComponent } from './components/foreman-work-bill-approval/edit/foreman-work-bill-approval-edit.component';
+import { ForemanPaymentApprovalEditComponent } from './components/foreman-payment-approval/edit/foreman-payment-approval-edit.component';
 
 export const HRmoduleComponents = [
   EmployeeDesignationRegistrationComponent,
@@ -135,5 +140,11 @@ export const HRmoduleComponents = [
   ForemanPaymentApprovalComponent,
   ForemanWorkBillApprovalComponent,
   LabourWagePaymentApprovalComponent,
-  GroupLabourWagePaymentApprovalComponent
+  GroupLabourWagePaymentApprovalComponent,
+  SubcontractorIndentApprovalEditComponent,
+  SubcontractorWorkOrderappEditComponent,
+  SubcontractorWorkBillappEditComponent,
+  AdditionalBillappComponent,
+  ForemanWorkBillApprovalEditComponent,
+  ForemanPaymentApprovalEditComponent,
 ];

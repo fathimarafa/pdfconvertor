@@ -19,6 +19,7 @@ import { PrebudgetWorkTypeMetadata } from 'src/app/modules/prebudget/components/
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 
 @Component({
   selector: 'app-foreman-work-order-edit',
@@ -30,11 +31,12 @@ export class ForemanWorkOrderEditComponent implements OnInit {
   modalForms;
   isEdit: boolean;
   tableColumns;
+  model: ForemanWorkOrder;
+  model1: ForemanWorkOrderDetails;
   dataSource;
   subscribeProjectDivison: Subscription;
   enableStockEdit: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
 
   constructor(
     private dialogRef: MatDialogRef<ForemanWorkOrderEditComponent>,
@@ -67,6 +69,7 @@ export class ForemanWorkOrderEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.tableColumns = ForemanWorkOrderMetadata.foremanWorkOrderDetails.tableColumns;
+   
   }
 
   defineModalForms() {
@@ -90,8 +93,21 @@ export class ForemanWorkOrderEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    this.loadItemDetails();
     this.dataSource = new MatTableDataSource(this.editData.foremanWorkOrderDetails || []);
   }
+
+  loadItemDetails() {
+    if (this.isEdit) {
+        const endpoint = `${ForemanWorkOrderMetadata.serviceEndPoint}List/${this.editData.id}`;
+        this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+            this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+}
+
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -120,17 +136,19 @@ export class ForemanWorkOrderEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  
   get httpRequest(): Observable<ForemanWorkOrder> {
-    let payload = {
-      ...this.modalForms.issued.model,
-      materialUsageDetails: this.dataSource.data,
-    }
+    this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+    let payload: any = this.modalForms.issued.model
+    payload.foremanWorkOrderDetails = this.dataSource.data;
     if (this.isEdit) {
-      return this.dataHandler.put<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, [payload]);
+        return this.dataHandler.put<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, [payload]);
     } else {
-      return this.dataHandler.post<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, [payload]);
+        payload.isDeleted = 0;
+        return this.dataHandler.post<ForemanWorkOrder>(ForemanWorkOrderMetadata.serviceEndPoint, [payload]);
     }
-  }
+}
+
 
   get dataColumns() {
     if (this.tableColumns && this.tableColumns.length) {
@@ -175,6 +193,7 @@ export class ForemanWorkOrderEditComponent implements OnInit {
   onAddStockBtnClick() {
     if (this.isValid) {
       const data: any = Object.assign({}, this.modalForms.usage.model);
+      data.labourWorkName = this.WorknameDataset.find(e => e.id === data.labourWorkId).labourWorkName;
       this.dataSource.data.push(data);
       this.dataSource._updateChangeSubscription();
       this.modalForms.usage.form.reset();
@@ -182,7 +201,7 @@ export class ForemanWorkOrderEditComponent implements OnInit {
   }
 
   get isValid() {
-    if (!this.modalForms.usage.model['workName']) {
+    if (!this.modalForms.usage.model['labourWorkId']) {
       this.snackBar.open('Warning : Please select WorkName', null, { panelClass: 'snackbar-error-message' });
       return false;
     }
@@ -194,18 +213,47 @@ export class ForemanWorkOrderEditComponent implements OnInit {
   }
 
 
-  fetchWorkNameSelectOptions() {
-    this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl)
-      .subscribe((res: LabourWorkRate[]) => {
-        if (res) {
-          FormfieldHandler.nameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
-            {
-              label: e.labourWorkName,
-              value: e.id
-            }
-          ));
-        }
-      });
+  // fetchWorkNameSelectOptions() {
+  //   this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl)
+  //     .subscribe((res: LabourWorkRate[]) => {
+  //       if (res) {
+  //         FormfieldHandler.nameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+  //           {
+  //             label: e.labourWorkName,
+  //             value: e.id
+  //           }
+  //         ));
+  //       }
+  //     });
+  // }
+
+
+  WorknameDataset: LabourWorkRate[];
+  private fetchWorkNameSelectOptions() {
+    this.dataHandler.get<LabourWorkRate[]>(this.labourWorkrateSerivceUrl).subscribe((res: LabourWorkRate[]) => {
+      if (res) {
+        this.WorknameDataset=res;
+                FormfieldHandler.nameDropdown.templateOptions.options = res.map((e: LabourWorkRate) => (
+                  {
+                   label: e.labourWorkName,
+                   value: e.id
+                  }
+              ));
+        this.listenworknameChange();
+      }
+    });
+  }
+
+  listenworknameChange() {
+    FormfieldHandler.nameDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      const selectedworkname: LabourWorkRate = this.WorknameDataset.find(e => e.id === this.modalForms.usage.model.labourWorkId)
+      if (selectedworkname) {
+        this.modalForms.usage.model.workRate= selectedworkname.rate;
+        this.modalForms.usage.model = { ...this.modalForms.usage.model};
+        console.log("",this.modalForms.usage.model['workRate']);
+      }
+    }
+
   }
 
   private get labourWorkrateSerivceUrl() {

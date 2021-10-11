@@ -12,7 +12,6 @@ export class FormfieldHandler {
     static initialize(modalForm: ModalFormFields) {
         this.forms = modalForm;
     }
-
     static get projectDropdown(): FormlyFieldConfig {
         return this.forms.issued
             .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
@@ -64,7 +63,7 @@ export class FormfieldHandler {
     static get worknameDropdown() {
         return this.forms.usage
             .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-            .find((x: FormlyFieldConfig) => x.key === 'workName');
+            .find((x: FormlyFieldConfig) => x.key === 'labourWorkId');
 
     }
     

@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFormOptions, FormlyFieldConfig, FormlyField } from '@ngx-formly/core';
 import { SupplierRegistrationMetadata } from '../supplier-registration.configuration';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { SupplierRegistration } from '../definitions/supplier-registration.definition';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-supplier-registration-edit',
@@ -15,11 +16,14 @@ import { Observable } from 'rxjs';
 })
 export class SupplierRegistrationEditComponent implements OnInit {
 
+ 
   form = new FormGroup({});
   model: SupplierRegistration;
   options: FormlyFormOptions = {};
   fields: FormlyFieldConfig[];
   isEdit: boolean;
+  hasOpeningBalance: boolean;////
+  static fields: any;
 
   constructor(
     private dialogRef: MatDialogRef<SupplierRegistrationEditComponent>,
@@ -31,7 +35,25 @@ export class SupplierRegistrationEditComponent implements OnInit {
     }
     this.fields = SupplierRegistrationMetadata.formFields;
     this.model = this.editData;
+    this.checkOpeningBalance();//i
   }
+ 
+  
+
+  checkOpeningBalance() {
+    this.hasOpeningBalance = this.model.openingBalance > 0 ? true : false;
+    this.openingBalancee.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.hasOpeningBalance = this.model.openingBalance > 0 ? true : false;
+        } 
+  }
+
+
+get openingBalancee():FormlyFieldConfig {
+    return this.fields
+        .find((x: FormlyFieldConfig) => x.id === 'row-5').fieldGroup
+        .find((x: FormlyFieldConfig) => x.key === 'openingBalance');
+}
+  
 
   ngOnInit(): void { }
 
@@ -44,7 +66,7 @@ export class SupplierRegistrationEditComponent implements OnInit {
         }
         this.dialogRef.close(closeEvent);
       })
-    }
+    }console.log("opening balance ",this.model.openingBalance); 
   }
 
   onCancelBtnClick() {
@@ -67,6 +89,8 @@ export class SupplierRegistrationEditComponent implements OnInit {
     }
   }
 
+ 
+1
   ngOnDestroy() {
     this.form.reset();
   }

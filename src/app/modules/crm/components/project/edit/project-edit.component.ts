@@ -9,41 +9,35 @@ import { Project } from '../definitions/project.definition';
 })
 export class ProjectEditComponent implements OnInit {
 
-  selectedValue;
-  favoriteSeason: string;
-  projectTypes: string[] = ['Own Project', 'Normal Project', 'Government Project'];
-  selectedProjectType;
+  showProject: boolean = false;
+
+  projectTypes = [
+    { id: 'OP', name: 'Own Project' },
+    { id: 'CN', name: 'Normal Project' },
+    { id: 'CG', name: 'Goverment Project' }
+  ]
+
+  selectedType;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) private editData: Project,
   ) { }
 
   ngOnInit(): void {
-    if(this.editData.projectTypeId === 'CG'){
-      this.selectedProjectType = 'Government Project';
+    if (this.editData && this.editData.projectTypeId) {
+      this.selectedType = this.editData.projectTypeId;
+      this.showProject = true;
     }
-    this.onProceedBtnClick();
-    // this.selectedValue = 'Two';
   }
 
-  onRadioBtnClick(value) {
-    this.selectedProjectType = value;
-  }
-
-  onProceedBtnClick(ele?) {
-    if (!this.selectedProjectType) {
-      return;
-    }
-    switch (this.selectedProjectType) {
-      case 'Own Project':
-        this.selectedValue = 'One';
-        break;
-      case 'Normal Project':
-        this.selectedValue = 'Two';
-        break;
-      case 'Government Project':
-        this.selectedValue = 'Three';
-        break;
-    }
+  onProceedBtnClick() {
+    this.showProject = true;
   }
 
 }
+
+
+  // CG - Gov. Projects
+  // CN - Consultancy
+  // CP - Private Projects
+  // OP - Villas and Apartment

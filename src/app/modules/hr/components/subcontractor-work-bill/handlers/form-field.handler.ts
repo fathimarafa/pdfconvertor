@@ -22,19 +22,19 @@ export class FormfieldHandler {
 
     static get blockDropdown(): FormlyFieldConfig {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'blockId');
     }
 
     static get floorDropdown(): FormlyFieldConfig {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'floorId');
     }
 
     static get unitDropdown(): FormlyFieldConfig {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'unitId');
     }
 
@@ -42,14 +42,14 @@ export class FormfieldHandler {
   
     static get subcontractorDropdown() {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-4').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'subContractorId');
 
     }
 
     static get workorderDropdown() {
         return this.forms.issued
-            .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+            .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
             .find((x: FormlyFieldConfig) => x.key === 'workOrderId');
 
     }
@@ -60,5 +60,11 @@ export class FormfieldHandler {
             .find((x: FormlyFieldConfig) => x.key === 'workOrderId');
 
     }
+
+    static get billnoDropdown(){
+        return this.forms.issued
+          .find((x: FormlyFieldConfig) => x.id === 'row-6').fieldGroup
+          .find((x: FormlyFieldConfig) => x.key === 'billNumber');
+      } 
     
 }

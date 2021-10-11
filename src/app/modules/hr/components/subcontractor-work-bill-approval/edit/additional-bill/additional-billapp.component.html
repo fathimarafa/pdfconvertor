@@ -1,0 +1,49 @@
+<h2 mat-dialog-title class="form-dialog header-color"> Additional Bill Details </h2>
+<mat-dialog-content class="form-dialog mat-typography dialog-content">
+    <div class="flex-1">
+        <div class="form-title"> Work Details</div>
+        <div class="form-container">
+            <div class="form-child">
+                <form [formGroup]="modalForms.usage.form">
+                    <formly-form [model]="modalForms.usage.model" [fields]="modalForms.usage.fields" [options]="modalForms.usage.options" [form]="modalForms.usage.form">
+                    </formly-form>
+                </form>
+                <ng-container *ngIf="enableStockEdit">
+                    <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
+                    <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
+                </ng-container>
+                <ng-container *ngIf="!enableStockEdit">
+                    <button (click)="onAddBtnClick()" mat-button class="save add-block">Add</button>
+                </ng-container>
+                <div class="inner-table-container">
+                    <table class="table-compnay" mat-table [dataSource]="dataSource">
+                        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                            <td mat-cell *matCellDef="let element;let i =index">
+                                <ng-container *ngIf="firstColumn">
+                                    {{this.paginator.pageIndex == 0 ? i + 1 : 1 + i + this.paginator.pageIndex * this.paginator.pageSize}}
+                                </ng-container>
+                                <ng-container *ngIf="!firstColumn">
+                                    <ng-container *ngIf="column.field !== 'action'">
+                                        {{element[column.field]}}
+                                    </ng-container>
+                                    <ng-container *ngIf=" column.field === 'action'">
+                                        <mat-icon (click)="editStock(element)">edit</mat-icon>
+                                        <mat-icon (click)="removeStock(i)">delete_outline</mat-icon>
+                                    </ng-container>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="form-dialog" align="end">
+    <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+</mat-dialog-actions>  

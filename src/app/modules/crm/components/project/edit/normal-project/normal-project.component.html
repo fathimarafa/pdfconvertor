@@ -93,7 +93,7 @@
                 </div>
                 <div align="end">
                     <button class="button-info" type="button" mat-button *ngIf="index !== 0" matStepperPrevious (click)="prevStep(index)">Back</button>
-                    <button class="button-info" type="button" *ngIf="!last" matStepperNext mat-button [disabled]="form.at(index) && !form.at(index).valid" (click)="nextStep(index)">Next</button>
+                    <button class="button-info" type="button" *ngIf="!last" matStepperNext mat-button [disabled]="form && form.at(index) && !form.at(index).valid" (click)="nextStep(index)">Next</button>
                     <button class="button-success" type="submit" (click)="onSaveBtnClick()" *ngIf="last" mat-button [disabled]="!form.valid">Submit</button>
                 </div>
             </mat-step>
