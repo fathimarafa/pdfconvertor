@@ -1,7 +1,8 @@
 .form-child {
     max-height: 45vh;
-    overflow: auto;
-    min-height: 45vh;
+    /* overflow: auto; */
+    min-height: 65vh;
+    width: 25wh;
 }
 
 .form-title {
@@ -27,9 +28,10 @@
 }
 
 .inner-table-container {
-    max-height: 30vh;
-    overflow: auto;
+    max-height: 45vh;
+    /* overflow: auto; */
     width: 100%;
+    width: 35wh;
 }
 
 .add-block {

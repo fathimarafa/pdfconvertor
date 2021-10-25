@@ -1,7 +1,8 @@
 .form-child {
-    max-height: 45vh;
-    overflow: auto;
-    min-height: 45vh;
+    max-height: 73vh;
+    /* overflow: auto; */
+    min-height: 60vh;
+    
 }
 
 .form-title {
@@ -22,8 +23,8 @@
 }
 
 ::ng-deep .cdk-overlay-pane {
-    max-width: 90vw!important;
-    width: 90vw;
+    max-width: 98vw!important;
+    width: 98vw;
 }
 
 .inner-table-container {

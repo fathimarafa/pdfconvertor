@@ -38,8 +38,11 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
   indentList: MaterialIndent[]
   editData: MaterialPurchaseOrder;
   totalAmount = 0;
+  
+
 
   constructor(
+    // private dialogRef: MatDialogRef<MaterialPurchaseOrderEditComponent>,//i
     private dataHandler: DataHandlerService,
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
     private dialog: MatDialog,
@@ -119,6 +122,7 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       if (result) {
         this.httpRequest.subscribe((res) => {
           this.snackBar.open('Data Saved Successfully');
+          this.onCancelBtnClick();
         })
       }
     });
@@ -128,23 +132,66 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     return this.router.url.includes('approval');
   }
 
+
   onSaveBtnClick(nextLevel?: boolean) {
-    if (this.modalForms.purchaseOrder.form.valid) {
+    // if (this.modalForms.purchaseOrder.form.valid) {
       if (this.isEditedFromApproval) {
         this.openApproveDialog();
-      } else {
+      }
+      else {
         if (nextLevel) {
-          this.modalForms.purchaseOrder.model.approvedDate = new Date();
-          this.modalForms.purchaseOrder.model.approvedBy = this.authService.loggedInUser.userId;
-          this.modalForms.purchaseOrder.model.approvalLevel = 1;
-        }
+          // if(this.modalForms.purchaseOrder.model.maxlevel===0){
+            
+            this.modalForms.purchaseOrder.model.approvalStatus= 1;
+            this.modalForms.purchaseOrder.model.approvedDate = new Date();
+            this.modalForms.purchaseOrder.model.approvedBy = this.authService.loggedInUser.userId;
+            this.modalForms.purchaseOrder.model.approvalLevel = 1;
+          
+        //     this.httpRequest.subscribe((res) => {
+        //     this.snackBar.open('Data Saved Successfully');
+        //     // this.onCancelBtnClick();
+        //     this.saveChanges()//i
+        // });
+
+          }
+         else
+          {
+            this.modalForms.purchaseOrder.model.approvalLevel=1;
+            this.modalForms.purchaseOrder.model.approvedDate = new Date();
+            this.modalForms.purchaseOrder.model.approvedBy = this.authService.loggedInUser.userId;
+            console.log(" save data ",this.modalForms.purchaseOrder.model.approvalLevel);//i
+          //   this.httpRequest.subscribe((res) => {
+          //   this.snackBar.open('Data Saved Successfully');
+          //   // this.onCancelBtnClick();
+          //   this.saveChanges()//i
+          //  });
+
+          }
         this.httpRequest.subscribe((res) => {
           this.snackBar.open('Data Saved Successfully');
-          this.onCancelBtnClick();
+          // this.onCancelBtnClick();
+          this.saveChanges()//i
         });
-      }
-    }
+      // }
+    // }
   }
+}
+
+
+  saveChanges() {//i
+    this.httpRequest.subscribe((res) => {
+        const closeEvent: IDialogEvent = {
+            action: this.isEdit ? DialogActions.edit : DialogActions.add,
+            data: res || this.modalForms.purchaseOrder.model
+        }
+        // this.dialogRef.close(closeEvent);
+        // this.onSaveBtnClick();
+        this.onCancelBtnClick();
+    })
+}
+
+
+
 
   onCancelBtnClick() {
     if (this.isEditedFromApproval) {
@@ -154,22 +201,52 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     }
   }
 
+  // get httpRequest(): Observable<MaterialPurchaseOrder> {
+  //   this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+  //   let payload = {
+  //     ...this.modalForms.purchaseOrder.model,
+  //     purchaseOrderDetail: this.dataSource.data,
+  //   }
+  //   if (this.isEdit) {
+  //     return this.dataHandler.put<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
+  //   } else {
+  //     const dummyDefaultFields = {
+  //       companyId: 1, branchId: 1, financialYearId: 1
+  //     }
+  //     payload = { ...dummyDefaultFields, ...payload };
+  //     return this.dataHandler.post<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
+  //   }
+  // }//already
+
+
+  // get httpRequest(): Observable<MaterialPurchaseOrder> {
+  //   this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+  //   let payload: any = this.modalForms.purchaseOrder.model
+  //   payload.purchaseOrderDetail = this.dataSource.data;
+  //   if (this.isEdit) {
+  //     return this.dataHandler.put<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
+  //   } else {
+  //     payload.isDeleted = 0;
+  //     return this.dataHandler.post<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
+  //   }
+  // }//rosh
+
+
+
   get httpRequest(): Observable<MaterialPurchaseOrder> {
     this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-    let payload = {
-      ...this.modalForms.purchaseOrder.model,
-      purchaseOrderDetail: this.dataSource.data,
-    }
+    let payload: any = this.modalForms.purchaseOrder.model
+    payload.purchaseOrderDetail = this.dataSource.data;
     if (this.isEdit) {
-      return this.dataHandler.put<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
+        return this.dataHandler.put<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
     } else {
-      const dummyDefaultFields = {
-        companyId: 1, branchId: 1, financialYearId: 1
-      }
-      payload = { ...dummyDefaultFields, ...payload };
-      return this.dataHandler.post<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
+        payload.isDeleted = 0;
+        return this.dataHandler.post<MaterialPurchaseOrder>(MaterialPurchaseOrderMetadata.serviceEndPoint, [payload]);
     }
-  }
+}//indent
+
+
+
 
   get dataColumns() {
     if (this.tableColumns && this.tableColumns.length) {
@@ -194,6 +271,9 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     if (this.modalForms.purchaseOrderDetails.form.valid) {
       const dataRow: PurchaseOrderDetail = Object.assign({}, this.modalForms.purchaseOrderDetails.model);
       dataRow.itemId = this.modalForms.purchaseOrder.model.itemId;
+      // dataRow.itemId = this.modalForms.purchaseOrderDetails.model.itemId;//i
+      //dataRow.itemRate=this.modalForms.purchaseOrderDetails.model.itemRate;//i
+      // dataRow.indentId = this.modalForms.PurchaseOrder.model.id;//i
       dataRow['total'] = dataRow.quantityPurchased * dataRow.itemRate;
       this.dataSource.data.push(Object.assign({}, dataRow));
       this.dataSource._updateChangeSubscription();
@@ -209,42 +289,80 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     }
   }
 
+  // fetchIndent() {
+  //   this.dataHandler.get<MaterialIndent[]>(this.indentServiceUrl)
+  //     .subscribe((res: MaterialIndent[]) => {
+  //       this.indentList = res;
+  //     });
+  // }
+
   fetchIndent() {
-    this.dataHandler.get<MaterialIndent[]>(this.indentServiceUrl)
+    const dummyCompanyId = 1; const dummyBranchId = 0;
+    // this.dataHandler.get<MaterialIndent[]>(`${'BuildExeMaterial/api/Indent'}/${this.modalForms.purchaseOrder.model.projectId}/${this.modalForms.purchaseOrder.model.unitId}/${this.modalForms.purchaseOrder.model.blockId}/${this.modalForms.purchaseOrder.model.floorId}/${this.modalForms.purchaseOrder.model.supplierId}`)
+    this.dataHandler.get<MaterialIndent[]>(`${'BuildExeMaterial/api/Indent'}/${1009}/${17}/${4}/${2}/${7}`)
       .subscribe((res: MaterialIndent[]) => {
         this.indentList = res;
       });
   }
 
-  get indentServiceUrl() {
-    const user = this.authService.loggedInUser;
-    return `${MaterialIndentCreationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
-  }
+  // get indentServiceUrl() {
+  //   const user = this.authService.loggedInUser;
+  //   return `${MaterialIndentCreationMetadata.serviceEndPoint}List/${user.companyId}/${user.branchId}`;
+  // }
+
+
+  // onSelectIndentBtnClick() {
+  //   const indentList: MaterialIndent[] = this.indentBySelectedProject;
+  //   if (this.indentList.length) {
+  //     const dialogReference = this.dialog.open(SelectIndentComponent, { data: this.indentList });
+  //     dialogReference.afterClosed().subscribe((result: any[]) => {
+  //       if (result) {
+  //         const purchaseOrderDetails = result.map((e) => {
+  //           return {
+  //             itemId: e.materialId,
+  //             indentId: e.id,
+  //             remarks: e.remarks,
+  //             quantityOrdered: e.quantityOrdered,
+
+  //             purchaseOrderId:e.indentId,
+  //             materialName:e.materialName
+  //             // indentId:e.purchaseOrderDetailId//i
+  //           }
+  //         });
+  //         this.dataSource.data = this.dataSource.data.concat(purchaseOrderDetails);
+  //       }
+  //     });
+  //   } else {
+  //     const errorMessage = 'No matching records found , please clear filter fields and try again';
+  //     this.snackBar.open(errorMessage, null, { panelClass: 'snackbar-error-message' });
+  //   }
+  // }
+
+
 
   onSelectIndentBtnClick() {
     const indentList: MaterialIndent[] = this.indentBySelectedProject;
-    if (indentList.length) {
+    // if (indentList.length) {
       const dialogReference = this.dialog.open(SelectIndentComponent, { data: this.indentList });
-      dialogReference.afterClosed().subscribe((result: any[]) => {
+      dialogReference.afterClosed().subscribe((result: MaterialIndent[]) => {
         if (result) {
-          const purchaseOrderDetails = result.map((e) => {
+          const purchaseOrderDetail = result.map((e: MaterialIndent) => {
             return {
-              itemId: e.materialId,
-              indentId: e.id,
-              remarks: e.remarks,
-              quantityOrdered: e.quantityOrdered
+              purchaseOrderDetailId: e.indentDetailsId,
+              materialName: e.materialName,
+              quantityPurchased: e.quantityOrdered,
+              itemRate: e.itemRate
             }
           });
-          this.dataSource.data = this.dataSource.data.concat(purchaseOrderDetails);
+          this.dataSource.data = this.dataSource.data.concat(purchaseOrderDetail);
         }
       });
-    } else {
-      const errorMessage = 'No matching records found , please clear filter fields and try again';
-      this.snackBar.open(errorMessage, null, { panelClass: 'snackbar-error-message' });
+
     }
-  }
 
   onUpdateDetailBtnClick() {
+    this.snackBar.open('Data Updated Successfully');
+          this.onCancelBtnClick();
 
   }
 
@@ -254,6 +372,14 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
     this.modalForms.purchaseOrderDetails.form.reset();
   }
 
+  // get indentBySelectedProject() {
+  //   if (this.modalForms.purchaseOrder.projectId && this.modalForms.purchaseOrder.supplierPreferred) {
+  //     return this.indentList.filter((e) => e.projectId === this.modalForms.purchaseOrder.projectId && e.supplierPreferred === this.modalForms.purchaseOrder.supplierPreferred);
+  //   } else {
+  //     return this.indentList;
+  //   }
+  // }
+
   get indentBySelectedProject() {
     if (this.modalForms.purchaseOrder.projectId) {
       return this.indentList.filter((e) => e.projectId === this.modalForms.purchaseOrder.projectId);
@@ -261,6 +387,14 @@ export class MaterialPurchaseOrderEditComponent implements OnInit {
       return this.indentList;
     }
   }
+
+  // get indentBySelectedSupplier() {//i
+  //   if (this.modalForms.purchaseOrder.supplierPreferred) {
+  //     return this.indentList.filter((e) => e.supplierPreferred === this.modalForms.purchaseOrder.supplierPreferred);
+  //   } else {
+  //     return this.indentList;
+  //   }
+  // }
 
   fetchMaterials() {
     this.dataHandler.get<MaterialRegistration[]>(this.materialServiceUrl)

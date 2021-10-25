@@ -12,32 +12,63 @@
                         </button>
                     </mat-form-field>
                 </div>
-                <div class="form-dialog">
+                <!-- <div class="form-dialog">
                     <button (click)="onApproveBtnClick()" mat-button class="save margin-right-30">Approve</button>
                     <button mat-button (click)="onRejectBtnClick()" cdkFocusInitial class="cancel">Reject</button>
-                </div>
+                </div> -->
             </div>
 
 
         </mat-card-header>
         <mat-card-content>
             <table class="table-compnay" mat-table [dataSource]="dataSource">
-                <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+
+
+                <ng-container
+                [matColumnDef]="column.field"
+                *ngFor="let column of tableColumns; let firstColumn = first"
+              >
+              <th mat-header-cell *matHeaderCellDef>
+                {{ column.displayName }}
+              </th>
+              <td mat-cell *matCellDef="let element; let i = index">
+                <ng-container>
+                  <ng-container *ngIf="column.field !== 'action'">
+                    {{ element[column.field] }}
+                  </ng-container>
+                  <ng-container *ngIf="column.field === 'action'">
+                    <mat-icon (click)="openEditDialog(element)" 
+                      >remove_red_eye</mat-icon
+                    >
+                  </ng-container>
+                </ng-container>
+              </td>
+              </ng-container>
+
+
+
+
+
+                <!-- <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
                     <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
-                    <td mat-cell *matCellDef="let element;let i =index">
-                        <ng-container *ngIf="firstColumn">
+                    <td mat-cell *matCellDef="let element;let i =index"> -->
+                        <!-- <ng-container *ngIf="firstColumn">
                             <mat-radio-button [checked]="element.isSelected"></mat-radio-button>
-                        </ng-container>
-                        <ng-container *ngIf="!firstColumn">
+                        </ng-container> -->
+                        <!-- <ng-container *ngIf="!firstColumn">
                             <ng-container *ngIf="column.field !== 'action'">
                                 {{element[column.field]}}
-                            </ng-container>
-                            <ng-container *ngIf="column.field === 'action'">
+                            </ng-container> -->
+                            <!-- <ng-container *ngIf="column.field === 'action'">
                                 <mat-icon (click)="openEditDialog(element)">edit</mat-icon>
-                            </ng-container>
+                            </ng-container> -->
+                            <!-- <ng-container *ngIf="column.field === 'action'">
+                                <mat-icon (click)="openEditDialog(element)"
+                                  >remove_red_eye</mat-icon>
+                              </ng-container>
                         </ng-container>
                     </td>
-                </ng-container>
+                </ng-container> -->
                 <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
                 <tr (click)="onRowSelection(row)" mat-row *matRowDef="let row; columns: dataColumns;"></tr>
             </table>
@@ -61,18 +92,18 @@
                 <tr mat-header-row *matHeaderRowDef="itemDataColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: itemDataColumns;"></tr>
             </table>
-            <div class="info-text" *ngIf="!itemDatasource">
+            <!-- <div class="info-text" *ngIf="!itemDatasource">
                 Please select indent to load data
             </div>
             <div class="info-text" *ngIf="itemDatasource && itemDatasource.data.length < 1 ">
                 No data
-            </div>
-            <div *ngIf="itemDatasource && itemDatasource.data.length" class="total-input-box">
+            </div> -->
+            <!-- <div *ngIf="itemDatasource && itemDatasource.data.length" class="total-input-box">
                 <mat-form-field>
                     <mat-label>Total</mat-label>
                     <input [value]="totalAmount" matInput type="text">
                 </mat-form-field>
-            </div>
+            </div> -->
 
         </mat-card-content>
     </mat-card>

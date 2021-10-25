@@ -8,6 +8,7 @@ import { SubcontractorbillPayment } from './definitions/subcontractor-bill-payme
 import { SubcontractorbillpaymentEditComponent } from './edit/subcontractorbillpayment-edit.component';
 import { SubcontractorPaymentMetadata} from './subcontractorbillpayment.configuration';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-subcontractorbillpayment',
@@ -24,6 +25,7 @@ export class SubcontractorbillPaymentComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
+    private authService: AuthenticationService,
     private pdfExportService: PdfExportService
   ) {
     this.module = SubcontractorPaymentMetadata;
@@ -43,8 +45,9 @@ export class SubcontractorbillPaymentComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<SubcontractorbillPayment[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    // const dummyCompanyId = 1; const dummyBranchId = 2;
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<SubcontractorbillPayment[]>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
       .subscribe((res: SubcontractorbillPayment[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -74,7 +77,7 @@ export class SubcontractorbillPaymentComponent implements OnInit {
     )
   }
 
-  private affectedRowIndex(affectedRow?: SubcontractorbillPayment) {
+  private affectedRowIndex(affectedRow?:SubcontractorbillPayment) {
     let indexToUpdate;
     if (affectedRow) {
       indexToUpdate = this.dataSource.data.findIndex((row: SubcontractorbillPayment) => row.id === affectedRow.id);
@@ -88,7 +91,7 @@ export class SubcontractorbillPaymentComponent implements OnInit {
 
   onDownloadBtnClick() {
     const data: PdfExportSettings = {
-      title: 'contractor payment',
+      title: 'supplier payment',
       tableColumns: this.tableColumns,
       tableRows: this.dataSource.data
     }

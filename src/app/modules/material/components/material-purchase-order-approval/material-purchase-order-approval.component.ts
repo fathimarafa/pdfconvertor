@@ -6,8 +6,12 @@ import { DialogEventHandlerService } from '../../../../services/dialog-event-han
 import { MaterialPurchaseOrderApprovalMetadata } from './material-purchase-order-approval.configuration';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MaterialPurchaseOrder } from '../material-purchase-order/definitions/material-purchase-order.definition';
-import { MaterialPurchaseOrderEditComponent } from '../material-purchase-order/edit/material-purchase-order-edit.component';
+// import { MaterialPurchaseOrder } from '../material-purchase-order/definitions/material-purchase-order.definition';
+
+import { MaterialPurchaseOrder, PurchaseOrderDetail } from '../material-purchase-order-approval/definitions/material-purchase-order-approval.definition';
+// import { MaterialPurchaseOrderEditComponent } from '../material-purchase-order/edit/material-purchase-order-edit.component';
+
+import { MaterialPurchaseOrderApprovalEditComponent } from '../material-purchase-order-approval/edit/material-purchase-order-approval-edit.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 import { MaterialPurchaseOrderMetadata } from '../material-purchase-order/material-purchase-order.configuration';
@@ -155,7 +159,7 @@ export class MaterialPurchaseOrderApprovalComponent implements OnInit {
 
   openEditDialog(rowToEdit?: MaterialPurchaseOrder) {
     this.dialogEventHandler.openDialog(
-      MaterialPurchaseOrderEditComponent,
+      MaterialPurchaseOrderApprovalEditComponent,
       this.dataSource,
       rowToEdit,
       this.affectedRowIndex(rowToEdit)

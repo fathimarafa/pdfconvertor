@@ -12,6 +12,7 @@ import { SubcontractorlabourgroupattendanceEditComponent } from '../subcontracto
 import { SubcontractorlaboutgroupattendanceMetadata } from '../subcontractor-labour-groupattendancesetting/subcontractor-labour-groupattendancesetting.configuration';
 import { MatDialog } from '@angular/material/dialog';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { SubcontractorlabourgroupattendanceapprovalEditComponent } from './edit/subcontractor-labour-groupattendancesetting-approval-edit.component';
 
 @Component({
   selector: 'app-subcontractor-labourgroupattendance-approval',
@@ -142,7 +143,7 @@ fetchDetails() {
 
 openDialog(rowToEdit?: SubcontractorlabourgroupaAttendance ) {
   this.dialogEventHandler.openDialog(
-    SubcontractorlabourgroupattendanceEditComponent,
+    SubcontractorlabourgroupattendanceapprovalEditComponent,
     this.dataSource,
     rowToEdit,
     this.affectedRowIndex(rowToEdit)

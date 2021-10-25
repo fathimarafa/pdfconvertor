@@ -1,19 +1,33 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
-import { AddLabourToProjectMetadata } from '../add-labour-to-project.configuration';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
-import { LaboursInProject } from '../definitions/labours-in-project.definition';
-import { Observable } from 'rxjs';
-import { IDropdown, IEmployee, IEmployeeCategory } from '../../employee-registration/definitions/employee.definiton';
-import { EmployeeRegistrationMetadata } from '../../employee-registration/employee-registration.configuration';
-import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
-import { ProjectDivisionFields , ProjectDivisionFieldsHandlerService } from 'src/app/services/project-division-fields-handler/project-division-fields-handler.service';
+import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
+import { Observable, Subscription } from 'rxjs';
+import { LaboursInProject, LaboursInProjectDetail, laboursInProjectDetails } from '../definitions/labours-in-project.definition';
+import { AddLabourToProjectMetadata } from '../add-labour-to-project.configuration';
 import { MatTableDataSource } from '@angular/material/table';
+import { ProjectDivisionFields, ProjectDivisionFieldsHandlerService } from '../../../../../services/project-division-fields-handler/project-division-fields-handler.service';
+import { FormfieldHandler, ModalFormFields } from '../handlers/form-field.handler';
 import { MatPaginator } from '@angular/material/paginator';
-import { IDialogEvent, DialogActions } from 'src/app/definitions/dialog.definitions';
+import { EmployeeRegistrationMetadata } from '../../employee-registration/employee-registration.configuration';
+import { IDropdown, IEmployee, IEmployeeCategory } from '../../employee-registration/definitions/employee.definiton';
+import { LabourWorkRateSettingMetadata } from '../../labour-workrate-setting/labour-workrate-setting.configuration';
+import { LabourWorkRate } from '../../labour-workrate-setting/definitions/labour-workrate-setting.definition';
+import { PrebudgetWorkType } from 'src/app/modules/prebudget/components/work-type/definitions/work-type.definition';
+import { PrebudgetWorkTypeMetadata } from 'src/app/modules/prebudget/components/work-type/work-type.configuration';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
 import { BasicWorkCategory } from 'src/app/modules/basic/components/work-category/definitions/basic-work-category.definition';
+import { ForemanWorkOrderMetadata } from '../../foreman-work-order/foreman-work-order.configuration';
+import { ForemanWorkOrder } from '../../foreman-work-order/definitions/foreman-work-order.definition';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { Router } from '@angular/router';
+import { id } from 'date-fns/locale';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-add-labour-to-project-edit',
@@ -21,229 +35,143 @@ import { BasicWorkCategory } from 'src/app/modules/basic/components/work-categor
   styleUrls: ['./add-labour-to-project-edit.component.css']
 })
 export class AddLabourToProjectEditComponent implements OnInit {
+  rootUrl: string;
+  model3: any = {};
 
-  form = new FormGroup({});
-  model: LaboursInProject;
-  options: FormlyFormOptions = {};
-  fields: FormlyFieldConfig[];
+  modalForms;
   isEdit: boolean;
-  employeeList: IEmployee[];
-  projectDivision: number;
-  displayEmployeeTable: boolean;
+  tableColumns;
+  model: LaboursInProject;
+  model1: LaboursInProjectDetail;
+  model2: laboursInProjectDetails;
   dataSource;
-  module;
-  employeeTableColmns;
-  attendanceDetails: LaboursInProject;
+  employeeId;
+  subscribeProjectDivison: Subscription;
+  enableStockEdit: boolean;
+  selection = new SelectionModel<LaboursInProjectDetail>(true, []);
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  
   constructor(
     private dialogRef: MatDialogRef<AddLabourToProjectEditComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: LaboursInProject,
     private dataHandler: DataHandlerService,
+    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
     private authService: AuthenticationService,
-    private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+    private snackBar: MatSnackBar,
+    private employeeService: EmployeeService,
+    private router: Router,
+    private dialog: MatDialog,
+
+    // rootUrl = 'BuildExeHR/api/LaboursInProjectDetail',
+
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
     }
-    this.fields = AddLabourToProjectMetadata.formFields;
-    this.model = this.editData;
-    this.displayEmployeeTable = false;
-    this.module = AddLabourToProjectMetadata;
-    this.employeeTableColmns = this.module.employeeTableColmns
+    this.defineModalForms();
+    this.bindFormSelectOptions();
 
-    this.bindFormSelectOptions()
   }
-
-  ngOnInit(): void { }
-
-  get dataColumnsEmployee() {
-    if (this.employeeTableColmns && this.employeeTableColmns.length) {
-      return this.employeeTableColmns.map(col => col.field);
-    } else {
-      return [];
-    }
-  }
-
-  get employeeCategory(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'category');
-  }
-
-  get employeeGroup(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'employeeGroupId');
-  }
-  get projectDropdown(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'projectId');
-  }
-  get blockDropdown(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'blockId');
-  }
-  get floorDropdown(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'floorId');
-  }
-
-  get unitDropdown(): FormlyFieldConfig {
-    return this.fields
-      .find((x: FormlyFieldConfig) => x.id === 'row-2').fieldGroup
-      .find((x: FormlyFieldConfig) => x.key === 'unitId');
-  }
-
-  get payload(): LaboursInProject[] {
-    const defaultPayload = {
-      dateWorked: new Date().toISOString(),
-      companyId: this.authService.loggedInUser.companyId,
-      branchId: this.authService.loggedInUser.branchId,
-      employeeId: this.editData.employeeId,
-      projectId: 0,
-      unitId: 0,
-      blockId: 0,
-      floorId: 0,
-      approvalLevel: 0,
-      approvalStatus: 1,
-      approvedBy: 1,
-      approvedDate: new Date().toISOString(),
-      financialYearId: 2
-    }
-
-    this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-    const commondata = { ...defaultPayload, ...this.model };
-    if (typeof (commondata.approvalStatus) === 'boolean') {
-      commondata.approvalStatus = commondata.approvalStatus ? 1 : 0;
-    }
-
-    const data = this.constuctPayload(commondata, this.dataSource.data);
-
-    return data;
-  }
-
-  constuctPayload(generic, source): LaboursInProject[] {
-    return source.map(table => ({
-      Amount: table.salaryAmount,
-      ApprovalLevel: generic.approvalLevel,
-      ApprovalStatus: generic.approvalStatus,
-      ApprovedBy: generic.approvedBy,
-      ApprovedDate: generic.approvedDate,
-      BlockId: generic.blockId,
-      BranchId: generic.branchId,
-      Category: generic.category,
-      CompanyId: generic.companyId,
-      DateAssigned: new Date().toISOString(),
-      DateWorked: new Date(generic.dateWorked).toISOString(),
-      EmployeeId: table.id,
-      FinancialYearId: generic.financialYearId,
-      FloorId: generic.floorId,
-      LoginTime: new Date(table.time_in).toISOString(),
-      LogoutTime: new Date(table.time_out).toISOString(),
-      OverTime: table.overtime,
-      OverTimeAmount: 0,
-      ProjectId: generic.projectId,
-      Remarks: generic.remarks,
-      UnitId: generic.unitId,
-      Work: 1,
-    }))
-  }
-
-  bindFormSelectOptions(){
-    this.fetchFullEmployeeList()
-    this.fetchCategorySelectOptions();
-    // this.employeeGroup.templateOptions.change = (field: FormlyFieldConfig, event) => {
-    //   this.fetchLabourHeadSelectOptions(event.value)
-    // }
-
+  
+  // getData() {
+  //   const endPoint = `${this.rootUrl}`;
+  //   return this.dataHandler.post<LaboursInProjectDetail[]>(endPoint, {});
+  // }
+  bindProjectDivisionFields() {
     const projectControllerFields: ProjectDivisionFields<LaboursInProject> = {
-      projectDropdown: this.projectDropdown,
-      blockDropdown: this.blockDropdown,
-      floorDropdown: this.floorDropdown,
-      unitDropdown: this.unitDropdown,
-      model: this.model,
+      projectDropdown: FormfieldHandler.projectDropdown,
+      blockDropdown: FormfieldHandler.blockDropdown,
+      floorDropdown: FormfieldHandler.floorDropdown,
+      unitDropdown: FormfieldHandler.unitDropdown,
+      model: this.modalForms.issued.model,
       isEdit: this.isEdit
     };
     this.projectDivisionFieldsHandler.initialize(projectControllerFields);
   }
 
-  fetchFullEmployeeList() {
-    const companyId = this.authService.loggedInUser.companyId
-    const branchId = this.authService.loggedInUser.branchId;
 
-    const endPoint = `${EmployeeRegistrationMetadata.serviceEndPoint}/${companyId}/${branchId}`;
+  ngOnInit(): void {
+    this.tableColumns = AddLabourToProjectMetadata.laboursInProjectDetail.tableColumns;
+  }
 
-    this.dataHandler.get<IEmployee[]>(endPoint).subscribe((res: IEmployee[]) => {
-        if (res && res.length) {
-        this.employeeList = res;
+  defineModalForms() {
+    this.modalForms = {
+      issued: {
+        form: new FormGroup({}),
+        model: this.editData,
+        options: {},
+        fields: AddLabourToProjectMetadata.formFields
+      },
+      usage: {
+        form: new FormGroup({}),
+        model: {},
+        options: {},
+        // fields: ForemanWorkBillMetadata.foremanWorkBillDetails.formFields
       }
-    });
-  }
-
-  fetchCategorySelectOptions(){
-    const endPoint = `${AddLabourToProjectMetadata.dropdownEndpoints.employeeCategory}`;
-    this.dataHandler.get<IEmployeeCategory[]>(endPoint)
-      .subscribe((res: IEmployeeCategory[]) => {
-        if (res) {
-          this.employeeCategory.templateOptions.options = res.map((e: IEmployeeCategory) => (
-            {
-              label: e.employeeCategoryName,
-              value: e.employeeCategoryId
-            }
-          ));
-          this.fetchLabourGroupSelectOptions();
-        }
-      });
-  }
-
-  fetchLabourGroupSelectOptions() {
-    const categoryList = this.employeeCategory.templateOptions.options as IDropdown[];
-    if(categoryList.length){
-      const generatedList  = categoryList.filter(e => [1,2,3,4].includes(e.value));
-      this.employeeGroup.templateOptions.options = generatedList;
     }
-  }
-
-  // fetchLabourHeadSelectOptions(groupID: number) {
-  //   const filteredList = this.employeeList.filter(e => e.employeeLabourGroupId == groupID);
-  //   this.labourHeadList.templateOptions.options = filteredList.map((e: IEmployee) => (
-  //     {
-  //       label: e.fullName,
-  //       value: e.id
-  //     }
-  //   ))
-  // }
-  fetchAttendanceList(){
-      this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-      const quueryData = {...this.model} as any;
-      const endPoint = `${AddLabourToProjectMetadata.dropdownEndpoints.employeeBasedAttendance}/${quueryData.projectId}/${quueryData.unitId}/${quueryData.blockId}/${quueryData.floorId}/${quueryData.category}`;
-      this.dataHandler.get<LaboursInProject[]>(endPoint).subscribe((res: LaboursInProject[]) => {
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.paginator = this.paginator;
-      });
-  }
-
-  onShowBtnClick(){
-    this.displayEmployeeTable = true;
-    if (this.form.valid) {
-      this.fetchAttendanceList();
+    const formFields: ModalFormFields = {
+      issued: this.modalForms.issued.fields,
+      usage: this.modalForms.usage.fields
     }
+    FormfieldHandler.initialize(formFields);
+    this.loadItemDetails();
+    this.dataSource = new MatTableDataSource(this.editData.laboursInProjectDetail || []);
   }
 
+  loadItemDetails() {
+    if (this.isEdit) {
+    const endpoint = `${"BuildExeHR/api/LaboursInProjectDetail"}`;
+        // this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+          let payload: any = this.model3;
+          payload.employeeCategoryId =this.modalForms.issued.model.employeeCategoryId;
+          payload.employeeLabourGroupId =this.modalForms.issued.model.employeeLabourGroupId;
+          payload.projectId =this.modalForms.issued.model.projectId;
+          payload.unitId =this.modalForms.issued.model.unitId;
+          payload.blockId =this.modalForms.issued.model.blockId;
+          payload.floorId =this.modalForms.issued.model.floorId;
+              console.log('model3', this.model3);
+              const data = this.model3;
+              // { "ModeOfEnquiryId": 1, "FromDate": "2020-01-05", "ToDate": "2020-12-05", "ReminderDate": "2021-01-01", "EnquiryStatusId": 1, "EnquiryForId": 4, "AssignStaffId": 2, "MarketingteamId": 1, "companyId": 1, "branchId": 2 }
+              this.dataHandler.post(endpoint, data)
+                .subscribe((res: any[]) => {
+        this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+//     const endpoint = `${"BuildExeHR/api/LaboursInProjectDetail"}`;
+//     this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+//   let payload: any = this.model3;
+// payload.employeeCategoryId =this.modalForms.issued.model.employeeCategoryId;
+// payload.employeeLabourGroupId =this.modalForms.issued.model.employeeLabourGroupId;
+// payload.projectId =this.modalForms.issued.model.projectId;
+// payload.unitId =this.modalForms.issued.model.unitId;
+// payload.blockId =this.modalForms.issued.model.blockId;
+// payload.floorId =this.modalForms.issued.model.floorId;
+//     console.log('model3', this.model3);
+//     const data = this.model3;
+//     // { "ModeOfEnquiryId": 1, "FromDate": "2020-01-05", "ToDate": "2020-12-05", "ReminderDate": "2021-01-01", "EnquiryStatusId": 1, "EnquiryForId": 4, "AssignStaffId": 2, "MarketingteamId": 1, "companyId": 1, "branchId": 2 }
+//     this.dataHandler.post(endpoint, data)
+//       .subscribe((res: any[]) => {
+//         this.dataSource = new MatTableDataSource(res);
+//         this.dataSource.paginator = this.paginator;
+//       });
+}
+
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   onSaveBtnClick() {
-    if (this.form.valid) {
+    if (this.modalForms.issued.form.valid) {
       this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.payload
+          data: this.modalForms.issued.model
         }
         this.dialogRef.close(closeEvent);
-      })
+      });
     }
   }
 
@@ -251,17 +179,131 @@ export class AddLabourToProjectEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  get httpRequest(): Observable<LaboursInProject> {
-    if (this.isEdit) {
-      return this.dataHandler.put<LaboursInProject>(AddLabourToProjectMetadata.serviceEndPoint, this.payload);
+
+get httpRequest(): Observable<LaboursInProject> {
+  this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+  let payload: any = this.modalForms.issued.model
+   payload.dateAssigned = new Date();
+   this.modalForms.issued.model.employeeId =this.employeeId;
+ 
+  if (this.isEdit) {
+   payload.laboursInProjectDetail = this.dataSource.data;
+
+      return this.dataHandler.put<LaboursInProject>(AddLabourToProjectMetadata.serviceEndPoint, [payload]);
+  } else {
+      // payload.isDeleted = 0;
+      // payload.approvedDate = new Date();
+   payload.laboursInProjectDetail = this.dataSource.data;
+
+      // this.modalForms.issued.model.approvedDate = new Date();
+      // payload.financialYearId = 1;
+      
+      return this.dataHandler.post<LaboursInProject>(AddLabourToProjectMetadata.serviceEndPoint, [payload]);
+  }
+}
+
+
+  get dataColumns() {
+      if (this.tableColumns && this.tableColumns.length) {
+        const columns = this.tableColumns.map(col => col.field);
+        const actionIndex = columns.findIndex((col: string) => col === 'action');
+        columns.splice(actionIndex, 1);
+        columns.push('select');
+        return columns;
     } else {
-      delete this.model.id;
-      return this.dataHandler.post<LaboursInProject>(AddLabourToProjectMetadata.serviceEndPoint, this.payload);
-    } 
+      return [];
+    }
   }
 
+  bindFormSelectOptions() {
+    this.bindProjectDivisionFields();
+    this.fetchCategorySelectOptions();
+    if(this.modalForms.issued.model.blockId == null || this.modalForms.issued.model.unitId == null || this.modalForms.issued.model.floorId == null){
+      this.modalForms.issued.model.blockId = 0;
+      this.modalForms.issued.model.unitId = 0;
+      this.modalForms.issued.model.floorId = 0;
+    }
+  }
+  fetchCategorySelectOptions(){
+    const endPoint = `${AddLabourToProjectMetadata.dropdownEndpoints.employeeCategory}`;
+    this.dataHandler.get<IEmployeeCategory[]>(endPoint)
+      .subscribe((res: IEmployeeCategory[]) => {
+        if (res) {
+          FormfieldHandler.employeeCategory.templateOptions.options = res.map((e: IEmployeeCategory) => (
+            {
+              label: e.employeeCategoryName,
+              value: e.employeeCategoryId
+            }
+          ));
+          this.fetchLabourGroupSelectOptions();
+        }
+        const categoryList = FormfieldHandler.employeeCategory.templateOptions.options as IDropdown[];
+        if(categoryList.length){
+          const generatedList  = categoryList.filter(e => [1,6,7].includes(e.value));
+          FormfieldHandler.employeeCategory.templateOptions.options = generatedList;
+        }
+      });
+  }
+  fetchLabourGroupSelectOptions() {
+    this.dataHandler.get<any[]>('BuildExeHR/api/EmployeeLabourGroup')
+    .subscribe((res: any[]) => {
+      if (res) {
+        FormfieldHandler.employeeGroup.templateOptions.options = res.map((e: any) => (
+          {
+            label: e.employeeLabourGroupName,
+            value: e.employeeLabourGroupId
+          }
+        ));
+      }
+    });
+    }
+  onShowBtnClick() {
+    if (this.modalForms.issued.form.valid) {
+      this.fetchData();
+    }
+  }
+  fetchData() {
+    const endpoint = `${"BuildExeHR/api/LaboursInProjectDetail"}`;
+    this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+  let payload: any = this.model3;
+payload.employeeCategoryId =this.modalForms.issued.model.employeeCategoryId;
+payload.employeeLabourGroupId =this.modalForms.issued.model.employeeLabourGroupId;
+payload.projectId =this.modalForms.issued.model.projectId;
+payload.unitId =this.modalForms.issued.model.unitId;
+payload.blockId =this.modalForms.issued.model.blockId;
+payload.floorId =this.modalForms.issued.model.floorId;
+    console.log('model3', this.model3);
+    const data = this.model3;
+    // { "ModeOfEnquiryId": 1, "FromDate": "2020-01-05", "ToDate": "2020-12-05", "ReminderDate": "2021-01-01", "EnquiryStatusId": 1, "EnquiryForId": 4, "AssignStaffId": 2, "MarketingteamId": 1, "companyId": 1, "branchId": 2 }
+    this.dataHandler.post(endpoint, data)
+      .subscribe((res: any[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+      });
+  }
+  isAllSelected() {
+    const totalSelected = this.selection.selected.length;
+    const totalRows = this.dataSource.data.length;
+    return totalSelected === totalRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  onReceiptSelection(event, row) {
+    event.stopPropagation();
+    row.isSelected = !row.isSelected;
+    if (row.isSelected) {
+      row.employeeId = row.id;
+      console.log("idr",row.id);
+    } 
+    this.modalForms.issued.model = { ...this.modalForms.issued.model };
+  }
   ngOnDestroy() {
-    this.form.reset();
+    this.modalForms.issued.form.reset();
+    this.modalForms.usage.form.reset();
     this.projectDivisionFieldsHandler.clear();
   }
 

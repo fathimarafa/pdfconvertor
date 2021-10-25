@@ -1,5 +1,5 @@
 .mat-dialog-content {
-    height: 75vh;
+    height: 70vh;
     max-height: 75vh;
 }
 
@@ -11,6 +11,7 @@
     border: 1px solid rgba(0, 0, 0, .12);
     border-radius: 10px;
     min-width: 220px;
+    overflow: auto;
 }
 
 .child-form {

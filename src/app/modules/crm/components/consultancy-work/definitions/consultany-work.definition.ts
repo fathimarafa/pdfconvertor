@@ -1,11 +1,11 @@
 export interface ConsultancyWork {
     id: number,
-    workName: String,
-    unit: String,
+    workName: string,
+    unit: string,
     unitRate: number,
-    remarks: String,
-    sac_Code: String,
-    companyId: number,
-    branchId: number,
-    userId: number
+    remarks: string,
+    sac_Code: string,
+    companyId: number;
+    branchId?: number;
+    userId?: number;
 }

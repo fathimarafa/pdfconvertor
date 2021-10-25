@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
 import { SubcontractorbillpaymentEditComponent } from '../subcontractorbillpayment/edit/subcontractorbillpayment-edit.component';
+import { SubcontractorbillpaymentapprovalEditComponent } from './edit/subcontractorbillpayment-approval-edit.component';
 
 @Component({
   selector: 'app-subcontractor-payment-approval',
@@ -143,7 +144,7 @@ export class SubcontractorPaymentApprovalComponent implements OnInit {
 
   openDialog(rowToEdit?: SubcontractorbillPayment ) {
     this.dialogEventHandler.openDialog(
-      SubcontractorbillpaymentEditComponent,
+      SubcontractorbillpaymentapprovalEditComponent,
       this.dataSource,
       rowToEdit,
       this.affectedRowIndex(rowToEdit)

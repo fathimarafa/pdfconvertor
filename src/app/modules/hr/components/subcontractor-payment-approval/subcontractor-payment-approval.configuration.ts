@@ -9,7 +9,7 @@ export const SubcontractorPaymentApprovalMetadata = {
     "serviceEndPoint": "BuildExeHR/api/SubContractorPayment",
     "tableColumns": [
         {
-            "field": 'indentDetailsId',
+            "field": 'id',
             "displayName": 'Id'
         },
         {
@@ -29,22 +29,22 @@ export const SubcontractorPaymentApprovalMetadata = {
             "displayName": 'Action'
         }
     ],
-    "itemDetailstableColumns": [
-        {
-            "field": 'indentDetailsId',
-            "displayName": 'Id'
-        },
-        {
-            "field": 'fullName',
-            "displayName": 'SubContractor Name'
-        },
-        {
-            "field": 'voucherNumber',
-            "displayName": 'Voucher Number'
-        },
-        {
-            "field": 'paymentNo',
-            "displayName": 'Payment Number'
-        }
-    ]
+    // "itemDetailstableColumns": [
+    //     {
+    //         "field": 'indentDetailsId',
+    //         "displayName": 'Id'
+    //     },
+    //     {
+    //         "field": 'fullName',
+    //         "displayName": 'SubContractor Name'
+    //     },
+    //     {
+    //         "field": 'voucherNumber',
+    //         "displayName": 'Voucher Number'
+    //     },
+    //     {
+    //         "field": 'paymentNo',
+    //         "displayName": 'Payment Number'
+    //     }
+    // ]
 }

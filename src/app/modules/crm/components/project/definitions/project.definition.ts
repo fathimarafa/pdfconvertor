@@ -1,6 +1,6 @@
 export interface Project {
     id?: number;
-    projectId?: string;
+    projectId?: string|number;
     projectTypeId?: string;
     departmentId?: number;
     projectName?: string;
@@ -33,7 +33,7 @@ export interface Project {
 
 export interface ProjectStage {
     id?: number;
-    projectId?: string;
+    projectId?: string|number;
     ownProjectDetailsiId?: number;
     stageName?: string;
     stageStatusId?: number;
@@ -68,6 +68,19 @@ export interface ProjectStage {
     userId?: number;
 }
 
-export interface ProjectRegistration extends Project, ProjectStage {
+export interface ProjectConsultancy{
+    id?: number;
+    projectId?: string|number;
+    workid?: number;
+    unitRate?: number;
+    qty?: number;
+    description?: string;
+    remarks?: string;
+    startdate?: Date;
+    enddate?: Date;
+    userId?: number;
+}
+
+export interface ProjectRegistration extends Project, ProjectStage, ProjectConsultancy {
 
 }

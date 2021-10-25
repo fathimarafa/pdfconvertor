@@ -9,6 +9,7 @@ import { MaterialPurchaseOrderMetadata } from './material-purchase-order.configu
 import { Router } from '@angular/router';
 import { AppStateService } from 'src/app/services/app-state-service/app-state.service';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
+import { MaterialPurchaseOrderEditComponent } from './edit/material-purchase-order-edit.component';//i
 
 @Component({
   selector: 'app-material-purchase-order',
@@ -43,17 +44,30 @@ export class MaterialPurchaseOrderComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+    console.log("data",this.dataSource);
   }
 
   fetchData() {
     const user = this.authService.loggedInUser;
-    const endpoint = `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`
+    const endpoint = `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`
     this.dataHandler.get<MaterialPurchaseOrder[]>(endpoint)
       .subscribe((res: MaterialPurchaseOrder[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
       });
   }
+
+
+  // openDialog(rowToEdit?: MaterialPurchaseOrder) {//i
+  //   this.dialogEventHandler.openDialog(
+  //     MaterialPurchaseOrderEditComponent,
+  //     this.dataSource,
+  //     rowToEdit,
+  //     this.affectedRowIndex(rowToEdit)
+  //   )
+  // }//i
+
+
 
   onAddEditBtnClick(rowToEdit?: MaterialPurchaseOrder) {
     if (rowToEdit) {

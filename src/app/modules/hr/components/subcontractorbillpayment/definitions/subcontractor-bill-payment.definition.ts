@@ -17,8 +17,10 @@ export interface SubcontractorbillPayment{
   approvalLevel : number;
   approvedBy : number;
   isDeleted : number;
-  subContractorPaymentDetails: SubContractorPaymentDetails[]
+  subContractorPaymentDetails: SubContractorPaymentDetails[];
+  subcontractorForPayment: subcontractorForPayment[]
 }
+
   export interface SubContractorPaymentDetails
   
       {
@@ -34,22 +36,25 @@ export interface SubcontractorbillPayment{
           advanceAmount : number;
       }
 
-      export interface SubContractorForPayment{
-        
-          id : number;
-          billno : string;
-          billDate : Date;
-          projectId : number;
-          projectName : string;
-          unitId : number;
-          unitName : string;
-          blockId : number;
-          blockName : string;
-          floorId : number;
-          floorName : string;
-          billAmount : number;
-          payment : number;
-          billAmountBalance : number;
-         
-      
-      }
+   
+    export interface subcontractorForPayment
+    
+    {
+      id: number;
+      billNumber: number;
+      billDate: Date;
+      projectId: number;
+      projectName: String;
+      unitId: number;
+      unitName: String;
+      blockId: number;
+      blockName: String;
+      floorId: number;
+      floorName: String;
+      totalWage: number;
+      totOtAmount: number;
+      advancePaid: number;
+      billAmount: number;
+      payment: number;
+      billAmountBalance: number;
+    }

@@ -50,7 +50,7 @@
     <!-- <button (click)="onApproveBtnClick()" mat-button class="save margin-right-30">Approve</button>
     <button mat-button (click)="onRejectBtnClick()" cdkFocusInitial class="cancel">Reject</button> -->
     <button form="indent-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
-    <button *ngIf="!isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save">Next
+    <button (click)="onSaveBtnClick(true)" mat-button class="save">Next
         Level</button>
     <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
 </mat-dialog-actions>

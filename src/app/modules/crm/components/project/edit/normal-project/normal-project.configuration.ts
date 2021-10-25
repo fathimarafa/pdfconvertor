@@ -276,23 +276,27 @@ export const NormalProjectMetadata = {
                 "displayName": 'S.No'
             },
             {
-                "field": 'unitId',
-                "displayName": 'Unit'
+                "field": 'sacCode',
+                "displayName": 'SacCode'
+            },
+            {
+                "field": 'workName',
+                "displayName": 'Work Name'
             },
             {
                 "field": 'description',
                 "displayName": 'Description'
             },
             {
-                "field": 'totalAreaCostWithTax',
-                "displayName": 'Area Cost'
+                "field": 'qty',
+                "displayName": 'Quantity'
             },
             {
-                "field": 'totalLandCost',
-                "displayName": 'Land Cost'
+                "field": 'unitRate',
+                "displayName": 'Rate'
             },
             {
-                "field": 'totalAmount',
+                "field": 'amount',
                 "displayName": 'Total'
             },
             {
@@ -305,9 +309,11 @@ export const NormalProjectMetadata = {
             "label": "Consultancy Work Details",
             "fields": [
                 {
+                    "id":"row-1",
                     "fieldGroupClassName": "display-flex",
                     "fieldGroup": [
                         {
+                            "id":"row-1",
                             "className": "flex-1",
                             "fieldGroup": [
                                 {
@@ -322,14 +328,17 @@ export const NormalProjectMetadata = {
                                 {
                                     "type": "input",
                                     "key": "qty",
+                                    "defaultValue": 0,
                                     "templateOptions": {
                                         "label": "Quantity",
-                                        "readonly": true
+                                        "required": true,
+                                        "type":"number",
                                     }
                                 },
                             ]
                         },
                         {
+                            "id":"row-2",
                             "className": "flex-1",
                             "fieldGroup": [
                                 {
@@ -337,15 +346,17 @@ export const NormalProjectMetadata = {
                                     "key": "unit",
                                     "templateOptions": {
                                         "label": "Unit",
-                                        "readonly": true
+                                        "required": true
                                     }
                                 },
                                 {
-                                    "key": "enddate",
+                                    "key": "unitRate",
                                     "type": "input",
+                                    "defaultValue": 0,
                                     "templateOptions": {
                                         "label": "Rate",
                                         "required": true,
+                                        "type":"number"
                                     }
                                 }
                             ]
@@ -354,19 +365,20 @@ export const NormalProjectMetadata = {
                             "className": "flex-1",
                             "fieldGroup": [
                                 {
-                                    "key": "sac_Code",
+                                    "key": "sacCode",
                                     "type": "input",
                                     "templateOptions": {
                                         "label": "SAC Code",
-                                        "readonly": true,
+                                        "required": true,
                                     }
                                 },
                                 {
                                     "key": "amount",
-                                    "type": "datepicker",
+                                    "type": "input",
                                     "templateOptions": {
                                         "label": "Amount",
-                                        "readonly": true,
+                                        "required": true,
+                                        "type":"number"
                                     }
                                 }
                             ]

@@ -35,6 +35,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
   dataSource;
   subscribeProjectDivison: Subscription;
   enableStockEdit: boolean;
+  isUpdatingUnit: boolean;
   model: Subcontractorlabourgroup;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -90,7 +91,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     this.modalForms = {
       issued: {
         form: new FormGroup({}),
-        model: {},
+        model: this.editData,
         options: {},
         fields: SubcontractorlaboutgroupMetadata.formFields
       },
@@ -170,6 +171,7 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
     let payload: any = this.modalForms.issued.model
     payload.attendanceSettingDetails = this.dataSource.data;
+    
     if (this.isEdit) {
       return this.dataHandler.put<Subcontractorlabourgroup>(SubcontractorlaboutgroupMetadata.serviceEndPoint, [payload]);
     } else {
@@ -186,15 +188,37 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     }
   }
 
-  onAddStockBtnClick() {
-    if (this.isValid) {
-      const data: any = Object.assign({}, this.modalForms.usage.model);
-      data.labourWorkName = this.WorknameDataset.find(e => e.id === data.labourWorkId).labourWorkName;
-      this.dataSource.data.push(data);
+  // onAddStockBtnClick() {
+  //   if (this.isValid) {
+  //     const data: any = Object.assign({}, this.modalForms.usage.model);
+  //     data.labourWorkName = this.WorknameDataset.find(e => e.id === data.labourWorkId).labourWorkName;
+  //     this.dataSource.data.push(data);
+  //     this.dataSource._updateChangeSubscription();
+  //     this.modalForms.usage.form.reset();
+  //   }
+  // }
+
+  onAddUnitsBtnClick() {
+    if(this.modalForms.usage.form.valid){
+      if (this.isUpdatingUnit) {
+        const indexToUpdate = this.dataSource.data.findIndex(row => row.id === this.modalForms.usage.model.id);
+        if (indexToUpdate !== -1) {
+          this.dataSource.data[indexToUpdate] = Object.assign({}, this.modalForms.usage.model);
+          this.isUpdatingUnit = false;
+        }
+      } else {
+        const data: any = Object.assign(
+            { id: `temp-${this.dataSource.data.length + 1}` },
+            this.modalForms.usage.model);
+       data.labourWorkName = this.WorknameDataset.find(e => e.id === data.labourWorkId).labourWorkName;
+       this.dataSource.data.push(data);
+      }
       this.dataSource._updateChangeSubscription();
       this.modalForms.usage.form.reset();
+    //   this.bindUnitDefaultValues();
     }
   }
+
 
   get isValid() {
     if (!this.modalForms.usage.model['labourWorkId']) {
@@ -294,15 +318,17 @@ export class SubcontractorlabourgroupEditComponent implements OnInit {
     });
   }
 
-  removeStock(rowIndex: number) {
-    this.dataSource.data.splice(rowIndex, 1)
-    this.dataSource._updateChangeSubscription();
+  onDeleteRowBtnClick(selectedRow) {
+    const indexToRemove = this.dataSource.data.findIndex(row => row.id === selectedRow.id);
+    if (indexToRemove !== -1) {
+      this.dataSource.data.splice(indexToRemove, 1);
+      this.dataSource._updateChangeSubscription();
+    }
   }
 
-
-  editStock(rowToEdit: AttendanceSettingDetails) {
-    this.enableStockEdit = true;
-    this.modalForms.usage.model = rowToEdit;
+  onEditRow(row) {
+    this.modalForms.usage.model = Object.assign({}, row);
+    this.isUpdatingUnit = true;
   }
 
   onUpdateStockBtnClick() {

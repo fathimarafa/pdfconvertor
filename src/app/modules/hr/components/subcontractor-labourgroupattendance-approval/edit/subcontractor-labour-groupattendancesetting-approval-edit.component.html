@@ -1,0 +1,75 @@
+<h2 mat-dialog-title class="form-dialog header-color">Subcontractor Labour Group Attendance</h2>
+<mat-dialog-content style="display: flex;" class="form-dialog mat-typography dialog-content">
+   
+    <div class="flex-1">
+        <div class="form-container">
+            <div class="form-child">
+                <form [formGroup]="modalForms.issued.form">
+                    <formly-form [model]="modalForms.issued.model" [fields]="modalForms.issued.fields" [options]="modalForms.issued.options" [form]="modalForms.issued.form">
+                    </formly-form>
+                </form>
+         
+        <div class="form-title">Work Bill Details</div>
+
+                <div class="form-container">
+                <div class="inner-table-container">
+                    <table class="items-table-container" mat-table [dataSource]="dataSource">
+                        <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
+                            <th mat-header-cell *matHeaderCellDef> {{column.displayName}} </th>
+                            <td mat-cell *matCellDef="let element;let i =index">
+                                <ng-container *ngIf="firstColumn">
+                                    {{i+ 1}}
+                                </ng-container>
+                                <ng-container *ngIf="!firstColumn">
+                                    <ng-container *ngIf="column.field !== 'action'">
+            
+                                        <ng-container *ngIf="column.field === 'noOfLabours'">
+                                            <mat-form-field class="field-size-small">
+                                                <input (change)="onUserInput($event,element,column.field)" [value]="element[column.field]" matInput type="number">
+                                            </mat-form-field>
+                                        </ng-container>
+                                        <!-- <ng-container *ngIf="column.field !== 'noOfLabours'">
+                                            {{element[column.field]}} 
+                                        </ng-container>  -->
+
+                                        <ng-container *ngIf="column.field === 'oTHours'">
+                                            <mat-form-field class="field-size-small">
+                                                <input (change)="onUserInput($event,element,column.field)" [value]="element[column.field]" matInput type="number">
+                                            </mat-form-field>
+                                        </ng-container>
+                                        <ng-container *ngIf="column.field !== 'oTHours'">
+                                        <ng-container *ngIf="column.field !== 'noOfLabours'">
+                                            {{element[column.field]}}
+                                        </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="dataColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: dataColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+                <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Total</mat-label>
+                        <input [value]="amount" matInput type="text">
+                    </mat-form-field>
+                </div>
+                <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Balance Amount</mat-label>
+                        <input [value]="balanceAmount" matInput type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="form-dialog" align="end">
+    <button (click)="onApproveBtnClick()" mat-button class="save">Approve</button>
+    <button (click)="onRejectBtnClick()" mat-button class="save">Reject</button>
+    <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+</mat-dialog-actions>

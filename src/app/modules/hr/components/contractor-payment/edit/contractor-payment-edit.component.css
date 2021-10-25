@@ -1,16 +1,66 @@
-::ng-deep .stage-receipt-edit-component th:last-child,
-th:first-child {
-    width: 30px;
+.indent-table-container th {
+    width: 30%;
 }
 
+.indent-table-container th:first-child {
+    width: 10%;
+}
 
-/* ::ng-deep .mat-dialog-container {
-    min-width: 95vw;
-} */
+.indent-table-container tr {
+    cursor: pointer;
+}
 
-.info-text {
-    font-size: 11px;
-    padding: 20px 0px;
-    text-align: center;
-    color: rgba(0, 0, 0, .6);
+.add-item-btn-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.items-table-container th {
+    width: 10%;
+}
+
+.items-table-container th:first-child {
+    width: 8%;
+}
+
+.items-table-container th:nth-child(2) {
+    width: 20%;
+}
+::ng-deep .cdk-overlay-pane {
+    max-width: 80vw!important;
+    width: 90vw;
+}
+
+.form-child {
+    /* max-height: 45vh; */
+    overflow: auto;
+    /* min-height: 45vh; */
+}
+
+.form-title {
+    color: #3182ce;
+    position: relative;
+    top: 11px;
+    display: inline-block;
+    background-color: #fff;
+    padding: 0 10px;
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+.form-container {
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.inner-table-container {
+    max-height: 30vh;
+    overflow: auto;
+    width: 100%;
+}
+
+.add-block {
+    float: right;
+    margin-bottom: 20px;
 }

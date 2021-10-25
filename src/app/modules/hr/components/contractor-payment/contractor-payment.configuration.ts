@@ -6,19 +6,14 @@ export const ContractorPaymentMetadata = {
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-    "serviceEndPoint":  "BuildExeHR/api/ContractorPayment",
-    /*{
-        "contractorPayment": "BuildExeHR/api/ContractorPayment",
-        "contractorWorkOrder": "BuildExeHR/api/ContractorWorkOrder"
-    },
-    */
+    "serviceEndPoint": "BuildExeHR/api/ContractorPayment",
     "tableColumns": [
         {
             "field": 'id',
             "displayName": 'SNo'
         },
         {
-            "field": 'employeeId',
+            "field": 'fullName',
             "displayName": 'Contractor'
         },
         {
@@ -62,14 +57,89 @@ export const ContractorPaymentMetadata = {
             "displayName": 'Action'
         }
     ],
-    "formFields":  [
+    "formFields": [
+        {
+            "id": "row-1",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "employeeId",
+                    "type": "select",
+                    "templateOptions": {
+                        "label": "Contractor",
+                        "required": true,
+                        "options": []
+                        
+                    }
+                },
+               
+            ]
+        },
+        {
+            "id": "row-2",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "is-siteManager checkbox-outline-none",
+                    "type": "checkbox",
+                    "key": "isSiteManager",
+                    "defaultValue": 0,
+                    "templateOptions": {
+                        "label": "Site Manager",
+                    }
+                },
+            ]
+        },
+        {
+            "id": "row-3",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "paymentModeId",
+                    "type": "select",
+                    "defaultValue": 0,
+                    "templateOptions": {
+                        "label": "Site Manager",
+                        "required": true,
+                        "options": []
+                    },
+                    "expressionProperties": {
+                        "templateOptions.disabled": "!model.isSiteManager",
+                    },
+                    
+                },
+            ]
+        },
+        {
+            "id": "row-4",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "key": "balance",
+                    "type": "input",
+                    "templateOptions": {
+                        "label": "Site balance",
+                        "required": true,
+                        "type": "number"
+                    },
+                    "expressionProperties": {
+                        "templateOptions.disabled": "!model.isSiteManager",
+                    },
+                    
+                },
+            ]
+            
+        },
        
-],
-    "contractorForPayment": {
+    ],
+    "contractorPaymentDetails": {
         "tableColumns": [
             {
                 "field": 'id',
-                "displayName": 'CNo'
+                "displayName": 'Id'
             },
             {
                 "field": 'projectId',
@@ -103,17 +173,6 @@ export const ContractorPaymentMetadata = {
                 "fieldGroup": [
                     {
                         "className": "flex-1",
-                        "key": "employeeId",
-                        "type": "select",
-                        "templateOptions": {
-                            "label": "Contractor",
-                            "required": true,
-                            "options": []
-                            
-                        }
-                    },
-                    {
-                        "className": "flex-1",
                         "key": "paymentDate",
                         "type": "datepicker",
                         "templateOptions": {
@@ -123,22 +182,52 @@ export const ContractorPaymentMetadata = {
                     },
                     {
                         "className": "flex-1",
-                        "key": "paymentMode",
                         "type": "select",
+                        "key": "paymentMode",
                         "templateOptions": {
                             "label": "Payment Mode",
-                            "required": true,
                             "options": [
                                 {
-                                    "label": "Cash/DD",
-                                    "value": 0
+                                    "label": "CASH",
+                                    "value": 1
                                 },
                                 {
-                                    "label": "Cheque",
-                                    "value": 1
+                                    "label": "BANK",
+                                    "value": 0
+                                },
+                                // {
+                                //     "label": "SITE MANAGER",
+                                //     "value": 2
+                                // }
+                            ],
+                            "required": true
+                        },
+                        // "expressionProperties": {
+                        //     "templateOptions.disabled": "model.isSiteManager",
+                        // },
+                        "hideExpression": "model.isSiteManager",
+
+                    },
+                    {
+                        "className": "flex-1",
+                        "type": "select",
+                        "key": "paymentMode",
+                        "templateOptions": {
+                            "label": "Payment Mode",
+                            "options": [
+                               
+                                {
+                                    "label": "SITE MANAGER",
+                                    "value": 2
                                 }
-                            ]
-                        }
+                            ],
+                            "required": true
+                        },
+                        // "expressionProperties": {
+                        //     "templateOptions.disabled": "model.isSiteManager",
+                        // },
+                        "hideExpression": "!model.isSiteManager",
+
                     },
                     {
                         "className": "flex-1 checkbox-outline-none",
@@ -151,30 +240,19 @@ export const ContractorPaymentMetadata = {
                     }
                 ]
             },
-        
             {
                 "id": "row-2",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
                     {
-                        "className": "is-siteManager checkbox-outline-none",
-                        "type": "checkbox",
-                        "key": "isSiteManager",
-                        "defaultValue": 0,
-                        "templateOptions": {
-                            "label": "Site Manager",
-                        }
-                    },
-                    {
-                        "className": "flex-1 readonly field-size-small",
+                        "className": "flex-1 readonly",
+                        "type": "input",
                         "key": "paymentAmount",
                         "defaultValue": 0,
-                        "type": "input",
                         "templateOptions": {
                             "label": "Paying Amount",
-                            "required": true,
-                            "type": "number",
-                            "readonly" : true
+                            // "required": true,
+                            // "type": "number"
                         }
                     },
                     {
@@ -187,100 +265,62 @@ export const ContractorPaymentMetadata = {
                             "options": []
                         },
                         "expressionProperties": {
-                            "templateOptions.disabled": "!model.paymentMode",
+                            "templateOptions.disabled": "model.paymentMode",
                         },
                         
                     },
-                    
+                   
                 ]
-                
             },
             {
-                "id": "row-3",
+                "id": "row-4",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
-            {
-                "className": "flex-1",
-                "key": "id",
-                "type": "select",
-                "templateOptions": {
-                    "label": "Site Manager",
-                    "required": true,
-                    "options": []
+                {
+                        "className": "flex-1",
+                        "type": "input",
+                        "key": "paymentNo",
+                        "templateOptions": {
+                            "label": "Cheque No",
+                            "required": true
+                    },
+                    "expressionProperties": {
+                    "templateOptions.disabled": "model.paymentMode",
+                    },
                 },
-                "expressionProperties": {
-                    "templateOptions.disabled": "!model.isSiteManager",
-                },
-                
-            },
-            {
+                {
                 "className": "flex-1",
-                "type": "input",
-                "key": "chequeClearenceID",
+                "type": "datepicker",
+                "key": "chequeDate",
                 "templateOptions": {
-                    "label": "Cheque No",
+                    "label": "Cheque Date",
                     "required": true
                 },
-                        "expressionProperties": {
-                            "templateOptions.disabled": "!model.paymentMode",
-                        },
+                "expressionProperties": {
+                    "templateOptions.disabled": "model.paymentMode",
+                },
+                },
+            
+            
+            ]
             },
-            
-            
-        ]
-    },
-     {
-        "id": "row-4",
-        "fieldGroupClassName": "display-flex",
-        "fieldGroup": [
-    {
-        "className": "flex-1",
-        "key": "discountAmount",
-        "type": "input",
-        "templateOptions": {
-            "label": "Site balance",
-            "required": true,
-            "type": "number"
-        },
-        "expressionProperties": {
-            "templateOptions.disabled": "!model.isSiteManager",
-        },
-        
-    },
-    {
-        "className": "flex-1",
-        "type": "datepicker",
-        "key": "paymentDate",
-        "templateOptions": {
-            "label": "Cheque Date",
-            "required": true
-        },
-        "expressionProperties": {
-            "templateOptions.disabled": "!model.paymentMode",
-        },
-    },
-    
-    
-]
-},
-{
-    "id": "row-5",
-    "fieldGroupClassName": "display-flex",
-    "fieldGroup": [
- {
-                        "className": "flex-2",
-                        "key": "remarks",
+            {
+                "id": "row-5",
+                "fieldGroupClassName": "display-flex",
+                "fieldGroup": [
+                    {
+                        "className": "flex-1",
                         "type": "textarea",
+                        "key": "remarks",
                         "templateOptions": {
-                            "label": "Description",
+                            "label": "Remarks",
                             "required": true,
                             "rows": 1
                         }
                     },
-    ]
-}
-            
+                ]
+            },
         ]
     }
 
-    }
+}

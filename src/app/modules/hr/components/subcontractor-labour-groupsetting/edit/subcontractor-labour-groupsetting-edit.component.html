@@ -19,13 +19,10 @@
                     <formly-form [model]="modalForms.usage.model" [fields]="modalForms.usage.fields" [options]="modalForms.usage.options" [form]="modalForms.usage.form">
                     </formly-form>
                 </form>
-                <ng-container *ngIf="enableStockEdit">
-                    <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
-                    <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
-                </ng-container>
-                <ng-container *ngIf="!enableStockEdit">
-                    <button (click)="onAddStockBtnClick()" mat-button class="save add-block">Add</button>
-                </ng-container>
+
+                <button style="float: right;" (click)="onAddUnitsBtnClick()" mat-button class="save">{{
+                    isUpdatingUnit ? 'Update' : 'Add' }}</button>
+
                 <div class="inner-table-container">
                     <table class="table-compnay" mat-table [dataSource]="dataSource">
                         <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
@@ -38,10 +35,10 @@
                                     <ng-container *ngIf="column.field !== 'action'">
                                         {{element[column.field]}}
                                     </ng-container>
-                                    <ng-container *ngIf=" column.field === 'action'">
-                                        <mat-icon (click)="editStock(element)">edit</mat-icon>
-                                        <mat-icon (click)="removeStock(i)">delete_outline</mat-icon>
-                                    </ng-container>
+                                     <ng-container *ngIf=" column.field === 'action'">
+                            <mat-icon (click)="onEditRow(element)">edit</mat-icon>
+                            <mat-icon (click)="onDeleteRowBtnClick(element)">delete_outline</mat-icon>
+                        </ng-container>
                                 </ng-container>
                             </td>
                         </ng-container>

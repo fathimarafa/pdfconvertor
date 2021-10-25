@@ -19,44 +19,37 @@ export const AddLabourToProjectMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'employeeId',
-            "displayName": 'Employee Id'
+            "field": 'employeeCategoryName',
+            "displayName": 'Category Name'
         },
         {
-            "field": 'projectId',
-            "displayName": 'Project Id'
+            "field": 'employeeLabourGroupName',
+            "displayName": 'Labour Group Name'
         },
         {
             "field": 'dateAssigned',
             "displayName": 'Date Assigned'
         },
         {
+            "field": 'projectName',
+            "displayName": 'Project Name'
+        },
+        {
+            "field": 'blockName',
+            "displayName": 'Block Name'
+        },
+        {
+            "field": 'floorName',
+            "displayName": 'Floor Name'
+        },
+        {
+            "field": 'unitName',
+            "displayName": 'Unit Name'
+        },
+        {
             "field": 'action',
             "displayName": 'Action'
         }
-    ],
-    "employeeTableColmns": [
-        {
-            "field": 'fullName',
-            "displayName": 'Employee Name'
-        },
-        {
-            "field": 'labourHeadName',
-            "displayName": 'labour head'
-        },
-        
-
-        {
-            "field": 'salaryAmount',
-            "displayName": 'Wage'
-        },
-        
-        {
-            "field": 'jobStatus',
-            "displayName": 'Status'
-        },
-       
-        
     ],
     "formFields": [
         {
@@ -65,7 +58,7 @@ export const AddLabourToProjectMetadata = {
             "fieldGroup": [
                     {
                         "className": "flex-1",
-                        "key": "category",
+                        "key": "employeeCategoryId",
                         "type": "select",
                         "templateOptions": {
                             "label": "Category",
@@ -75,13 +68,16 @@ export const AddLabourToProjectMetadata = {
                 },
                 {
                     "className": "flex-1",
-                    "key": "employeeGroupId",
+                    "key": "employeeLabourGroupId",
                     "type": "select",
                     "templateOptions": {
                         "label": "Employee Group",
                         "required": true,
                         "options": []
-                    }
+                    },
+                    "expressionProperties": {
+                        "templateOptions.disabled": "![1].includes(model.employeeCategoryId)",
+                    },
                 },
             ]
         },
@@ -130,6 +126,78 @@ export const AddLabourToProjectMetadata = {
                     }
                 },
             ]
-        }
-    ]
+        }  
+    
+
+        
+    ],
+    "laboursInProjectDetail": {
+        "tableColumns": [
+            {
+                "field": 'id',
+                "displayName": 'Id'
+            },
+            {
+                "field": 'fullName',
+                "displayName": 'Employee Name'
+            },
+            {
+                "field": 'salaryAmount',
+                "displayName": 'Wage/Salary'
+            },
+            {
+                "field": 'labourHeadName',
+                "displayName": 'labour head'
+            },
+            {
+                "field": 'action',
+                "displayName": 'action'
+            },
+
+        ],
+    //     "formFields": [
+    //         {
+    //             "id": "row-1",
+    //             "fieldGroupClassName": "display-flex",
+    //             "fieldGroup": [
+                   
+    //                 {
+    //                     "className": "flex-1",
+    //                     "type": "select",
+    //                     "key": "labourWorkId",
+    //                     "templateOptions": {
+    //                         "label": "Work Name",
+    //                         "options": [],
+    //                         "required": true
+    //                     }
+    //                 },
+    //                 {
+    //                     "className": "flex-1 readonly",
+    //                     "type": "input",
+    //                     "key": "workRate",
+    //                     "templateOptions": {
+    //                         "label": "Wage",
+    //                         // "type":"number",
+    //                         // "required": true,
+    //                         "readonly": true
+                            
+    //                     }
+    //                 },
+    //                 {
+    //                     "className": "flex-1",
+    //                     "type": "input",
+    //                     "key": "otRate",
+    //                     "templateOptions": {
+    //                         "label": "OT Rate",
+    //                         "required": true,
+    //                         "type":"number"
+    //                     }
+                    
+    //                 },
+    //             ]
+    //         },
+           
+    //     ]
+    }
+
 }

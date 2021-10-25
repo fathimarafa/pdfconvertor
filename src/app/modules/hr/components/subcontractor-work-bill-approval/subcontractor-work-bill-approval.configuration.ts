@@ -1,12 +1,12 @@
 export const SubcontractorBillApprovalMetadata = {
     "moduleId": "subcontractorworkbill",
     "moduleName": "subcontractorworkbill",
-    "displayName": "HR/ SubcontractorBill",
+    "displayName": "HR/ SubContractorBill Approval",
     "hasAddNew": true,
     "hasEdit": true,
     "hasDelete": true,
     "useMultiStepForm": false,
-     // "serviceEndPoint": "BuildExeHR/api/SubcontractorBill",
+    // "serviceEndPoint": "BuildExeHR/api/SubcontractorBill",
     // "serviceEndPoint1": "BuildExeHR/api/SubContractorWorkOrder",
     "serviceEndPoint": "BuildExeHR/api/SubcontractorBill",
     // "serviceEndPoint1": "BuildExeHR/api/ForemanWorkOrderList",
@@ -157,7 +157,7 @@ export const SubcontractorBillApprovalMetadata = {
     "subcontractorBillDetails": {
         "tableColumns": [
             {
-                "field": 'subContractorWorkOrderDetailsId',
+                "field": 'workOrderDetailsId',
                 "displayName": 'Indent No'
             },
             {
@@ -189,17 +189,17 @@ export const SubcontractorBillApprovalMetadata = {
                 "displayName": 'Negotiate Amount'
             },
             {
-                "field": 'Total Qty',
+                "field": 'totalqty',
                 "displayName": 'Totalqty'
             },
             {
-                "field": 'Total Amount',
+                "field": 'netAmount',
                 "displayName": 'Amount'
             },
-            {
-                "field": 'action',
-                "displayName": 'Action'
-            }
+            // {
+            //     "field": 'action',
+            //     "displayName": 'Action'
+            // }
         ],
         "formFields": [
             {
@@ -216,12 +216,6 @@ export const SubcontractorBillApprovalMetadata = {
                             // "required": true
                         }
                     },
-                ]
-            },       
-            {
-                "id": "row-2",
-                "fieldGroupClassName": "display-flex",
-                "fieldGroup": [
                     {
                         "className": "flex-1 field-size-small",
                         "type": "input",
@@ -239,28 +233,106 @@ export const SubcontractorBillApprovalMetadata = {
                         "templateOptions": {
                             "label": "Other Charges",
                             "options": [],
+                            "type": "number",
+                            // "required": true
+                        }
+                    },
+                    {
+                        "className": "flex-1 field-size-small",
+                        "type": "input",
+                        "key": "tax",
+                        "templateOptions": {
+                            "label": "Tax Percentage",
+                            "options": [ ],
                             // "required": true
                         }
                     },
                     {
                         "className": "flex-1 field-size-small",
                         "type": "select",
-                        "key": "taxArea",
+                        "key": "taxtype",
                         "templateOptions": {
                             "label": "Tax Area",
                             "options": [
                                 {
-                                    "label": "INTER",
-                                    "value": "INTER"
+                                    "label": "INTER STATE",
+                                    "value": "INTER STATE"
                                 },
                                 {
-                                    "label": "INTRA",
-                                    "value": "INTRA"
+                                    "label": "INTRA STATE",
+                                    "value": "INTRA STATE"
                                 }
                             ],
-                          
+                            "required": true
                         }
                     },
+                  
+                ]
+            },       
+          
+            {
+                "id": "row-2",
+                "fieldGroupClassName": "display-flex",
+                "fieldGroup": [
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "textarea",
+                    //     "key": "itemDescription",
+                    //     "templateOptions": {
+                    //         "label": "Particular",
+                    //         "rows": 1
+                    //     }
+                    // },
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "textarea",
+                    //     "key": "workDescription",
+                    //     "templateOptions": {
+                    //         "label": "Description",
+                    //         "rows": 1
+                    //     }
+                    // },
+                    // {
+                    //     "className": "flex-1 field-size-small",
+                    //     "type": "input",
+                    //     "key": "saccode",
+                    //     "templateOptions": {
+                    //         "label": "SAC Code"
+                    //     }
+                    // },
+                    {
+                        "className": "flex-1 field-size-small",
+                        "type": "input",
+                        "defaultValue": 0,
+                        "key": "amountRetensionPercent",
+                        "templateOptions": {
+                            "label": "Retension (%)",
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "className": "flex-1 readonly",
+                        "type": "input",
+                        "key": "amountRetensionAmount",
+                        "defaultValue": 0,
+                        "templateOptions": {
+                            "label": "Retension Amount",
+                            "type": "number",
+                            // "readonly": true
+                        }
+                    },
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "amount",
+                    //     "templateOptions": {
+                    //         "label": "Amount",
+                    //         "type": "number",
+                    //         // "readonly": true
+                    //     }
+                    // },
+                   
                 ]
             },
             {
@@ -268,55 +340,13 @@ export const SubcontractorBillApprovalMetadata = {
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
                     {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "itemDescription",
-                        "templateOptions": {
-                            "label": "Status of Work",
-                            "rows": 1
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "retentionBalanceAmount",
-                        "templateOptions": {
-                            "label": "Retension Amount",
-                            "rows": 1
-                        }
-                    },
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "retentionStatus",
-                        "templateOptions": {
-                            "label": "",
-                            "rows": 1
-                        }
-                    },
-                    {
                         "className": "flex-1 field-size-small",
                         "type": "input",
-                        "key": " tax",
+                        "defaultValue": 0,
+                        "key": "sgstPercent",
                         "templateOptions": {
-                            "label": "Tax(%)"
-                        }
-                    },
-                   
-                   
-                ]
-            },
-            {
-                "id": "row-4",
-                "fieldGroupClassName": "display-flex",
-                "fieldGroup": [
-                    {
-                        "className": "flex-1",
-                        "type": "input",
-                        "key": "amountPaidAdvance",
-                        "templateOptions": {
-                            "label": "Advance recovery",
-                            "rows": 1
+                            "label": "SGST (%)",
+                            "type": "number"
                         }
                     },
                     {
@@ -348,7 +378,7 @@ export const SubcontractorBillApprovalMetadata = {
                         "templateOptions": {
                             "label": "CGST Amount",
                             "type": "number",
-                            // "readonly": true
+                            "readonly": true
                         }
                     },
                     {
@@ -375,49 +405,105 @@ export const SubcontractorBillApprovalMetadata = {
                 ]
             },
             {
-                "id": "row-5",
+                "id": "row-4",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
-                   
-                   
-                   
+                    // {
+                    //     "className": "flex-1 field-size-small",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "kfcper",
+                    //     "templateOptions": {
+                    //         "label": "KFC (%)",
+                    //         "type": "number"
+                    //     }
+                    // },
+                    // {
+                    //     "className": "flex-1 readonly field-size-small",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "kfcAmt",
+                    //     "templateOptions": {
+                    //         "label": "KFC Amount",
+                    //         "type": "number",
+                    //         "readonly": true
+                    //     }
+                    // },
                     {
                         "className": "flex-1 field-size-small",
                         "type": "input",
                         "defaultValue": 0,
-                        "key": "tdsPercent",
+                        "key": "amountTdsPercent",
                         "templateOptions": {
                             "label": "TDS (%)",
                             "type": "number",
                         }
                     },
                     {
-                        "className": "flex-1 readonly field-size-small",
+                        "className": "flex-1 readonly",
                         "type": "input",
                         "defaultValue": 0,
-                        "key": "tdsAmount",
+                        "key": "amountTdsAmount",
                         "templateOptions": {
                             "label": "TDS Amount",
                             "type": "number",
-                            "readonly": true
+                            // "readonly": true
                         }
                     },
-                   
-
+                    // {
+                    //     "className": "flex-1 field-size-small",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "labourWelfarePercent",
+                    //     "templateOptions": {
+                    //         "label": "LW (%)",
+                    //         "type": "number",
+                    //     }
+                    // },
+                    // {
+                    //     "className": "flex-1 readonly field-size-small",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "labourWelfareAmount",
+                    //     "templateOptions": {
+                    //         "label": "LW Amount",
+                    //         "type": "number",
+                    //         "readonly": true
+                    //     }
+                    // }
                 ]
             },
             {
-                "id": "row-6",
+                "id": "row-5",
                 "fieldGroupClassName": "display-flex",
                 "fieldGroup": [
-                  
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "discount",
+                    //     "templateOptions": {
+                    //         "label": "Discount (%)",
+                    //         "type": "number"
+                    //     }
+                    // },
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "input",
+                    //     "defaultValue": 0,
+                    //     "key": "discountAmt",
+                    //     "templateOptions": {
+                    //         "label": "Discount Amount",
+                    //         "type": "number"
+                    //     }
+                    // },
                     {
-                        "className": "flex-1 readonly",
+                        "className": "flex-1 readonly field-size-small",
                         "type": "input",
                         // "defaultValue": 0,
                         "key": "netAmount",
                         "templateOptions": {
-                            "label": "Net Payable",
+                            "label": "Total Amount",
                             "type": "number",
                             "readonly": true
                         }

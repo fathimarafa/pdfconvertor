@@ -51,8 +51,8 @@ export class FormfieldHandler {
     }*/
 
     static get categoryDropdown(){
-        return this.forms.usage
-          .find((x: FormlyFieldConfig) => x.id === 'row-1').fieldGroup
+        return this.forms.issued
+          .find((x: FormlyFieldConfig) => x.id === 'row-4').fieldGroup
           .find((x: FormlyFieldConfig) => x.key === 'category');
       }
       static get contractorDropdown(){

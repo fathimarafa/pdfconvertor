@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubcontractorWorkBillApprovalComponent } from './subcontractor-work-bill-approval.component';
-
-
+import { SubcontractorPaymentApprovalComponent } from './subcontractor-payment-approval.component';
+import {SubcontractorbillpaymentapprovalEditComponent} from "f:/Roshni/Buildexe12.10.21/BuildExe_UI/src/app/modules/hr/components/subcontractor-payment-approval/edit/subcontractorbillpayment-approval-edit.component"
 
 @NgModule({
   declarations: [
-    SubcontractorWorkBillApprovalComponent
+    SubcontractorPaymentApprovalComponent,SubcontractorbillpaymentapprovalEditComponent
   ],
   imports: [
     CommonModule

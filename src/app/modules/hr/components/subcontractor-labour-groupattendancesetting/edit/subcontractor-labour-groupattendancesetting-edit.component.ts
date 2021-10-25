@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormfieldHandler, ModalFormFields } from '../handlers/form-field.handler';
@@ -19,6 +19,8 @@ import { Project } from 'src/app/modules/crm/components/project/definitions/proj
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
 import { SubContractorWorkOrder } from '../../subcontractor-work-order/definitions/subcontractor-work-order.definition';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -35,8 +37,12 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
   isEdit: boolean;
   tableColumns;
   dataSource;
+  amount = 0;
+  balanceAmount = 0;
   subscribeProjectDivison: Subscription;
   enableStockEdit: boolean;
+  isUpdatingUnit: boolean;
+  nooflabours: 0;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
@@ -45,7 +51,9 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     private dataHandler: DataHandlerService,
     private authService: AuthenticationService,
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private router: Router,
+    private dialog: MatDialog,
   ) {
     this.module = SubcontractorlaboutgroupattendanceMetadata;
     this.tableColumns = SubcontractorlaboutgroupattendanceMetadata.attendanceDetails.tableColumns
@@ -76,16 +84,7 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     //  this.fetchData();
    }
 
-  // fetchData() {
-  //   // const dummyCompanyId = 4; 
-  //   // this.dataHandler.get<AttendanceDetails[]>(`${'BuildExeHR/api/SubContractorAttendanceSetting'}/${this.modalForms.issued.model.projectId}/${this.modalForms.issued.model.unitId}/${this.modalForms.issued.model.blockId}/${this.modalForms.issued.model.floorId}/${this.modalForms.issued.model.subContractorId}`)
-  //   this.dataHandler.get<AttendanceDetails[]>(`${'BuildExeHR/api/SubContractorAttendanceSetting'}/${1009}/${17}/${4}/${2}/${12}`)
-  //     .subscribe((res: AttendanceDetails[]) => {
-  //       this.dataSource = new MatTableDataSource(res);
-  //       this.dataSource.paginator = this.paginator;
-  //     });
-  // }
-
+  
   defineModalForms() {
     this.modalForms = {
       issued: {
@@ -114,8 +113,17 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
 
   loadItemDetails() {
     if (this.isEdit) {
-        const endpoint = `${"BuildExeHR/api/SubContractorAttendanceSetting"}List/${this.editData.id}`;
+        const endpoint = `${"BuildExeHR/api/SubContractorAttendanceList"}/${this.editData.id}`;
         this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+          res.forEach(e => {
+            e['Amount'] = e.noOfLabours * e.wage;
+            e['oTAmount'] = e.oTRate * e.oTHours;
+            e['total'] = e['Amount'] + e['oTAmount'];
+          this.amount = this.amount + e['total'];
+      this.balanceAmount = this.balanceAmount + e['total'];
+          
+
+          })
             this.dataSource = new MatTableDataSource(res)
         });
     } else {
@@ -134,18 +142,66 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     // this.fetchWorkOrderSelectOptions();
   }
 
-  onSaveBtnClick() {
-    if (this.modalForms.issued.form.valid) {
-      this.httpRequest.subscribe((res) => {
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+            this.saveChanges();
+        }
+    });
+}
+
+get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+}
+
+onSaveBtnClick(nextLevel?: boolean) {
+  if (this.modalForms.issued.form.valid) {
+      if (this.isEditedFromApproval) {
+          this.openApproveDialog();
+      } else {
+          if (nextLevel) {
+         
+          if(this.modalForms.issued.model.maxlevel===0)
+          {
+              this.modalForms.issued.model.approvalStatus=1;
+              this.modalForms.issued.model.approvedDate = new Date();
+              this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+              this.modalForms.issued.model.approvalLevel = 1;
+              this.saveChanges(); 
+          }
+          else
+          {
+            this.modalForms.issued.model.approvalLevel=1;
+            this.modalForms.issued.model.approvedDate = new Date();
+            this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+              this.saveChanges(); 
+          }
+        
+          }
+        
+      }
+  }
+}
+
+
+saveChanges() {
+    // this.httpRequest.subscribe((res) => {
+    //     const closeEvent: IDialogEvent = {
+    //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+    //         data: res || this.modalForm.indent.model
+    //     }
+    //     this.dialogRef.close(closeEvent);
+    this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
           data: res || this.modalForms.issued.model
         }
         this.dialogRef.close(closeEvent);
-      })
+    })
+}
 
-    }
-  }
+
 
 
   onCancelBtnClick() {
@@ -172,9 +228,15 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
 
   get httpRequest(): Observable<SubcontractorlabourgroupaAttendance> {
     this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
-    let payload: any = this.modalForms.issued.model
+    let payload: any = this.modalForms.issued.model;
     payload.attendanceDetails = this.dataSource.data;
+    payload.approvedDate = new Date();
+      payload.financialYearId = 1;
+      payload.balanceAmount = this.balanceAmount;
+      payload.amount = this.amount;
     if (this.isEdit) {
+      payload.balanceAmount = this.balanceAmount;
+      payload.amount = this.amount;
       return this.dataHandler.put<SubcontractorlabourgroupaAttendance>(SubcontractorlaboutgroupattendanceMetadata.serviceEndPoint, [payload]);
     } else {
       payload.isDeleted = 0;
@@ -208,9 +270,8 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
       
     }
     FormfieldHandler.workorderDropdown.templateOptions.change = (field: FormlyFieldConfig, event) => {
-      // this.fetchData();
       this.fetchWorkBillnoSelectOptions();
-      
+      this.fetchData();
     }
   }
 
@@ -247,11 +308,21 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     return `${BasicWorkCategoryMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
   }
   onUserInput($event, row, column) {
-    row[column] = $event.target.value;
-    row['amount'] = row.noOfLabours * row.workRate;
+    row[column] = Number($event.target.value);
+    row['Amount'] = row.noOfLabours * row.wage;
     row['oTAmount'] = row.oTRate * row.oTHours;
-    row['total'] = row['amount'] + row['oTAmount'];
-    // this.calculateItemDetailsTableTotal();
+    row['total'] = row['Amount'] + row['oTAmount'];
+    this.calculateItemDetailsTableTotal();
+  }
+
+  calculateItemDetailsTableTotal() {
+    this.amount = 0;
+    this.balanceAmount =0;
+    this.dataSource.data.forEach((row) => {
+      this.amount = this.amount + row['total'];
+      this.balanceAmount = this.balanceAmount + row['total'];
+    });
+    // this.calculateNetAmount();
   }
 
   WorknoDataset: SubContractorWorkOrder[]; 
@@ -305,10 +376,11 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     this.dataHandler.get<any[]>(endPoint)
       .subscribe((res: any[]) => {
         if (res) {
-          this.modalForms.issued.model['billno']=String(res);
+          this.modalForms.issued.model['billNumber']=String(res);
           console.log("bill",this.modalForms.issued.model.billno);
           this.modalForms.issued.model = { ...this.modalForms.issued.model};
         }
+        // this. fetchData();
       });
     }
 
@@ -325,15 +397,25 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
 
   
   fetchData() {
-    // const dummyCompanyId = 1; const dummyBranchId = 0;
-    const user = this.authService.loggedInUser;
-    this.dataHandler.get<any[]>(`${"BuildExeHR/api/ForemanWorkOrder"}List/${user.companyId}/${user.branchId}`)
+    const workid = this.modalForms.issued.model.workOrderMasterId;
+    
+    // console.log("df",this.modalForms.issued.model['workOrderMasterId']);
+    this.dataHandler.get<any[]>(`${"BuildExeHR/api/SubContractorAttendanceSettingBill"}/${this.modalForms.issued.model['workOrderMasterId']}`)
     .subscribe((res: any[]) => {
+      this.nooflabours = 0;
+      res.forEach(e => {
+        e['noOfLabours'] = 0;
+        e['oTHours'] = 0;
+        e['Amount'] = e.noOfLabours * e.wage;
+        e['oTAmount'] = e.oTRate * e.oTHours;
+        e['total'] = e['Amount'] + e['oTAmount'];
+      })
+
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
+        console.log("wage",this.dataSource.filteredData[0]);
       });
   }
-
 
 
   fetchSubcontractorSelectOptions() {
@@ -378,6 +460,8 @@ export class SubcontractorlabourgroupattendanceEditComponent implements OnInit {
     this.enableStockEdit = true;
     this.modalForms.usage.model = rowToEdit;
   }
+
+ 
 
   onUpdateStockBtnClick() {
 

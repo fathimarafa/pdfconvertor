@@ -1,7 +1,7 @@
 <h2 mat-dialog-title class="form-dialog header-color">Add Contractor Work Order Details</h2>
 <mat-dialog-content style="display: flex;" class="form-dialog mat-typography dialog-content">
     <div>
-        <div class="form-title">Contractor Work Order</div>
+        <!-- <div class="form-title">Contractor Work Order</div> -->
         <div class="form-container">
             <div class="form-child">
                 <form [formGroup]="modalForms.issued.form">
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="flex-1">
-        <div class="form-title">Contractor Work Order Details</div>
+        <!-- <div class="form-title">Contractor Work Order Details</div> -->
         <div class="form-container">
             <div class="form-child">
                 <form [formGroup]="modalForms.usage.form">
@@ -50,11 +50,31 @@
                     </table>
                     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                 </div>
+                <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Total</mat-label>
+                        <input [value]="amount" matInput type="text">
+                    </mat-form-field>
+                </div>
+                <!-- <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Balance Amount</mat-label>
+                        <input [value]="balanceAmount" matInput type="text">
+                    </mat-form-field>
+                </div> -->
             </div>
         </div>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
     <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <button *ngIf="!isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save">Next
+        Level</button>
+        <button *ngIf="isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save">Next
+        Level</button>
+        <!-- <button *ngIf="isView" form="indent-form" (click)="onSaveBtnClic(true)" mat-button class="save">Approve
+            </button> -->
+        <!-- <button *ngIf= form="column.field === 'action'" (click)="openDialog(element)" mat-button class="save">Approve</button> -->
+        <!-- <button *ngIf="isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save">Approve</button> -->
     <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
 </mat-dialog-actions>

@@ -90,7 +90,7 @@ export class AdditionalBillappComponent implements OnInit {
       issued: this.modalForms.issued.fields,
       usage: this.modalForms.usage.fields
     }
-    FormfieldHandler.initialize(formFields);
+    // FormfieldHandler.initialize(formFields,this.detailsFields);
     this.loadDropdowns();
     this.dataSource = new MatTableDataSource(this.editData. subContractorWorkOrderDetails || []);
   }

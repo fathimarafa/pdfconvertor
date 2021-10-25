@@ -147,18 +147,64 @@ export class MaterialStockEntryEditComponent implements OnInit {
     return this.router.url.includes('approval');
   }
 
+  // onSaveBtnClick(nextLevel?: boolean) {
+  //   if (this.modalForms.stockentry.form.valid) {
+  //     if (this.isEditedFromApproval) {
+  //       this.openApproveDialog();
+  //     } else {
+  //       if (nextLevel) {
+  //         if(this.modalForms.stockentry.model.maxlevel===0)
+  //         {
+  //           this.modalForms.stockentry.model.approvedDate = new Date();
+  //           this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
+  //           this.modalForms.stockentry.model.approvalLevel = 1;
+  //           this.modalForms.stockentry.model.approvalStatus = 1;
+  //         }
+  //         else
+  //         {
+  //           this.modalForms.stockentry.model.approvalLevel=1;
+  //           this.modalForms.stockentry.model.approvedDate = new Date();
+  //           this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
+  //             // this.saveChanges(); 
+  //         }
+  //         // this.modalForms.stockentry.model.approvedDate = new Date();
+  //         // this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
+  //         // this.modalForms.stockentry.model.approvalLevel = 1;
+  //         // this.modalForms.stockentry.model.approvalStatus = 1;
+  //       this.saveChanges();
+  //     }
+  //     }
+  //   }
+  // }
+
+
+
+  
   onSaveBtnClick(nextLevel?: boolean) {
     if (this.modalForms.stockentry.form.valid) {
-      if (this.isEditedFromApproval) {
-        this.openApproveDialog();
-      } else {
-        if (nextLevel) {
-          this.modalForms.stockentry.model.approvedDate = new Date();
-          this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
-          this.modalForms.stockentry.model.approvalLevel = 1;
+        if (this.isEditedFromApproval) {
+            this.openApproveDialog();
+        } else {
+            if (nextLevel) {
+           
+            if(this.modalForms.stockentry.model.maxlevel===0)
+            {
+                this.modalForms.stockentry.model.approvalStatus=1;
+                this.modalForms.stockentry.model.approvedDate = new Date();
+                this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
+                this.modalForms.stockentry.model.approvalLevel = 1;
+            }
+            else
+            {
+              this.modalForms.stockentry.model.approvalLevel=1;
+              this.modalForms.stockentry.model.approvedDate = new Date();
+              this.modalForms.stockentry.model.approvedBy = this.authService.loggedInUser.userId;
+                this.saveChanges(); 
+            }
+          
+            }
+          
         }
-        this.saveChanges();
-      }
     }
   }
 

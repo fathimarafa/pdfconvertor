@@ -101,9 +101,11 @@
     </mat-dialog-content>
 
     <mat-dialog-actions class="form-dialog" align="end">
-        <button form="stock-entry-form" (click)="onSaveBtnClick()" mat-button class="save">Save</button>
-        <button *ngIf="!isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save margin-right-20">Next
-            Level</button>
+        <button form="stock-entry-form" (click)="saveChanges()" mat-button class="save">Save</button>
+        <button (click)="onSaveBtnClick(true)" mat-button class="save margin-right-20">Next Level</button>
         <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
     </mat-dialog-actions>
+
+
+
 </div>

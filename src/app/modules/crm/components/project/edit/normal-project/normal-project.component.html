@@ -13,8 +13,14 @@
                     </formly-form>
 
                     <ng-container *ngIf="step.id === 'projectconsultancy'">
+
+                        <form [formGroup]="projectConsultancy.form">
+                            <formly-form [model]="projectConsultancy.model" [fields]="projectConsultancy.fields" [options]="projectConsultancy.options" [form]="projectConsultancy.form"></formly-form>
+                        </form>
+
                         <div class="" style="display: flex;justify-content: flex-end;">
-                            <button (click)="onAddConsultancyWorkBtnClick()" mat-button class="save">Add</button>
+                            <button (click)="onAddConsultancyWorkBtnClick()" mat-button class="save">{{
+                                isUpdatingUnit ? 'Update' : 'Add' }}</button>
                         </div>
                         <div>
                             <table class="table-compnay" mat-table [dataSource]="consultancyDatasource">
@@ -29,8 +35,9 @@
                                                 {{element[column.field]}}
                                             </ng-container>
                                             <ng-container *ngIf=" column.field === 'action'">
-                                                <mat-icon (click)="openDialog(element)">edit</mat-icon>
-                                                <mat-icon (click)="openDeleteDialog(element)">delete_outline</mat-icon>
+                                                <mat-icon (click)="onEditProjectConsultancy(element)">edit</mat-icon>
+                                                <mat-icon (click)="onDeleteConsultancyBtnClick(element)">delete_outline
+                                                </mat-icon>
                                             </ng-container>
                                         </ng-container>
                                     </td>
@@ -94,7 +101,8 @@
                 <div align="end">
                     <button class="button-info" type="button" mat-button *ngIf="index !== 0" matStepperPrevious (click)="prevStep(index)">Back</button>
                     <button class="button-info" type="button" *ngIf="!last" matStepperNext mat-button [disabled]="form && form.at(index) && !form.at(index).valid" (click)="nextStep(index)">Next</button>
-                    <button class="button-success" type="submit" (click)="onSaveBtnClick()" *ngIf="last" mat-button [disabled]="!form.valid">Submit</button>
+                    <button class="button-success" type="submit" (click)="onSaveBtnClick()" *ngIf="last" mat-button>Submit</button>
+                    <!-- [disabled]="!form.valid" -->
                 </div>
             </mat-step>
         </mat-horizontal-stepper>

@@ -30,6 +30,7 @@ export class MaterialIndentCreationEditComponent implements OnInit {
     dataSource;
     modalForm: IndentForm;
     materialList: MaterialRegistration[];
+    isUpdatingUnit: boolean;
 
     constructor(
         private dialogRef: MatDialogRef<MaterialIndentCreationEditComponent>,
@@ -59,7 +60,7 @@ export class MaterialIndentCreationEditComponent implements OnInit {
             },
             itemDetails: {
                 form: new FormGroup({}),
-                model: {},
+                model: this.editData,
                 options: {},
                 fields: MaterialIndentCreationMetadata.itemDetails.formFields
             }
@@ -125,6 +126,10 @@ export class MaterialIndentCreationEditComponent implements OnInit {
     onApproveBtnClick() {
         const isApproved = true;
         this.openApproveDialog();
+        // this.modalForm.indent.model.approvedDate = new Date();
+        // this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
+        // this.modalForm.indent.model.approvalLevel=1;
+        // this.modalForm.indent.model.approvalStatus = 1;
       }
     
       onRejectBtnClick() {
@@ -133,22 +138,67 @@ export class MaterialIndentCreationEditComponent implements OnInit {
       }
 
 
+    // onSaveBtnClick(nextLevel?: boolean) {
+    //     if (this.modalForm.indent.form.valid) {
+    //         if (this.isEditedFromApproval) {
+    //             if(this.modalForm.itemDetails.model.maxlevel=0){
+    //                 this.openApproveDialog();
+    //             }
+                
+    //         } else {
+    //             if (nextLevel) {
+    //                 this.modalForm.indent.model.approvedDate = new Date();
+    //                 this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
+    //                 this.modalForm.indent.model.approvalLevel = 1;
+    //             //     this.modalForm.indent.model.approvalStatus = 1;
+                    
+    //             // console.log("level",this.modalForm.indent.model.approvalLevel);//i
+    //             // console.log("status",this.modalForm.indent.model.approvalStatus);
+    //             }
+    //             this.saveChanges();
+    //         }
+    //     }
+    // }
+
+
+
     onSaveBtnClick(nextLevel?: boolean) {
         if (this.modalForm.indent.form.valid) {
             if (this.isEditedFromApproval) {
                 this.openApproveDialog();
             } else {
                 if (nextLevel) {
+               
+                if(this.modalForm.indent.model.maxlevel===0)
+                {
+                    this.modalForm.indent.model.approvalStatus=1;
                     this.modalForm.indent.model.approvedDate = new Date();
                     this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
-                    this.modalForm.indent.model.approvalLevel = 1;
+                    this.modalForm.indent.model.approvalLevel = 0;
+                    // this.saveChanges(); 
                     
-                console.log("success",this.modalForm.indent.model.approvalLevel);//i
+                    
                 }
-                this.saveChanges();
+                else
+                {
+                    this.modalForm.indent.model.approvalLevel=1;
+                    this.modalForm.indent.model.approvedDate = new Date();
+                    this.modalForm.indent.model.approvedBy = this.authService.loggedInUser.userId;
+                     console.log("approval level",this.modalForm.indent.model.approvalLevel)
+                    // this.saveChanges(); 
+                }
+               
+                }
+              
             }
+            this.saveChanges(); 
         }
     }
+
+
+
+
+
 
     saveChanges() {
         this.httpRequest.subscribe((res) => {
@@ -215,15 +265,39 @@ export class MaterialIndentCreationEditComponent implements OnInit {
         return `${MaterialRegistrationMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
     }
 
+    // onAddItemBtnClick() {
+    //     if (this.isValid) {
+    //         const data: any = Object.assign({}, this.modalForm.itemDetails.model);
+    //         data.materialName = this.materialList.find(e => e.id === data.materialId).materialName;
+    //         this.dataSource.data.push(data);
+    //         this.dataSource._updateChangeSubscription();
+    //         this.modalForm.itemDetails.form.reset();
+    //     }
+    // }
+
     onAddItemBtnClick() {
-        if (this.isValid) {
-            const data: any = Object.assign({}, this.modalForm.itemDetails.model);
-            data.materialName = this.materialList.find(e => e.id === data.materialId).materialName;
-            this.dataSource.data.push(data);
-            this.dataSource._updateChangeSubscription();
-            this.modalForm.itemDetails.form.reset();
+        if(this.modalForm.itemDetails.form.valid){
+          if (this.isUpdatingUnit) {
+            const indexToUpdate = this.dataSource.data.findIndex(row => row.id === this.modalForm.itemDetails.model.id);
+            if (indexToUpdate !== -1) {
+              this.dataSource.data[indexToUpdate] = Object.assign({}, this.modalForm.itemDetails.model);
+              this.isUpdatingUnit = false;
+            }
+          } else {
+            const data: any = Object.assign(
+                { id: `temp-${this.dataSource.data.length + 1}` },
+                this.modalForm.itemDetails.model);
+        //    data.labourWorkName = this.WorknameDataset.find(e => e.id === data.workId).labourWorkName;
+           this.dataSource.data.push(data);
+          }
+          this.dataSource._updateChangeSubscription();
+          this.modalForm.itemDetails.form.reset();
+        //   this.bindUnitDefaultValues();
         }
-    }
+      }
+
+
+
 
     get isValid() {
         if (!this.modalForm.itemDetails.model['materialId']) {
@@ -237,14 +311,24 @@ export class MaterialIndentCreationEditComponent implements OnInit {
         return true;
     }
 
-    openDialog(rowToEdit?: MaterialIndent) {
-        const data = Object.assign({}, rowToEdit);
-        this.modalForm.itemDetails.model = data;
-    }
+    // openDialog(rowToEdit?: MaterialIndent) {
+    //     const data = Object.assign({}, rowToEdit);
+    //     this.modalForm.itemDetails.model = data;
+    // }
+
+    openDialog(rowToEdit) {
+        this.modalForm.itemDetails.model = Object.assign({}, rowToEdit);
+        this.isUpdatingUnit = true;
+      }
 
     openDeleteDialog(rowToDelete): void {
-        this.dataSource.data.splice(rowToDelete, 1);
-        this.dataSource._updateChangeSubscription();
+        const indexToRemove = this.dataSource.data.findIndex(row => row.id === rowToDelete.id);
+        if (indexToRemove !== -1) {
+            this.dataSource.data.splice(indexToRemove, 1);
+            this.dataSource._updateChangeSubscription();
+            // this.dataSource.data.splice(rowToDelete, 1);
+            // this.dataSource._updateChangeSubscription();
+          }
     }
 
     ngAfterViewInit() {

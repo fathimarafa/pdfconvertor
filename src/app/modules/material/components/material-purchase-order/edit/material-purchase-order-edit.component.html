@@ -69,9 +69,17 @@
 
     </div>
 
-    <div class="footer">
+    <!-- <div class="footer">
         <button (click)="onSaveBtnClick()" mat-button class="save margin-right-20">Save</button>
-        <button *ngIf="!isEdit" form="indent-form" (click)="onSaveBtnClick(true)" mat-button class="save margin-right-20">Next
+        <button (click)="onSaveBtnClick(true)" mat-button class="save margin-right-20">Next
+            Level</button>
+        <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
+    </div> -->
+
+
+    <div class="footer">
+        <button (click)="saveChanges()" mat-button class="save margin-right-20">Save</button>
+        <button (click)="onSaveBtnClick(true)" mat-button class="save margin-right-20">Next
             Level</button>
         <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
     </div>

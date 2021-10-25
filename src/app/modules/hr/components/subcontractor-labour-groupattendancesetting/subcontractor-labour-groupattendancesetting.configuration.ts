@@ -121,7 +121,7 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                 {
                     "className": "flex-1",
                     "type": "input",
-                    "key": "billno",
+                    "key": "billNumber",
                     "templateOptions": {
                         "label": "Bill Number"
                     }
@@ -146,16 +146,20 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
                 "displayName": 'SNo'
             },
             {
-                "field": 'labourWorkId',
+                "field": 'labourWorkName',
                 "displayName": 'Work Name'
             },
             {
                 "field": 'noOfLabours',
-                "displayName": 'No of Labours'
+                "displayName": 'No Of Labours'
             },
             {
-                "field": 'workRate',
-                "displayName": 'Daily wage'
+                "field": 'wage',
+                "displayName": 'Daily Wage'
+            },
+            {
+                "field": 'Amount',
+                "displayName": 'Amount'
             },
             {
                 "field": 'oTRate',
@@ -163,12 +167,20 @@ export const SubcontractorlaboutgroupattendanceMetadata = {
             },
             {
                 "field": 'oTHours',
-                "displayName": 'OT Hours'
+                "displayName": 'OT Rate(Hrs)'
             },
             {
-                "field": 'action',
-                "displayName": 'Action'
-            }
+                "field": 'oTAmount',
+                "displayName": 'OT Amount'
+            },
+            {
+                "field": 'total',
+                "displayName": 'Total'
+            },
+            // {
+            //     "field": 'action',
+            //     "displayName": 'Action'
+            // }
         ],
        
     }

@@ -190,6 +190,11 @@ export class OwnProjectComponent implements OnInit {
           this.isUpdatingUnit = false;
         }
       } else {
+        const unitIdExist = this.dataSource.data.find(row=>row.unitId === this.modalForms.child.model.unitId);
+        if(unitIdExist){
+          this.snackbar.open('WARNING : Unit Id already exist');
+          return;
+        }
         this.dataSource.data.push(Object.assign(
           { id: `temp-${this.dataSource.data.length + 1}` },
           this.modalForms.child.model

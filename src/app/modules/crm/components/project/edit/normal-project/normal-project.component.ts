@@ -9,6 +9,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ProjectMetadata } from '../../project.configuration';
 import { Observable } from 'rxjs';
 import { DialogActions, IDialogEvent } from 'src/app/definitions/dialog.definitions';
+import { ConsultancyWork } from '../../../consultancy-work/definitions/consultany-work.definition';
+import { ConsultancyWorkMetadata } from '../../../consultancy-work/consultancy-work.configuration';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 export interface StepType {
   id: string;
@@ -37,10 +40,19 @@ export class NormalProjectComponent implements OnInit {
   consultancyDatasource;
   consultancyTableColumns;
 
+  projectConsultancy = {
+    form: new FormGroup({}),
+    model: {},
+    options: {},
+    fields: []
+  }
+  isUpdatingConsultancy: boolean;
+
   constructor(
     private dialogRef: MatDialogRef<NormalProjectComponent>,
     @Inject(MAT_DIALOG_DATA) private editData: ProjectRegistration,
-    private dataHandler: DataHandlerService
+    private dataHandler: DataHandlerService,
+    private authSerivce: AuthenticationService
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -64,8 +76,6 @@ export class NormalProjectComponent implements OnInit {
       return [];
     }
   }
-
-
 
   ngOnInit(): void {
     this.steps = NormalProjectMetadata.formFields;
@@ -131,7 +141,25 @@ export class NormalProjectComponent implements OnInit {
       this.listenPrivateProjectCostChange();
     }
     if (this.model['projectTypeId'] === 'CN') {
-      this.steps.push(NormalProjectMetadata.projectConsultancyForm.fields);
+      const form = {
+        "id": "projectconsultancy",
+        "label": "Consultancy Work Details",
+        "fields": [
+          {
+            "type": "input",
+            "key": "isValid",
+            "templateOptions": {
+              "label": "",
+              "required": true,
+              "type": "boolean"
+            },
+            hideExpression: true,
+          }
+        ]
+      }
+      this.projectConsultancy.fields = NormalProjectMetadata.projectConsultancyForm.fields.fields;
+      this.steps.push(form);
+      this.loadConsultancyWork();
     }
     this.loadPayment();
   }
@@ -183,8 +211,20 @@ export class NormalProjectComponent implements OnInit {
   }
 
   onAddConsultancyWorkBtnClick() {
-    this.consultancyDatasource.data.push([]);
+    if (this.isUpdatingConsultancy) {
+      const indexToUpdate = this.consultancyDatasource.data.findIndex(row => row.id === this.projectConsultancy.model['id']);
+      if (indexToUpdate !== -1) {
+        this.consultancyDatasource.data[indexToUpdate] = Object.assign({}, this.projectConsultancy.model);
+        this.isUpdatingConsultancy = false;
+      }
+    } else {
+      this.consultancyDatasource.data.push(Object.assign(
+        { id: `temp-${this.consultancyDatasource.data.length + 1}` },
+        this.projectConsultancy.model
+      ));
+    }
     this.consultancyDatasource._updateChangeSubscription();
+    this.projectConsultancy.form.reset();
   }
 
   onAddStageBtnClick(form) {
@@ -263,10 +303,6 @@ export class NormalProjectComponent implements OnInit {
       domStyle.minHeight = '90vh';
       domStyle.minWidth = '90vw'
     }
-  }
-
-  ngOnDestroy() {
-
   }
 
   /* private project fields */
@@ -488,6 +524,9 @@ export class NormalProjectComponent implements OnInit {
   onSaveBtnClick() {
     if (this.form.valid) {
       this.projectHttpRequest.subscribe((res) => {
+        if (this.model.projectTypeId === 'CN') {
+          this.saveProjectConsultancy(res || this.model.id);
+        }
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
           data: res || this.model
@@ -501,9 +540,104 @@ export class NormalProjectComponent implements OnInit {
     if (this.isEdit) {
       return this.dataHandler.put<Project>(ProjectMetadata.serviceEndPoint, this.model);
     } else {
-      this.model.projectTypeId = 'CN';
+      // this.model.projectTypeId = 'CN';
       return this.dataHandler.post<Project>(ProjectMetadata.serviceEndPoint, this.model);
     }
+  }
+
+  ngOnDestroy() {
+    this.steps.splice(2);
+    this.form.reset();
+  }
+
+  private get consultanyWorkDropdown() {
+    return this.projectConsultancy.fields.find(e => e.id === 'row-1')
+      .fieldGroup.find(e => e.id === 'row-1')
+      .fieldGroup.find(e => e.key === 'workid')
+  }
+
+  private get consultanyWorkQuantityInputbox() {
+    return this.projectConsultancy.fields.find(e => e.id === 'row-1')
+      .fieldGroup.find(e => e.id === 'row-1')
+      .fieldGroup.find(e => e.key === 'qty')
+  }
+
+  private get consultanyWorkRateInputbox() {
+    return this.projectConsultancy.fields.find(e => e.id === 'row-1')
+      .fieldGroup.find(e => e.id === 'row-2')
+      .fieldGroup.find(e => e.key === 'unitRate')
+  }
+
+  private listenConsultancyWorkAmountChange() {
+    this.consultanyWorkQuantityInputbox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.projectConsultancy.model['amount'] = this.projectConsultancy.model['qty'] * this.projectConsultancy.model['unitRate'];
+      this.projectConsultancy.model = { ...this.projectConsultancy.model };
+    }
+    this.consultanyWorkRateInputbox.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      this.projectConsultancy.model['amount'] = this.projectConsultancy.model['qty'] * this.projectConsultancy.model['unitRate'];
+      this.projectConsultancy.model = { ...this.projectConsultancy.model };
+    }
+  }
+
+  private loadConsultancyWork() {
+    this.dataHandler.get<ConsultancyWork[]>(ConsultancyWorkMetadata.serviceEndPoint)
+      .subscribe((res: ConsultancyWork[]) => {
+        if (res) {
+          this.consultanyWorkDropdown.templateOptions.options = res.map((e) => (
+            {
+              label: e.workName,
+              value: e.id
+            }
+          ))
+          this.listenConsultancyChange(res);
+          this.listenConsultancyWorkAmountChange();
+        }
+      });
+  }
+
+  private listenConsultancyChange(consultancyList: ConsultancyWork[]) {
+    this.consultanyWorkDropdown.templateOptions.change = (field: FormlyFieldConfig, event: any) => {
+      const selectedConsultancy = consultancyList.find((e) => e.id === this.projectConsultancy.model['workid']);
+      this.projectConsultancy.model['sacCode'] = selectedConsultancy.sac_Code;
+      this.projectConsultancy.model['unitRate'] = selectedConsultancy.unitRate;
+      this.projectConsultancy.model['remarks'] = selectedConsultancy.remarks;
+      this.projectConsultancy.model['workName'] = selectedConsultancy.workName;
+      this.projectConsultancy.model = { ...this.projectConsultancy.model };
+    }
+  }
+
+  private saveProjectConsultancy(projectId) {
+    this.consultancyDatasource.data.forEach((row) => {
+      if (typeof (row.id) === 'string' && row.id.startsWith('temp')) {
+        delete row.id; // delete temp id
+      }
+      row.projectId = projectId;
+      row.userId = this.authSerivce.loggedInUser.userId
+    });
+    const endpoint = `${NormalProjectMetadata.serviceEndPoint}Consultancy`;
+    const serviceRequest =
+      this.isEdit ?
+        this.dataHandler.post(this.consultancyDatasource.data, endpoint) :
+        this.dataHandler.put(this.consultancyDatasource.data, endpoint);
+    serviceRequest.subscribe(res => {
+      console.log('project consultancy saved')
+    });
+  }
+
+  onDeleteConsultancyBtnClick(row) {
+    const indexToRemove = this.consultancyDatasource.data.findIndex(row => row.id === row.id);
+    if (indexToRemove !== -1) {
+      this.consultancyDatasource.data.splice(indexToRemove, 1);
+      this.consultancyDatasource._updateChangeSubscription();
+      if (this.projectConsultancy.model['id'] === row.id) {
+        this.projectConsultancy.form.reset();
+      }
+    }
+  }
+
+  onEditProjectConsultancy(row) {
+    this.projectConsultancy.model = Object.assign({}, row);
+    this.isUpdatingConsultancy = true;
   }
 
 

@@ -72,6 +72,10 @@ import { AdditionalBillComponent } from './components/subcontractor-work-bill/ed
 import { AdditionalBillappComponent } from './components/subcontractor-work-bill-approval/edit/additional-bill/additional-billapp.component';
 import { ForemanWorkBillApprovalEditComponent } from './components/foreman-work-bill-approval/edit/foreman-work-bill-approval-edit.component';
 import { ForemanPaymentApprovalEditComponent } from './components/foreman-payment-approval/edit/foreman-payment-approval-edit.component';
+import {SubcontractorbillpaymentapprovalEditComponent} from './components/subcontractor-payment-approval/edit/subcontractorbillpayment-approval-edit.component'
+import { SubcontractorlabourgroupattendanceapprovalEditComponent} from './components/subcontractor-labourgroupattendance-approval/edit/subcontractor-labour-groupattendancesetting-approval-edit.component';
+import { ContractorWorkOrderApprovalEditComponent } from './components/contractor-work-order-approval/edit/contractor-work-order-approval-edit.component';
+import { ContractorPaymentApprovalEditComponent } from './components/contractor-payment-approval/edit/contractor-payment-approval-edit.component';
 
 export const HRmoduleComponents = [
   EmployeeDesignationRegistrationComponent,
@@ -147,4 +151,8 @@ export const HRmoduleComponents = [
   AdditionalBillappComponent,
   ForemanWorkBillApprovalEditComponent,
   ForemanPaymentApprovalEditComponent,
+  SubcontractorbillpaymentapprovalEditComponent,
+  SubcontractorlabourgroupattendanceapprovalEditComponent,
+  ContractorWorkOrderApprovalEditComponent,
+  ContractorPaymentApprovalEditComponent
 ];

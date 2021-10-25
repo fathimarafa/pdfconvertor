@@ -74,7 +74,7 @@ export class MaterialStockEntryComponent implements OnInit {
 
   get serviceEndpoint() {
     const user = this.authService.loggedInUser;
-    return `${this.module.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+    return `${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`;
   }
 
   openDialog(rowToEdit?: MaterialStockEntry) {

@@ -163,8 +163,12 @@ export const MaterialPurchaseOrderMetadata = {
                 "field": 'materialName',
                 "displayName": 'Item'
             },
+            // {
+            //     "field": 'quantityPurchased',
+            //     "displayName": 'Quantity'
+            // },
             {
-                "field": 'quantityPurchased',
+                "field": 'quantityOrdered',
                 "displayName": 'Quantity'
             },
             {
@@ -180,6 +184,8 @@ export const MaterialPurchaseOrderMetadata = {
                 "displayName": 'Action'
             }
         ],
+
+
         "formFields": [
             {
                 "id": "row-1",
@@ -251,9 +257,26 @@ export const MaterialPurchaseOrderMetadata = {
                             "rows": "3"
                         }
                     }
-                ]
+                ]    
             }
-        ]
-    }
+            
+        ],
+        // "Indent": {
+        //     "tableColumns": [
+        //         {
+        //             "field": 'indentDetailsId',
+        //             "displayName": 'Project'
+        //         },
+        //         {
+        //             "field": 'quantityOrdered',
+        //             "displayName": 'Supplier Prefferd'
+        //         },
+        //         {
+        //             "field": 'indentedDate',
+        //             "displayName": 'IndentedDate'
+        //         },
+        //     ],
+        // }
 
+    }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable, Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ import { BasicWorkCategory } from 'src/app/modules/basic/components/work-categor
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { Router } from '@angular/router';
 //import { MaterialRegistrationMetadata } from '../../material-registration/material-registration.configuration';
 //import { MaterialRegistration } from '../../material-registration/definitions/material-registration.definition';
 
@@ -29,6 +31,7 @@ export class ContractorWorkOrderEditComponent implements OnInit {
   isEdit: boolean;
   tableColumns;
   dataSource;
+  amount=0;
   subscribeProjectDivison: Subscription;
   enableStockEdit: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -41,7 +44,9 @@ export class ContractorWorkOrderEditComponent implements OnInit {
     private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService,
     private authService: AuthenticationService,
     private snackBar: MatSnackBar,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private router: Router,
+    private dialog: MatDialog,
   ) {
     if (Object.keys(this.editData).length) {
       this.isEdit = true;
@@ -87,9 +92,23 @@ export class ContractorWorkOrderEditComponent implements OnInit {
     }
     FormfieldHandler.initialize(formFields);
     this.loadDropdowns();
+    this.loadItemDetails();
     this.dataSource = new MatTableDataSource(this.editData.contractorWorkOrderDetails || []);
   }
-
+  loadItemDetails() {
+    if (this.isEdit) {
+        const endpoint = `${ContractorWorkOrderMetadata.serviceEndPoint}List/${this.editData.id}`;
+        this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+          res.forEach(e => {
+            e['amount'] = e.qty * e.rate;
+            e['totalamount'] = e['amount'] + (e['amount'] * e.tax) /100;
+          })
+            this.dataSource = new MatTableDataSource(res)
+        });
+    } else {
+        this.dataSource = new MatTableDataSource([]);
+    }
+}
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
@@ -99,19 +118,24 @@ export class ContractorWorkOrderEditComponent implements OnInit {
     this.fetchContractorSelectOptions();
     //this.fetchMaterial();
     this.bindProjectDivisionFields();
-  }
-
-  onSaveBtnClick() {
-    if (this.modalForms.issued.form.valid) {
-      this.httpRequest.subscribe((res) => {
-        const closeEvent: IDialogEvent = {
-          action: this.isEdit ? DialogActions.edit : DialogActions.add,
-          data: this.modalForms.issued.model
-        }
-        this.dialogRef.close(closeEvent);
-      });
+    if(this.modalForms.issued.model.blockId == null || this.modalForms.issued.model.unitId == null || this.modalForms.issued.model.floorId == null){
+      this.modalForms.issued.model.blockId = 0;
+      this.modalForms.issued.model.unitId = 0;
+      this.modalForms.issued.model.floorId = 0;
     }
   }
+
+  // onSaveBtnClick() {
+  //   if (this.modalForms.issued.form.valid) {
+  //     this.httpRequest.subscribe((res) => {
+  //       const closeEvent: IDialogEvent = {
+  //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+  //         data: this.modalForms.issued.model
+  //       }
+  //       this.dialogRef.close(closeEvent);
+  //     });
+  //   }
+  // }
 
   onCancelBtnClick() {
     this.dialogRef.close();
@@ -120,7 +144,11 @@ export class ContractorWorkOrderEditComponent implements OnInit {
   get httpRequest(): Observable<ContractorWorkOrder> {
     let payload = {
       ...this.modalForms.issued.model,
-      materialUsageDetails: this.dataSource.data,
+    contractorWorkOrderDetails: this.dataSource.data,
+    financialYearId : 1,
+    billAmount : this.amount,
+    billAmountBalance :this.amount,
+    negotiatedAmount :this.amount
     }
     if (this.isEdit) {
       return this.dataHandler.put<ContractorWorkOrder>(ContractorWorkOrderMetadata.serviceEndPoint, [payload]);
@@ -142,16 +170,61 @@ export class ContractorWorkOrderEditComponent implements OnInit {
       return [];
     }
   }
+  openApproveDialog(): void {
+    const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+    dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+            this.saveChanges();
+        }
+    });
+}
 
+get isEditedFromApproval() {
+    return this.router.url.includes('approval');
+}
+
+onSaveBtnClick(nextLevel?: boolean) {
+    if (this.modalForms.issued.form.valid) {
+        if (this.isEditedFromApproval) {
+            this.openApproveDialog();
+        } else {
+            if (nextLevel) {
+                this.modalForms.issued.model.approvedDate = new Date();
+                this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+                this.modalForms.issued.model.approvalLevel = 1;
+            }
+            else{
+              this.modalForms.issued.model.approvalLevel = 0;
+              this.modalForms.issued.model.approvalStatus =0;
+              this.modalForms.issued.model.approvedDate = new Date();
+            }
+            this.saveChanges();
+        }
+      }
+    }
+
+    saveChanges() {
+        this.httpRequest.subscribe((res) => {
+            const closeEvent: IDialogEvent = {
+                action: this.isEdit ? DialogActions.edit : DialogActions.add,
+                data: res || this.modalForms.issued.model
+            }
+            this.dialogRef.close(closeEvent);
+        })
+    }
   onAddStockBtnClick() {
     if (this.isValid) {
       this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
       const dataRow: ContractorWorkOrderDetails = Object.assign({}, this.modalForms.usage.model);
-      dataRow['taxAmount'] = dataRow.qty * dataRow.rate;
-      dataRow['billAmount'] = dataRow['taxAmount'] + (dataRow['taxAmount'] * dataRow.tax) / 100;
+      dataRow['amount'] = dataRow.qty * dataRow.rate;
+      dataRow['totalamount'] = dataRow['amount'] + (dataRow['amount'] * dataRow.tax) / 100;
       this.dataSource.data.push(dataRow);
       this.dataSource._updateChangeSubscription();
       this.modalForms.usage.form.reset();
+      this.dataSource.data.forEach((row) => {
+        this.amount = this.amount + row['totalamount'];
+        // this.balanceAmount = this.balanceAmount + row['total'];
+      });
     }
   }
   get isValid() {
@@ -159,8 +232,8 @@ export class ContractorWorkOrderEditComponent implements OnInit {
       this.snackBar.open('Warning : Please select hsncode', null, { panelClass: 'snackbar-error-message' });
       return false;
     }
-    if (!this.modalForms.usage.model['category']) {
-      this.snackBar.open('Warning : Please input category', null, { panelClass: 'snackbar-error-message' });
+    if (!this.modalForms.usage.model['workName']) {
+      this.snackBar.open('Warning : Please input Work Name', null, { panelClass: 'snackbar-error-message' });
       return false;
     }
     return true;

@@ -8,6 +8,7 @@ import { ContractorWorkOrder } from './definitions//contractor-work-order.defini
 import { ContractorWorkOrderEditComponent } from './edit//contractor-work-order-edit.component';
 import { ContractorWorkOrderMetadata } from './contractor-work-order.configuration';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-contractor-work-order',
@@ -24,7 +25,9 @@ export class ContractorWorkOrderComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private pdfExportService: PdfExportService,
+    private authService: AuthenticationService,
+
   ) {
     this.module = ContractorWorkOrderMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,8 +46,8 @@ export class ContractorWorkOrderComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<ContractorWorkOrder[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<ContractorWorkOrder[]>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
       .subscribe((res: ContractorWorkOrder[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

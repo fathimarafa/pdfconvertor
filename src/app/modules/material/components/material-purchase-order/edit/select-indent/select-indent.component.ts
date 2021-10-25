@@ -7,6 +7,7 @@ import { MaterialTransferRequestMetadata } from '../../../material-transfer-requ
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MaterialIndentCreationMetadata } from '../../../material-indent-creation/material-indent-creation.configuration';
 import { MaterialIndent } from '../../../material-indent-creation/definitions/material-indent-creation.definiton';
+import { MaterialPurchaseOrderMetadata } from '../../material-purchase-order.configuration';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class SelectIndentComponent implements OnInit {
     private dialogRef: MatDialogRef<SelectIndentComponent>,
     @Inject(MAT_DIALOG_DATA) private tableRows: MaterialIndent[]
   ) {
-    this.tableColumns = MaterialIndentCreationMetadata.tableColumns;
+    this.tableColumns = MaterialPurchaseOrderMetadata.purchaseOrderDetail.tableColumns;
     this.dataSource = new MatTableDataSource(this.tableRows);
   }
 

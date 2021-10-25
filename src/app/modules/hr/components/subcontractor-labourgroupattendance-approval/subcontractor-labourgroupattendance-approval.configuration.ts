@@ -9,42 +9,46 @@ export const SubconntractorattendanceApprovalMetadata = {
     "serviceEndPoint": "BuildExeHR/api/SubContractorAttendance",
     "tableColumns": [
         {
-            "field": 'indentDetailsId',
-            "displayName": 'Id'
+            "field": 'id',
+            "displayName": 'S.No'
         },
         {
             "field": 'projectName',
-            "displayName": 'Project Name'
+            "displayName": 'Project Id'
         },
         {
-            "field": 'subId',
-            "displayName": 'Subcontractor Name'
+            "field": 'billDate',
+            "displayName": 'Bill Date'
+        },
+        {
+            "field": 'fullName',
+            "displayName": 'SubContractor Id'
         },
         {
             "field": 'action',
             "displayName": 'Action'
         }
     ],
-    "itemDetailstableColumns": [
-        {
-            "field": 'attendanceDetailsId',
-            "displayName": 'Id'
-        },
-        {
-            "field": 'labourWorkName',
-            "displayName": 'Item'
-        },
-        {
-            "field": 'noOfLabours',
-            "displayName": 'No of Labours'
-        },
-        {
-            "field": 'oTRate',
-            "displayName": 'OT Rate'
-        },
-        {
-            "field": 'oTHours',
-            "displayName": 'OT Hours'
-        }
-    ]
+    // "itemDetailstableColumns": [
+    //     {
+    //         "field": 'attendanceDetailsId',
+    //         "displayName": 'Id'
+    //     },
+    //     {
+    //         "field": 'labourWorkName',
+    //         "displayName": 'Item'
+    //     },
+    //     {
+    //         "field": 'noOfLabours',
+    //         "displayName": 'No of Labours'
+    //     },
+    //     {
+    //         "field": 'oTRate',
+    //         "displayName": 'OT Rate'
+    //     },
+    //     {
+    //         "field": 'oTHours',
+    //         "displayName": 'OT Hours'
+    //     }
+    // ]
 }

@@ -36,8 +36,10 @@
                                             </mat-form-field>
                                         </ng-container>
                                         <ng-container *ngIf="column.field !== 'negotiatedAmount'">
-                                             {{element[column.field]}}  
-                                       </ng-container> 
+                                            <ng-container *ngIf="column.field !== 'currentQuantity'">
+                                                {{element[column.field]}}  
+                                            </ng-container> 
+                                           </ng-container> 
                                         <ng-container *ngIf="column.field === 'negotiatedAmount'">
                                             <mat-form-field class="field-size-small">
                                                 <input (change)="onUserInput($event,element,column.field)" [value]="element[column.field]" matInput type="number">
@@ -53,10 +55,19 @@
                 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
             </div>
             <div class="form-child">
-                <form [formGroup]="modalForms.usage.form">
+                <!-- <form [formGroup]="modalForms.usage.form">
                     <formly-form [model]="modalForms.usage.model" [fields]="modalForms.usage.fields" [options]="modalForms.usage.options" [form]="modalForms.usage.form">
                     </formly-form>
-                </form>
+                </form> -->
+                <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Total</mat-label>
+                        <input [value]="totalAmount" matInput type="text">
+                    </mat-form-field>
+                </div>
+                
+                <formly-form [model]="detailsModel" [fields]="detailsFields" [options]="detailsOptions" [form]="detailsForm"></formly-form>
+                
                 <ng-container *ngIf="enableStockEdit">
                     <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
                     <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>

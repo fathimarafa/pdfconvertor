@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DataHandlerService } from '../../../../../services/datahandler/datahandler.service';
 import { IDialogEvent, DialogActions } from '../../../../../definitions/dialog.definitions';
 import { Observable, Subscription } from 'rxjs';
-import { SubcontractorbillPayment,SubContractorForPayment,SubContractorPaymentDetails} from '../definitions/subcontractor-bill-payment.definition';
+import { SubcontractorbillPayment,subcontractorForPayment,SubContractorPaymentDetails} from '../definitions/subcontractor-bill-payment.definition';
 import { SubcontractorPaymentMetadata } from '../subcontractorbillpayment.configuration';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormlyFieldConfig } from '@ngx-formly/core';
@@ -19,10 +19,14 @@ import { IEmployee } from '../../employee-registration/definitions/employee.defi
 import { BankAccountRegistrtaionMetadata } from 'src/app/modules/basic/components/bank-account-registration/bank-account-registration.configuration';
 import { BankAccount } from 'src/app/modules/basic/components/bank-account-registration/definitions/bank-account-registration.definition';
 import { BasicWorkCategoryMetadata } from 'src/app/modules/basic/components/work-category/basic-work-category.configuration';
+// import {EmployeelistMetadata} from 'src/app/modules/hr/components/employeelist/employeelist.configuration';
+// import {EmployeeList} from 'src/app/modules/hr/components/employeelist/definitions/employeelist.definition';
 import { SubcontractorBillMetadata } from '../../subcontractor-work-bill/subcontractor-work-bill.configuration';
 import { SubcontractorBill } from '../../subcontractor-work-bill/definitions/subcontractor-work-bill.definition';
 import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 import { EmployeeService } from 'src/app/services/employee-service/employee.service';
+import { FormApprovalDialogComponent } from 'src/app/modules/common/form-approval-dialog/form-approval-dialog.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -32,204 +36,328 @@ import { EmployeeService } from 'src/app/services/employee-service/employee.serv
 })
 export class SubcontractorbillpaymentEditComponent implements OnInit {
 
-  model: SubContractorForPayment;
-  module;
-  modalForms;
-  isEdit: boolean;
-  tableColumns;
-  dataSource;
-  enquiryList: any[];
-  selectedEnquiry;
-  subscribeProjectDivison: Subscription;
-  enableStockEdit: boolean;
-  selection = new SelectionModel<SubContractorForPayment>(true, []);
 
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  stageDatasource;
-  snackBar: any;
+
+// Roshni 23.10.21
 
 
-  constructor(
-    private dialogRef: MatDialogRef<SubcontractorbillpaymentEditComponent>,
-    @Inject(MAT_DIALOG_DATA) private editData: SubcontractorbillPayment,
-    private dataHandler: DataHandlerService,
-    private employeeService: EmployeeService,
-    private authService: AuthenticationService
-    // private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
-  ) {
-    // if (Object.keys(this.editData).length) {
-    //   this.isEdit = true;
-    // }
-    this.module = SubcontractorPaymentMetadata;
-    this.tableColumns = this.module.subcontractorForPayment.tableColumns
-    this.defineModalForms();
-    this.loadDropdowns();
+
+module;
+modalForms;
+isEdit: boolean;
+tableColumns;
+dataSource;
+// discountAmount =0;
+billId = 0;
+subscribeProjectDivison: Subscription;
+enableStockEdit: boolean;
+selection = new SelectionModel<SubContractorPaymentDetails>(true, []);
+
+@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+constructor(
+  private dialogRef: MatDialogRef<SubcontractorbillpaymentEditComponent>,
+  @Inject(MAT_DIALOG_DATA) private editData: SubcontractorbillPayment,
+  private dataHandler: DataHandlerService,
+  private employeeService: EmployeeService,
+  private authService: AuthenticationService,
+  private router: Router,
+  private dialog: MatDialog,
+
+
+  // private projectDivisionFieldsHandler: ProjectDivisionFieldsHandlerService
+) {
+  if (Object.keys(this.editData).length) {
+    this.isEdit = true;
   }
+  this.module = SubcontractorPaymentMetadata;
+  this.tableColumns = this.module.tableColumns
+  this.defineModalForms();
+  this.loadDropdowns();
+  // this.listenQuotationTypeChange();
+ 
+}
 
+loadItemDetails() {
+  if (this.isEdit) {
+    // this.modalForms.issued.model.paymentMode = this.modalForms.issued.model.paymentMode;
+    // FormfieldHandler.paymentModeDropdown.templateOptions = this.modalForms.issued.model.paymentMode;
+    const endpoint = `${'BuildExeHR/api/SubContractorForPayment'}/${this.editData.id}`;
+      this.dataHandler.get(endpoint).subscribe((res: any[]) => {
+          this.dataSource = new MatTableDataSource(res)
 
-  ngOnInit() {
-    
+      });
+  } else {
+      this.dataSource = new MatTableDataSource([]);
   }
+}
 
-  defineModalForms() {
-    this.modalForms = {
-      issued: {
-        form: new FormGroup({}),
-        model: this.editData,
-        options: {},
-        fields: SubcontractorPaymentMetadata.formFields
-      },
-      usage: {
-        form: new FormGroup({}),
-        model: {},
-        options: {},
-        fields: SubcontractorPaymentMetadata.subcontractorForPayment.formFields
-      }
-    }
-    const formFields: ModalFormFields = {
-      issued: this.modalForms.issued.fields,
-      usage: this.modalForms.usage.fields
-    }
-    FormfieldHandler.initialize(formFields);
-    this.loadDropdowns();
-    this.dataSource = new MatTableDataSource(this.editData.subContractorPaymentDetails || []);
-  }
+onUserInput($event, row, column) {
+  row[column] = Number($event.target.value);
+}
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
-  loadDropdowns() {
-
-    this.fetchSiteManagerSelectOptions();
-    this.fetchBankNameSelectOptions();
-    this.fetchSubContractorSelectOptions();
-  
-  }
-
-  private fetchSubContractorSelectOptions() {
-    this.employeeService.getSubContractor().subscribe((res) => {
-      this.enquiryList = res;
-      this.fetchData();
+fetchData() {
+  // const dummyCompanyId = 1; const dummyBranchId = 0; 
+  const foremanId = this.modalForms.issued.model.employeeId;
+  // const To = this.modalForms.issued.model.dateTo;
+  // const Todate = To.toISOString().split('T')[0]
+  const sitemanagerId = this.modalForms.issued.model.paymentModeId; const dummyFinancialyearId = 1; 
+  this.dataHandler.get<subcontractorForPayment[]>(`${"BuildExeHR/api/SubContractorForPayment"}/${foremanId}/${sitemanagerId}/${dummyFinancialyearId}`)
+    .subscribe((res: subcontractorForPayment[]) => {
+      this.dataSource = new MatTableDataSource(res);
+      this.dataSource.paginator = this.paginator;
     });
+
+}
+get dataColumns() {
+  if (this.tableColumns && this.tableColumns.length) {
+    const columns = this.tableColumns.map(col => col.field);
+    const actionIndex = columns.findIndex((col: string) => col === 'action');
+    columns.splice(actionIndex, 1);
+    columns.push('select');
+    return columns;
+  } else {
+    return [];
   }
+}
 
-  doFilter(value: string) {
-    this.selectedEnquiry = value;
-    this.dataSource.filter = value + ''; //.trim().toLocaleLowerCase();
+isAllSelected() {
+  const totalSelected = this.selection.selected.length;
+  const totalRows = this.dataSource.data.length;
+  return totalSelected === totalRows;
+}
+
+masterToggle() {
+  this.isAllSelected() ?
+    this.selection.clear() :
+    this.dataSource.data.forEach(row => this.selection.select(row));
+}
+onReceiptSelection(event, row) {
+  event.stopPropagation();
+  row.isSelected = !row.isSelected;
+  if (row.isSelected) {
+    this.modalForms.issued.model['am'] = this.modalForms.issued.model['am'] + row.paymentAmount;
+    // this.discountAmount =this.discountAmount +row.discount;
+    row.billId = row.id;
+    console.log("idr",row.id);
+  } 
+  this.modalForms.issued.model = { ...this.modalForms.issued.model };
+}
+
+
+ngOnInit(): void {
+  this.tableColumns = SubcontractorPaymentMetadata.subContractorPaymentDetails.tableColumns;
+  // if (this.modalForms.issued.model.paymentModeId === 0) {
+  //   FormfieldHandler.paymentModeDropdown.templateOptions.disabled = true;
+  
+  // }
+
+}
+
+defineModalForms() {
+  this.modalForms = {
+    issued: {
+      form: new FormGroup({}),
+      model: this.editData,
+      options: {},
+      fields: SubcontractorPaymentMetadata.formFields
+    },
+    usage: {
+      form: new FormGroup({}),
+      model: {},
+      options: {},
+      fields: SubcontractorPaymentMetadata.subContractorPaymentDetails
+    }
   }
-
-  fetchData() {
-    const dummyEmployeeId = 12; const dummySitemanagerId = 0; const dummyFinancialyearId = 1;
-    this.dataHandler.get<SubContractorForPayment[]>(`${'BuildExeHR/api/SubContractorForPayment'}/${dummyEmployeeId}/${dummySitemanagerId}/${dummyFinancialyearId}`)
-      .subscribe((res: SubContractorForPayment[]) => {
-        res.forEach((e) => {
-          const exists = this.enquiryList.find(enq => enq.id === e.id);
-          if (exists) {
-            e.id = exists.id;
-          }
-        });
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.paginator = this.paginator;
-        this.selectedEnquiry = res[0].id;
-        this.doFilter(this.selectedEnquiry);
-      });
+  const formFields: ModalFormFields = {
+    issued: this.modalForms.issued.fields,
+    usage: this.modalForms.usage.fields
   }
+  FormfieldHandler.initialize(formFields);
+  this.loadDropdowns();
+  this.loadItemDetails();
+  this.dataSource = new MatTableDataSource(this.editData.subContractorPaymentDetails || []);
+}
 
+ngAfterViewInit() {
+  this.dataSource.paginator = this.paginator;
+}
 
-  private fetchBankNameSelectOptions() {
-    this.dataHandler.get<BankAccount[]>(this.bankServiceUrl)
-      .subscribe((res: BankAccount[]) => {
-        if (res) {
-          FormfieldHandler.bankaccountnameDropdown.templateOptions.options = res.map((e: BankAccount) => (
-            {
-              label: e.bankName,
-              value: e.id
-            }
-          ));
-        }
-      });
-  }
-
-  private get bankServiceUrl() {
-    const user = this.authService.loggedInUser;
-    return `${BankAccountRegistrtaionMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
-  }
-
-  private fetchSiteManagerSelectOptions() {
-    this.employeeService.getSiteManager().subscribe((res) => {
+loadDropdowns() {
+  this.fetchSiteManagerSelectOptions();
+  this.fetchSubcontractorSelectOptions();
+  this.fetchBankNameSelectOptions();
+}
+private fetchBankNameSelectOptions() {
+  this.dataHandler.get<BankAccount[]>(this.bankServiceUrl)
+    .subscribe((res: BankAccount[]) => {
       if (res) {
-        FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e) => (
+        FormfieldHandler.bankaccountnameDropdown.templateOptions.options = res.map((e: BankAccount) => (
           {
-            label: e.fullName,
+            label: e.bankName,
             value: e.id
           }
         ));
       }
     });
-  }
+}
 
-  get dataColumns() {
-    if (this.tableColumns && this.tableColumns.length) {
-      const columns = this.tableColumns.map(col => col.field);
-      const actionIndex = columns.findIndex((col: string) => col === 'action');
-      columns.splice(actionIndex, 1);
-      columns.push('select');
-      return columns;
-    } else {
-      return [];
+private get bankServiceUrl() {
+  const user = this.authService.loggedInUser;
+  return `${BankAccountRegistrtaionMetadata.serviceEndPoint}/${user.companyId}/${user.branchId}`;
+}
+private fetchSiteManagerSelectOptions() {
+  this.employeeService.getSiteManager().subscribe((res) => {
+    if (res) {
+      FormfieldHandler.sitemanagerDropdown.templateOptions.options = res.map((e) => (
+        {
+          label: e.fullName,
+          value: e.id
+        }
+      ));
     }
-  }
-  isAllSelected() {
-    const totalSelected = this.selection.selected.length;
-    const totalRows = this.dataSource.data.length;
-    return totalSelected === totalRows;
-  }
+  });
+}
 
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
+private fetchSubcontractorSelectOptions() {
+  this.employeeService.getSubContractor().subscribe((res) => {
+    if (res) {
+      FormfieldHandler.subcontractorDropdown.templateOptions.options = res.map((e) => (
+        {
+          label: e.fullName,
+          value: e.id
+        }
+      ));
+    }
+  });
+}
 
-  onSaveBtnClick() {
-    if (this.modalForms.issued.form.valid) {
-      this.httpRequest.subscribe((res) => {
+
+openApproveDialog(): void {
+  const dialogRef = this.dialog.open(FormApprovalDialogComponent, { data: '' });
+  dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          this.saveChanges();
+      }
+  });
+}
+
+get isEditedFromApproval() {
+  return this.router.url.includes('approval');
+}
+
+onSaveBtnClick(nextLevel?: boolean) {
+  // if (this.modalForms.issued.form.valid) {
+      if (this.isEditedFromApproval) {
+          this.openApproveDialog();
+      } else {
+          if (nextLevel) {
+         
+          if(this.modalForms.issued.model.maxlevel===0)
+          {
+              this.modalForms.issued.model.approvalStatus=1;
+              this.modalForms.issued.model.approvedDate = new Date();
+              this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+              this.modalForms.issued.model.approvalLevel = 1;
+              this.saveChanges(); 
+          }
+          else
+          {
+            this.modalForms.issued.model.approvalLevel=1;
+            this.modalForms.issued.model.approvedDate = new Date();
+            this.modalForms.issued.model.approvedBy = this.authService.loggedInUser.userId;
+              this.saveChanges(); 
+          }
+        
+          }
+        
+      }
+  // }
+}
+
+
+saveChanges() {
+    // this.httpRequest.subscribe((res) => {
+    //     const closeEvent: IDialogEvent = {
+    //         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+    //         data: res || this.modalForm.indent.model
+    //     }
+    //     this.dialogRef.close(closeEvent);
+    this.httpRequest.subscribe((res) => {
         const closeEvent: IDialogEvent = {
           action: this.isEdit ? DialogActions.edit : DialogActions.add,
           data: res || this.modalForms.issued.model
         }
         this.dialogRef.close(closeEvent);
-      })
+    })
+}
 
-    }
-  }
 
- 
-  get httpRequest(): Observable<SubcontractorbillPayment> {
-    let payload: any = this.modalForms.issued.model
-    payload.subContractorPaymentDetails = this.dataSource.data;
-    if (this.isEdit) {
+// onSaveBtnClick() {
+//   if (this.modalForms.issued.form.valid) {
+//     if(this.modalForms.issued.model.paymentMode == 0){
+//       this.modalForms.issued.model.paymentMode = "Cash/DD";
+//     }
+//     else{
+//       this.modalForms.usage.model.paymentMode = "Cheque";
+//     }
+//     this.httpRequest.subscribe((res) => {
+//       const closeEvent: IDialogEvent = {
+//         action: this.isEdit ? DialogActions.edit : DialogActions.add,
+//         data: this.modalForms.issued.model
+//       }
+//       this.dialogRef.close(closeEvent);
+//     });
+//   }
+// }
+onShowBtnClick() {
+  // if (this.modalForms.issued.form.valid) {
+    this.fetchData();
+  // }
+}
+onCancelBtnClick() {
+  this.dialogRef.close();
+}
+
+// get httpRequest(): Observable<ForemanPayment> {
+//   let payload = {
+//     ...this.modalForms.issued.model,
+//   foremanPaymentDetails: this.dataSource.data,
+//   }
+//   if (this.isEdit) {
+//     return this.dataHandler.put<ForemanPayment>(ForemanPaymentMetadata.serviceEndPoint, [payload]);
+//   } else {
+//     const dummyDefaultFields = {
+//       companyId: 1,
+//       branchId: 2,
+//       userId: 23
+//     }
+//     payload = { ...payload, ...dummyDefaultFields }
+//     return this.dataHandler.post<ForemanPayment>(ForemanPaymentMetadata.serviceEndPoint, [payload]);
+//   }
+// }
+get httpRequest(): Observable<SubcontractorbillPayment> {
+  // this.projectDivisionFieldsHandler.setProjectDivisionFieldsDefaultValue();
+  let payload: any = this.modalForms.issued.model
+  payload.foremanPaymentDetails = this.dataSource.data;
+  //  payload.modalForms.issued.model.financialYearId = 1;
+  this.modalForms.issued.model.finantialYearId =1;
+  this.modalForms.issued.model.billId = this.billId;
+  if (this.isEdit) {
       return this.dataHandler.put<SubcontractorbillPayment>(SubcontractorPaymentMetadata.serviceEndPoint, [payload]);
-    } else {
+  } else {
       payload.isDeleted = 0;
+      payload.approvedDate = new Date();
+      // this.modalForms.issued.model.approvedDate = new Date();
       return this.dataHandler.post<SubcontractorbillPayment>(SubcontractorPaymentMetadata.serviceEndPoint, [payload]);
-    }
   }
-
-
-
-  onCancelBtnClick() {
-    this.dialogRef.close();
-  }
-
-  
-
-  ngOnDestroy() {
-    this.modalForms.issued.form.reset();
-    this.modalForms.usage.form.reset();
-   
-  }
+}
+ngOnDestroy() {
+  this.modalForms.issued.form.reset();
+  this.modalForms.usage.form.reset();
+}
 
 }
+
+

@@ -8,6 +8,7 @@ import { ContractorPayment } from './definitions//contractor-payment.definition'
 import { ContractorPaymentEditComponent } from './edit//contractor-payment-edit.component';
 import { ContractorPaymentMetadata } from './contractor-payment.configuration';
 import { PdfExportService, PdfExportSettings } from 'src/app/services/pdf-export/pdf-export.service';
+import { AuthenticationService } from 'src/app/services/auth-service/authentication.service';
 
 @Component({
   selector: 'app-contractor-payment',
@@ -24,7 +25,9 @@ export class ContractorPaymentComponent implements OnInit {
   constructor(
     private dataHandler: DataHandlerService,
     private dialogEventHandler: DialogEventHandlerService,
-    private pdfExportService: PdfExportService
+    private pdfExportService: PdfExportService,
+    private authService: AuthenticationService,
+
   ) {
     this.module = ContractorPaymentMetadata;
     this.tableColumns = this.module.tableColumns
@@ -43,8 +46,8 @@ export class ContractorPaymentComponent implements OnInit {
   }
 
   fetchData() {
-    const dummyCompanyId = 1; const dummyBranchId = 0;
-    this.dataHandler.get<ContractorPayment[]>(`${this.module.serviceEndPoint}/${dummyCompanyId}/${dummyBranchId}`)
+    const user = this.authService.loggedInUser;
+    this.dataHandler.get<ContractorPayment[]>(`${this.module.serviceEndPoint}List/${user.companyId}/${user.branchId}`)
       .subscribe((res: ContractorPayment[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

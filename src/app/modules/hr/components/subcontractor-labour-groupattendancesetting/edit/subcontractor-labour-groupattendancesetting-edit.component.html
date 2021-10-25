@@ -1,29 +1,17 @@
-<h2 mat-dialog-title class="form-dialog header-color">Add Labour Group Attendance Setting </h2>
+<h2 mat-dialog-title class="form-dialog header-color">Subcontractor Labour Group Attendance</h2>
 <mat-dialog-content style="display: flex;" class="form-dialog mat-typography dialog-content">
-    <div>
-        <div class="form-title">Labour Group Attendance Detials</div>
+   
+    <div class="flex-1">
         <div class="form-container">
             <div class="form-child">
                 <form [formGroup]="modalForms.issued.form">
                     <formly-form [model]="modalForms.issued.model" [fields]="modalForms.issued.fields" [options]="modalForms.issued.options" [form]="modalForms.issued.form">
                     </formly-form>
                 </form>
-            </div>
-        </div>
-    <div class="flex-1">
-        <div class="form-title"> Details</div>
-        <div class="form-container">
-            <div class="form-child">
-                <form [formGroup]="modalForms.usage.form">
-                    <formly-form [model]="modalForms.usage.model" [fields]="modalForms.usage.fields" [options]="modalForms.usage.options" [form]="modalForms.usage.form">
-                    </formly-form>
-                </form>
-                <ng-container *ngIf="enableStockEdit">
-                    <button (click)="onUpdateStockBtnClick()" mat-button class="save add-block">Update</button>
-                    <button (click)="onCancelStockUpdateBtnClick()" mat-button class="cancel add-block">Cancel</button>
-                </ng-container>
-                <ng-container *ngIf="!enableStockEdit">
-                </ng-container>
+         
+        <div class="form-title">Work Bill Details</div>
+
+                <div class="form-container">
                 <div class="inner-table-container">
                     <table class="items-table-container" mat-table [dataSource]="dataSource">
                         <ng-container [matColumnDef]="column.field" *ngFor="let column of tableColumns;let firstColumn = first">
@@ -49,23 +37,12 @@
                                                 <input (change)="onUserInput($event,element,column.field)" [value]="element[column.field]" matInput type="number">
                                             </mat-form-field>
                                         </ng-container>
-                                        <!-- <ng-container *ngIf="column.field !== 'oTHours'">
+                                        <ng-container *ngIf="column.field !== 'oTHours'">
+                                        <ng-container *ngIf="column.field !== 'noOfLabours'">
                                             {{element[column.field]}}
-                                        </ng-container> -->
-                                        <ng-container *ngIf="column.field === 'oTAmount'">
-                                            <mat-form-field class="field-size-small">
-                                                <input (change)="onUserInput($event,element,column.field)" [value]="element[column.field]" matInput type="number">
-                                            </mat-form-field>
                                         </ng-container>
-                                        <ng-container *ngIf="column.field == 'oTAmount'">
-                                            {{element[column.field]}} 
-                                        </ng-container> 
+                                        </ng-container>
                                     </ng-container>
-                                    <!-- <ng-container *ngIf="column.field === 'action'">
-                                        <mat-icon (click)="editItem(element)">edit</mat-icon>
-                                        <mat-icon (click)="removeItem(i)">delete_outline</mat-icon>
-                                    </ng-container> -->
-                                  
                                 </ng-container>
                             </td>
                         </ng-container>
@@ -74,12 +51,26 @@
                     </table>
                     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                 </div>
+                <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Total</mat-label>
+                        <input [value]="amount" matInput type="text">
+                    </mat-form-field>
+                </div>
+                <div *ngIf="dataSource && dataSource.data.length" class="total-input-box">
+                    <mat-form-field>
+                        <mat-label>Balance Amount</mat-label>
+                        <input [value]="balanceAmount" matInput type="text">
+                    </mat-form-field>
+                </div>
+            </div>
             </div>
         </div>
     </div>
-</div> 
 </mat-dialog-content>
 <mat-dialog-actions class="form-dialog" align="end">
-    <button (click)="onSaveBtnClick()" mat-button class="save">Save</button>
+    <button (click)="saveChanges()" mat-button class="save">Save</button>
+    <button (click)="onSaveBtnClick(true)" mat-button class="save">Next
+        Level</button>
     <button mat-button (click)="onCancelBtnClick()" cdkFocusInitial class="cancel">Cancel</button>
 </mat-dialog-actions>

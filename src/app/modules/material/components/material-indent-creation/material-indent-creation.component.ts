@@ -40,6 +40,8 @@ export class MaterialIndentCreationComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+    console.log("Indent-creatation table data",this.dataSource);
+    
   }
 
   fetchData() {

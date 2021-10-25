@@ -2,6 +2,7 @@ import { FormGroup } from "@angular/forms";
 import { FormlyFieldConfig, FormlyFormOptions } from "@ngx-formly/core";
 
 export interface MaterialIndent {
+    maxlevel?: number;
     id?: number;
     indentTypeId?: number;
     indentCategoryId?: number;
@@ -20,7 +21,12 @@ export interface MaterialIndent {
     branchId?: number;
     isDeleted?: number;
     approvalLevel?: number;
-    indentDetails?: IndentDetails[]
+    indentDetails?: IndentDetails[],
+    indentDetailsId?:number;
+    materialName?:string;
+    quantityOrdered?:number;
+    itemRate?:number;
+
 }
 
 export interface IndentDetails {

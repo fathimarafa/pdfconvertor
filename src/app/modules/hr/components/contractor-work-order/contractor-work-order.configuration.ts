@@ -13,8 +13,8 @@ export const ContractorWorkOrderMetadata = {
             "displayName": 'SNo'
         },
         {
-            "field": 'projectId',
-            "displayName": 'Project Id'
+            "field": 'projectName',
+            "displayName": 'Project'
         },
         {
             "field": 'dateOrdered',
@@ -25,13 +25,17 @@ export const ContractorWorkOrderMetadata = {
             "displayName": 'Tax Type'
         },
         {
-            "field": 'contractorId',
+            "field": 'fullName',
             "displayName": 'Contractor'
         },
         {
             "field": 'workOrderNo',
             "displayName": 'Work No'
         },
+        // {
+        //     "field": 'category',
+        //     "displayName": 'Work Category'
+        // },
         {
             "field": 'action',
             "displayName": 'Action'
@@ -119,17 +123,27 @@ export const ContractorWorkOrderMetadata = {
                         "required": true,
                         "options": [
                             {
-                                "label": "intrastate",
-                                "value": "INTRASTATE"
+                                "label": "INTRA STATE",
+                                "value": "INTRA STATE"
                             },
                             {
-                                "label": "interstate",
-                                "value": "INTERSTATE"
+                                "label": "INTER STATE",
+                                "value": "INTER STATE"
                             }
                         ]
                     }
 
-                }
+                },
+                {
+                    "className": "flex-1",
+                    "type": "select",
+                    "key": "category",
+                    "templateOptions": {
+                        "label": "Work Category",
+                        "options": [],
+                        "required": true
+                    }
+                },
             ]
             
         },
@@ -159,7 +173,23 @@ export const ContractorWorkOrderMetadata = {
                 }
                
             ]
-        }
+        },
+        {
+            "id": "row-6",
+            "fieldGroupClassName": "display-flex",
+            "fieldGroup": [
+                {
+                    "className": "flex-1",
+                    "type": "textarea",
+                    "key": "remarks",
+                    "templateOptions": {
+                        "label": "Remarks",
+                        "required": true,
+                        "rows": 1
+                    }
+                },
+            ]
+        },
     ],
     "contractorWorkOrderDetails": {
         "tableColumns": [
@@ -171,13 +201,10 @@ export const ContractorWorkOrderMetadata = {
                 "field": 'hsnCode',
                 "displayName": 'Hsn/Sac Code'
             },
+            
             {
-                "field": 'category',
-                "displayName": 'Work Category'
-            },
-            {
-                "field": 'remarks',
-                "displayName": 'Description'
+                "field": 'workName',
+                "displayName": 'Work Name'
             },
             {
                 "field": 'qty',
@@ -188,7 +215,7 @@ export const ContractorWorkOrderMetadata = {
                 "displayName": 'Rate'
             },
             {
-                "field": 'taxAmount',
+                "field": 'amount',
                 "displayName": 'Amount'
             },
             {
@@ -196,7 +223,7 @@ export const ContractorWorkOrderMetadata = {
                 "displayName": 'Tax%'
             },
             {
-                "field": 'billAmount',
+                "field": 'totalamount',
                 "displayName": 'Total Amount'
             },
           
@@ -221,24 +248,24 @@ export const ContractorWorkOrderMetadata = {
                             
                         }
                     },
-                    {
-                        "className": "flex-1",
-                        "type": "select",
-                        "key": "category",
-                        "templateOptions": {
-                            "label": "Work Category",
-                            "options": [],
-                            "required": true
-                        }
-                    },
+                    // {
+                    //     "className": "flex-1",
+                    //     "type": "select",
+                    //     "key": "category",
+                    //     "templateOptions": {
+                    //         "label": "Work Category",
+                    //         "options": [],
+                    //         "required": true
+                    //     }
+                    // },
                     {
                         "className": "flex-2",
-                        "key": "remarks",
-                        "type": "textarea",
+                        "key": "workName",
+                        "type": "input",
                         "templateOptions": {
-                            "label": "Description",
+                            "label": "Work Name",
                             "required": true,
-                            "rows": 1
+                        
                         }
                     },
                 ]

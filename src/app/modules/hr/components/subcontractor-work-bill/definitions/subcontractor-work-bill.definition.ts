@@ -21,6 +21,9 @@ export interface SubcontractorBill {
         amountRetensionPercent : number;
         amountRetensionAmount : number;
         amountTdsPercent : number;
+        totalqty:number;
+        netAmount:number;
+        totalAmount: number;
         amountTdsAmount : number;
         tdsStatus : number;
         retentionStatus : number;
